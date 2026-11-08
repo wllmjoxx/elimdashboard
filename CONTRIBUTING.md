@@ -52,6 +52,23 @@ php artisan make:request 'App\Modules\Prayer\Http\Requests\StorePrayerRequest'
 php artisan make:policy 'App\Modules\Prayer\Policies\PrayerRequestPolicy'
 ```
 
+### Halaman publik dan desain
+
+- Halaman untuk pengunjung (tanpa panel admin) diletakkan di
+  `resources/js/pages/<key>/public/`, misalnya `landing/public/home.tsx` atau
+  `prayer/public/form.tsx`. Halaman di folder itu otomatis memakai
+  `PublicLayout` (navbar kaca, tombol tema, Masuk/Daftar). Link navbar diisi
+  lewat `Halaman.layout = { nav: [...] }`.
+- Pakai komponen `Glass` (`@/components/glass`) atau class `glass` hanya untuk
+  lapisan melayang: navbar, kartu, panel form, modal. Maksimal dua lapis kaca
+  bertumpuk; teks panjang tetap di permukaan solid.
+- Warna merek tersedia sebagai class Tailwind: `flame`/`flame-strong` (oranye
+  api), `gold` (ayat, ornamen), `cross` (detail kecil), `sky` dan `iris`
+  (sekunder). Judul dan ayat memakai `font-serif`, isi memakai `font-sans`.
+  Latar halaman publik memakai `bg-haze`.
+- Tombol publik berbentuk pil: `className="rounded-full"`, varian `glass` untuk
+  tombol sekunder.
+
 ## 2. Pembagian kerja
 
 - **Satu modul dikerjakan satu orang dalam satu waktu.** Sebelum mulai, buat
