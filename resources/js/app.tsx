@@ -13,8 +13,6 @@ void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            case name === 'welcome':
-                return null;
             // Public pages live in resources/js/pages/<module>/public/.
             case name.includes('/public/'):
                 return PublicLayout;
