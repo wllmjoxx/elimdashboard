@@ -1,0 +1,26 @@
+# Normalize line endings to LF for everyone (Windows, macOS, Linux), so
+# nobody produces whole-file diffs just by saving a file.
+* text=auto eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Generated lockfiles: collapsed in GitHub PR diffs. On a merge conflict,
+# never hand-edit them; see CONTRIBUTING.md ("Konflik lockfile").
+composer.lock linguist-generated=true
+package-lock.json linguist-generated=true
+
+CHANGELOG.md export-ignore
+README.md export-ignore

@@ -1,0 +1,11 @@
+<?php
+
+// Settings for the {{ title }} module, read with config('modules.{{ key }}.*').
+
+return [
+
+    // Feature flag: when false, the module's routes and sidebar items are not
+    // registered (its migrations still run).
+    'enabled' => (bool) env('MODULE_{{ KEY }}_ENABLED', true),
+
+];

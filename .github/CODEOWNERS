@@ -1,0 +1,16 @@
+# Reviewers requested automatically on every pull request.
+# Replace @SECOND_DEVELOPER with the second developer's GitHub username,
+# then uncomment the lines below. The last matching rule wins.
+
+* @wllmjoxx
+# * @wllmjoxx @SECOND_DEVELOPER
+
+# Shared files: both developers review changes here.
+# /app/Support/                     @wllmjoxx @SECOND_DEVELOPER
+# /app/Providers/                   @wllmjoxx @SECOND_DEVELOPER
+# /bootstrap/                       @wllmjoxx @SECOND_DEVELOPER
+# /resources/js/components/         @wllmjoxx @SECOND_DEVELOPER
+# /resources/css/                   @wllmjoxx @SECOND_DEVELOPER
+# /composer.json                    @wllmjoxx @SECOND_DEVELOPER
+# /package.json                     @wllmjoxx @SECOND_DEVELOPER
+# /.github/                         @wllmjoxx @SECOND_DEVELOPER

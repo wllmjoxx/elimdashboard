@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Modules\{{ Name }};
+
+use App\Modules\{{ Name }}\Database\Seeders\{{ Name }}Seeder;
+use App\Support\Modules\ModuleServiceProvider;
+
+class {{ Name }}ServiceProvider extends ModuleServiceProvider
+{
+    public function key(): string
+    {
+        return '{{ key }}';
+    }
+
+    public function name(): string
+    {
+        return '{{ title }}';
+    }
+
+    public function navigation(): array
+    {
+        return [
+            // Add 'permission' => '{{ key }}.view' once roles and permissions exist.
+            ['title' => '{{ title }}', 'route' => '{{ key }}.index', 'icon' => 'index', 'group' => 'Menu'],
+        ];
+    }
+
+    public function permissions(): array
+    {
+        return [
+            '{{ key }}.view',
+        ];
+    }
+
+    public function seeders(): array
+    {
+        return [
+            {{ Name }}Seeder::class,
+        ];
+    }
+}
