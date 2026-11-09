@@ -17,8 +17,14 @@ use Illuminate\Database\Eloquent\Model;
 class SiteSection extends Model
 {
     /**
-     * Section keys the landing page knows how to render. Each key has a
-     * matching component in resources/js/modules/landing/sections.
+     * The three home segments editable from the admin panel: a wide
+     * background image with a title, text and an optional button.
+     */
+    public const SEGMENT_KEYS = ['segment_1', 'segment_2', 'segment_3'];
+
+    /**
+     * Section keys the site knows how to render. Each key has a matching
+     * component in resources/js/modules/landing/sections.
      */
     public const KEYS = [
         'hero',
@@ -30,6 +36,23 @@ class SiteSection extends Model
         'gallery',
         'testimonies',
         'contact',
+        ...self::SEGMENT_KEYS,
+    ];
+
+    /**
+     * Sections shown on the homepage. The other sections have their own page
+     * (Tentang, Renungan, Jadwal, Form Doa, Contact); devotional and schedule
+     * appear on both, as a short teaser on the homepage.
+     */
+    public const HOME_KEYS = [
+        'hero',
+        'segment_1',
+        'devotional',
+        'schedule',
+        'segment_2',
+        'gallery',
+        'segment_3',
+        'testimonies',
     ];
 
     protected $fillable = [

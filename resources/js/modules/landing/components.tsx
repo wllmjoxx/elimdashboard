@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +13,9 @@ export const sectionIds = {
     gallery: 'galeri',
     testimonies: 'kesaksian',
     contact: 'kontak',
+    segment_1: 'segmen-1',
+    segment_2: 'segmen-2',
+    segment_3: 'segmen-3',
 } as const;
 
 export function SectionShell({
@@ -97,5 +101,38 @@ export function SampleBadge() {
         <span className="inline-flex items-center rounded-full border border-gold/40 px-2.5 py-0.5 text-xs font-medium text-gold">
             Contoh
         </span>
+    );
+}
+
+/**
+ * Link for admin-entered addresses: Inertia navigation for pages of this
+ * site ("/jadwal"), a new tab for other websites.
+ */
+export function SmartLink({
+    href,
+    className,
+    children,
+}: {
+    href: string;
+    className?: string;
+    children: ReactNode;
+}) {
+    if (href.startsWith('/')) {
+        return (
+            <Link href={href} className={className}>
+                {children}
+            </Link>
+        );
+    }
+
+    return (
+        <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={className}
+        >
+            {children}
+        </a>
     );
 }

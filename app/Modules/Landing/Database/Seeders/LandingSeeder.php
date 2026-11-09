@@ -16,10 +16,13 @@ class LandingSeeder extends Seeder
     public function run(): void
     {
         foreach (array_values($this->sections()) as $order => [$key, $content]) {
-            SiteSection::query()->updateOrCreate(
-                ['church_id' => null, 'key' => $key],
-                ['content' => $content, 'is_active' => true, 'sort_order' => ($order + 1) * 10],
-            );
+            $attributes = ['church_id' => null, 'key' => $key];
+            $values = ['content' => $content, 'is_active' => true, 'sort_order' => ($order + 1) * 10];
+
+            // Segments are edited by Admin, so a re-run must not overwrite them.
+            in_array($key, SiteSection::SEGMENT_KEYS, true)
+                ? SiteSection::query()->firstOrCreate($attributes, $values)
+                : SiteSection::query()->updateOrCreate($attributes, $values);
         }
 
         if (ServiceSchedule::query()->doesntExist()) {
@@ -60,8 +63,17 @@ class LandingSeeder extends Seeder
                         'text' => 'Kami menantikan Anda dan keluarga di GGP Elim Ciputat.',
                     ],
                 ],
-                'primary_cta' => ['label' => 'Lihat jadwal ibadah', 'href' => '#jadwal'],
-                'secondary_cta' => ['label' => 'Kirim pokok doa', 'href' => '#doa'],
+                'primary_cta' => ['label' => 'Lihat jadwal ibadah', 'href' => '/jadwal'],
+                'secondary_cta' => ['label' => 'Kirim pokok doa', 'href' => '/doa'],
+            ]],
+            ['segment_1', [
+                'eyebrow' => 'GGP Elim Ciputat',
+                'title' => 'Rumah Kasih Karunia',
+                'text' => 'Keluarga Allah di Ciputat yang rindu setiap orang mengalami kasih karunia Yesus Kristus dan bertumbuh di dalam-Nya.',
+                'button_label' => 'Kenali kami',
+                'button_href' => '/tentang',
+                'align' => 'center',
+                'image' => null,
             ]],
             ['about', [
                 'title' => 'Tentang GGP Elim',
@@ -94,6 +106,15 @@ class LandingSeeder extends Seeder
                 'title' => 'Jadwal Kegiatan',
                 'subtitle' => 'Semua waktu dalam WIB.',
             ]],
+            ['segment_2', [
+                'eyebrow' => 'Menara Doa',
+                'title' => 'Berdoa bersama setiap Selasa dan Sabtu',
+                'text' => 'Selasa pukul 19.00 dan Sabtu pukul 07.30. Bawa pokok doa Anda, atau kirimkan lewat Form Doa.',
+                'button_label' => 'Kirim pokok doa',
+                'button_href' => '/doa',
+                'align' => 'left',
+                'image' => null,
+            ]],
             ['prayer', [
                 'title' => 'Butuh didoakan?',
                 'text' => 'Tim Doa GGP Elim mendoakan setiap pokok doa yang masuk setiap minggu.',
@@ -111,6 +132,15 @@ class LandingSeeder extends Seeder
                     ['caption' => 'Usia Emas'],
                 ],
                 'is_sample' => true,
+            ]],
+            ['segment_3', [
+                'eyebrow' => 'Ibadah Komisi',
+                'title' => 'Ada tempat untuk setiap usia',
+                'text' => 'Sekolah Minggu, Youth dan Pemuda/i, Kaum Wanita dan Pria, hingga Usia Emas.',
+                'button_label' => 'Lihat jadwal',
+                'button_href' => '/jadwal',
+                'align' => 'right',
+                'image' => null,
             ]],
             ['testimonies', [
                 'title' => 'Kesaksian',

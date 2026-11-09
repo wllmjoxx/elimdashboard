@@ -73,6 +73,16 @@ export type ScheduleGroup = {
     }[];
 };
 
+export type SegmentContent = {
+    eyebrow?: string | null;
+    title: string;
+    text?: string | null;
+    button_label?: string | null;
+    button_href?: string | null;
+    align: 'left' | 'center' | 'right';
+    image_url: string | null;
+};
+
 export type SectionContentMap = {
     hero: HeroContent;
     about: AboutContent;
@@ -83,6 +93,9 @@ export type SectionContentMap = {
     gallery: GalleryContent;
     testimonies: TestimoniesContent;
     contact: ContactContent;
+    segment_1: SegmentContent;
+    segment_2: SegmentContent;
+    segment_3: SegmentContent;
 };
 
 export type SectionKey = keyof SectionContentMap;

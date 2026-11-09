@@ -1,100 +1,29 @@
-import { Head, usePage } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
-import type { PublicNavItem } from '@/layouts/public-layout';
-import {
-    AboutSection,
-    ContactSection,
-    DevotionalSection,
-    GallerySection,
-    MissionSection,
-    PrayerSection,
-    ScheduleSection,
-    TestimoniesSection,
-} from '@/modules/landing/sections/content-sections';
-import { HeroSection } from '@/modules/landing/sections/hero';
+import { Head } from '@inertiajs/react';
+import { Fragment } from 'react';
+import { nav } from '@/modules/landing/nav';
+import { renderSection } from '@/modules/landing/render-section';
+import { HomeHighlights } from '@/modules/landing/sections/highlights';
+import { SiteFooter } from '@/modules/landing/site-footer';
 import type { ScheduleGroup, Section } from '@/modules/landing/types';
-
-const nav: PublicNavItem[] = [
-    { label: 'Home', href: '#beranda' },
-    { label: 'Tentang GGP Elim', href: '#tentang' },
-    { label: 'Renungan Harian', href: '#renungan' },
-    { label: 'Jadwal', href: '#jadwal' },
-    { label: 'Form Doa', href: '#doa' },
-    { label: 'Contact', href: '#kontak' },
-];
 
 type Props = {
     sections: Section[];
     scheduleGroups: ScheduleGroup[];
 };
 
-function renderSection(section: Section, scheduleGroups: ScheduleGroup[]) {
-    switch (section.key) {
-        case 'hero':
-            return <HeroSection content={section.content} />;
-        case 'about':
-            return <AboutSection content={section.content} />;
-        case 'mission':
-            return <MissionSection content={section.content} />;
-        case 'devotional':
-            return <DevotionalSection content={section.content} />;
-        case 'schedule':
-            return (
-                <ScheduleSection
-                    content={section.content}
-                    groups={scheduleGroups}
-                />
-            );
-        case 'prayer':
-            return <PrayerSection content={section.content} />;
-        case 'gallery':
-            return <GallerySection content={section.content} />;
-        case 'testimonies':
-            return <TestimoniesSection content={section.content} />;
-        case 'contact':
-            return <ContactSection content={section.content} />;
-    }
-}
-
-function SiteFooter() {
-    const { name } = usePage().props;
-
-    return (
-        <footer className="border-t border-foreground/10 px-4 py-10 sm:px-6">
-            <div className="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2">
-                    <AppLogoIcon className="size-6 fill-flame" />
-                    <span className="font-serif text-lg font-semibold">
-                        {name}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                        · Rumah Kasih Karunia
-                    </span>
-                </div>
-                <nav
-                    aria-label="Tautan cepat"
-                    className="flex flex-wrap gap-x-5 gap-y-2 text-sm"
-                >
-                    {nav.map((item) => (
-                        <a
-                            key={item.href}
-                            href={item.href}
-                            className="text-muted-foreground hover:text-foreground"
-                        >
-                            {item.label}
-                        </a>
-                    ))}
-                </nav>
-            </div>
-            <p className="mx-auto mt-6 max-w-6xl text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Gereja Gerakan Pentakosta Jemaat
-                Elim Ciputat
-            </p>
-        </footer>
-    );
-}
-
+/**
+ * Homepage, laid out like gms.church: theme slider, wide image segments
+ * set by Admin, and short teasers that lead to the other pages.
+ */
 export default function Home({ sections, scheduleGroups }: Props) {
+    const devotional = sections.find((section) => section.key === 'devotional');
+    const hasSchedule = sections.some((section) => section.key === 'schedule');
+    // The devotional and schedule teasers share one row, placed where the
+    // first of the two comes in the admin-defined order.
+    const highlightsAt = sections.findIndex(
+        (section) => section.key === 'devotional' || section.key === 'schedule',
+    );
+
     return (
         <>
             <Head title="Beranda">
@@ -110,11 +39,30 @@ export default function Home({ sections, scheduleGroups }: Props) {
                 <meta property="og:type" content="website" />
             </Head>
 
-            {sections.map((section) => (
-                <div key={section.key}>
-                    {renderSection(section, scheduleGroups)}
-                </div>
-            ))}
+            {sections.map((section, index) => {
+                if (
+                    section.key === 'devotional' ||
+                    section.key === 'schedule'
+                ) {
+                    return index === highlightsAt ? (
+                        <HomeHighlights
+                            key="highlights"
+                            devotional={
+                                devotional?.key === 'devotional'
+                                    ? devotional.content
+                                    : undefined
+                            }
+                            groups={hasSchedule ? scheduleGroups : undefined}
+                        />
+                    ) : null;
+                }
+
+                return (
+                    <Fragment key={section.key}>
+                        {renderSection(section, scheduleGroups)}
+                    </Fragment>
+                );
+            })}
 
             <SiteFooter />
         </>
