@@ -132,8 +132,9 @@ export default function PublicLayout({
     children,
     nav = [],
 }: PublicLayoutProps) {
-    // Fixed spots on the server and first render; scattered after mount so
-    // hydration matches.
+    // The glows are placed after mount (so hydration matches) and fade in,
+    // instead of jumping from default spots to random ones, which looked like
+    // a second page load.
     const [haze, setHaze] = useState<CSSProperties>();
 
     useEffect(() => setHaze(randomHaze()), []);
@@ -155,7 +156,15 @@ export default function PublicLayout({
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-haze text-foreground" style={haze}>
+        <div className="relative isolate min-h-screen bg-background text-foreground">
+            <div
+                aria-hidden="true"
+                className={cn(
+                    'pointer-events-none fixed inset-0 -z-10 bg-haze transition-opacity duration-1000 ease-out',
+                    haze ? 'opacity-100' : 'opacity-0',
+                )}
+                style={haze}
+            />
             <a
                 href="#konten"
                 className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2"

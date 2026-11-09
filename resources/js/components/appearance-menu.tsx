@@ -22,9 +22,7 @@ const options: { value: Appearance; label: string; icon: LucideIcon }[] = [
  * (localStorage + cookie) by useAppearance.
  */
 export function AppearanceMenu() {
-    const { appearance, resolvedAppearance, updateAppearance } =
-        useAppearance();
-    const CurrentIcon = resolvedAppearance === 'dark' ? Moon : Sun;
+    const { appearance, updateAppearance } = useAppearance();
 
     return (
         <DropdownMenu>
@@ -35,7 +33,12 @@ export function AppearanceMenu() {
                     className="rounded-full"
                     aria-label="Ganti tema"
                 >
-                    <CurrentIcon />
+                    {/* Picked by CSS from the `dark` class that app.blade.php
+                        sets before paint. Choosing it in JS made the server
+                        and browser HTML differ, so React threw the page away
+                        and rendered it again (a visible second load). */}
+                    <Sun className="dark:hidden" />
+                    <Moon className="hidden dark:block" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
