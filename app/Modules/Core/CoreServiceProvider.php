@@ -2,8 +2,17 @@
 
 namespace App\Modules\Core;
 
+use App\Models\User;
+use App\Modules\Core\Console\SyncPermissionsCommand;
 use App\Modules\Core\Database\Seeders\CoreSeeder;
+use App\Modules\Core\Enums\Role;
+use App\Modules\Core\Http\Middleware\ScopeToCurrentChurch;
+use App\Modules\Core\Models\Church;
+use App\Modules\Core\Support\CurrentChurch;
 use App\Support\Modules\ModuleServiceProvider;
+use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Support\Facades\Gate;
 
 class CoreServiceProvider extends ModuleServiceProvider
 {
@@ -20,8 +29,7 @@ class CoreServiceProvider extends ModuleServiceProvider
     public function navigation(): array
     {
         return [
-            // Add 'permission' => 'core.view' once roles and permissions exist.
-            ['title' => 'Cabang & Akses', 'route' => 'core.index', 'icon' => 'index', 'group' => 'Administrasi', 'order' => 90],
+            ['title' => 'Cabang & Akses', 'route' => 'core.index', 'icon' => 'index', 'permission' => 'core.view', 'group' => 'Administrasi', 'order' => 90],
         ];
     }
 
@@ -29,6 +37,7 @@ class CoreServiceProvider extends ModuleServiceProvider
     {
         return [
             'core.view',
+            'core.churches.manage',
         ];
     }
 
@@ -37,5 +46,33 @@ class CoreServiceProvider extends ModuleServiceProvider
         return [
             CoreSeeder::class,
         ];
+    }
+
+    protected function registerModule(): void
+    {
+        $this->app->singleton(CurrentChurch::class);
+
+        // User lives outside the module, so its branch relation is added here.
+        User::resolveRelationUsing('church', fn (User $user) => $user->belongsTo(Church::class, 'church_id', 'id', 'church'));
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([SyncPermissionsCommand::class]);
+        }
+    }
+
+    protected function bootModule(): void
+    {
+        // The HTTP kernel rewrites the router's groups when it is resolved, so
+        // the middleware goes on the kernel's "web" group.
+        $scope = fn (HttpKernel $kernel) => $kernel->appendMiddlewareToGroup('web', ScopeToCurrentChurch::class);
+
+        if ($this->app->resolved(HttpKernelContract::class)) {
+            $scope($this->app->make(HttpKernelContract::class));
+        } else {
+            $this->app->afterResolving(HttpKernelContract::class, $scope);
+        }
+
+        // Superadmin works across branches and passes every check (PRD 4.2).
+        Gate::before(fn ($user) => $user instanceof User && $user->hasRole(Role::Superadmin->value) ? true : null);
     }
 }
