@@ -144,7 +144,7 @@ class LandingSeeder extends Seeder
             ]],
             ['testimonies', [
                 'title' => 'Kesaksian',
-                'text' => 'Kesaksian jemaat yang sudah dimoderasi akan tampil di sini.',
+                'text' => 'Cerita karya Tuhan dalam hidup jemaat GGP Elim.',
             ]],
             ['contact', [
                 'title' => 'Alamat & Kontak',
