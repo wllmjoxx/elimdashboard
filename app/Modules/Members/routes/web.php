@@ -1,6 +1,8 @@
 <?php
 
+use App\Modules\Members\Http\Controllers\MemberProfileController;
 use App\Modules\Members\Http\Controllers\MembersController;
+use App\Modules\Members\Http\Controllers\ProfileController;
 use App\Modules\Members\Http\Controllers\RegisterController;
 use App\Modules\Members\Http\Controllers\SetPasswordController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,24 @@ Route::middleware(['signed', 'throttle:6,1'])
         Route::get('/', 'create')->name('create');
         Route::post('/', 'store')->name('store');
     });
+
+// The signed-in member's own profile (PRD 4.5).
+Route::middleware(['auth', 'verified'])
+    ->prefix('profil')
+    ->name('members.profile.')
+    ->controller(ProfileController::class)
+    ->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::post('/', 'update')->name('update');
+        Route::post('/deletion', 'requestDeletion')->name('deletion');
+        Route::delete('/deletion', 'cancelDeletion')->name('deletion.cancel');
+    });
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/member-photos/{member}', [MemberProfileController::class, 'photo'])->name('members.photo');
+    Route::get('/admin/members/{member}', [MemberProfileController::class, 'show'])->whereNumber('member')->name('members.show');
+    Route::post('/admin/members/{member}/membership', [MemberProfileController::class, 'updateMembership'])->name('members.membership');
+});
 
 Route::middleware(['auth', 'verified'])
     ->prefix('admin/members')

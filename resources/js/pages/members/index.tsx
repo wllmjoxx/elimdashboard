@@ -20,6 +20,7 @@ import {
     index,
     reject,
     requestInfo,
+    show,
     status as statusRoute,
 } from '@/routes/members';
 
@@ -33,6 +34,7 @@ type Member = {
     church: string | null;
     roles: string[];
     reviewNote: string | null;
+    deletionRequested: boolean;
     registeredAt: string | null;
     approvedAt: string | null;
     can: { review: boolean; deactivate: boolean };
@@ -242,9 +244,20 @@ export default function MembersIndex({
                                         className="border-t align-top"
                                     >
                                         <td className="px-4 py-3">
-                                            <div className="font-medium">
+                                            <Link
+                                                href={show.url(member.id)}
+                                                className="font-medium underline-offset-4 hover:underline"
+                                            >
                                                 {member.name}
-                                            </div>
+                                            </Link>
+                                            {member.deletionRequested && (
+                                                <Badge
+                                                    variant="destructive"
+                                                    className="ml-2"
+                                                >
+                                                    Minta dihapus
+                                                </Badge>
+                                            )}
                                             {member.roles.length > 0 && (
                                                 <div className="mt-1 flex flex-wrap gap-1">
                                                     {member.roles.map(

@@ -17,6 +17,22 @@ class MemberPolicy
         return $user->can('members.view');
     }
 
+    /**
+     * Members see their own profile; Admin sees profiles in their branch.
+     */
+    public function view(User $user, Member $member): bool
+    {
+        return $user->is($member) || ($user->can('members.view') && $this->sameChurch($member));
+    }
+
+    /**
+     * Membership data (status, join date, baptism) is kept by Admin.
+     */
+    public function updateMembership(User $user, Member $member): bool
+    {
+        return $user->can('members.edit') && $this->sameChurch($member);
+    }
+
     public function review(User $user, Member $member): bool
     {
         return $user->can('members.approve') && $this->sameChurch($member);

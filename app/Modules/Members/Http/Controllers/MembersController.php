@@ -37,7 +37,7 @@ class MembersController extends Controller
 
         $members = Member::query()->inCurrentChurch()
             ->withStatus($status)
-            ->with(['church:id,name', 'roles:id,name'])
+            ->with(['church:id,name', 'roles:id,name', 'profile'])
             ->orderBy($status === MemberStatus::Pending ? 'created_at' : 'name')
             ->paginate(25)
             ->withQueryString()
@@ -49,6 +49,7 @@ class MembersController extends Controller
                 'church' => $member->church?->name,
                 'roles' => $member->roles->map(fn ($role) => Role::tryFrom($role->name)?->label() ?? $role->name)->values(),
                 'reviewNote' => $member->review_note,
+                'deletionRequested' => $member->profile?->deletion_requested_at !== null,
                 'registeredAt' => $member->created_at?->toIso8601String(),
                 'approvedAt' => $member->approved_at?->toIso8601String(),
                 'can' => [

@@ -8,6 +8,7 @@ use App\Modules\Members\Enums\MemberStatus;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -47,6 +48,22 @@ class Member extends User
             'status' => MemberStatus::class,
             'approved_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return HasOne<MemberProfile, $this>
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(MemberProfile::class, 'user_id');
+    }
+
+    /**
+     * The saved profile, or an unsaved one with defaults.
+     */
+    public function profileOrNew(): MemberProfile
+    {
+        return $this->profile ?? $this->profile()->make();
     }
 
     /**

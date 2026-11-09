@@ -32,6 +32,7 @@ class MembersServiceProvider extends ModuleServiceProvider
     public function navigation(): array
     {
         return [
+            ['title' => 'Profil Saya', 'route' => 'members.profile.edit', 'icon' => 'profile', 'group' => 'Akun', 'order' => 200],
             ['title' => 'Jemaat', 'route' => 'members.index', 'icon' => 'index', 'permission' => 'members.view', 'group' => 'Administrasi', 'order' => 60],
         ];
     }
@@ -41,6 +42,7 @@ class MembersServiceProvider extends ModuleServiceProvider
         return [
             'members.view',
             'members.approve',
+            'members.edit',
             'members.deactivate',
         ];
     }
