@@ -68,11 +68,16 @@ class ModuleSystemTest extends TestCase
 
     public function test_module_navigation_is_shared_with_the_frontend(): void
     {
-        $this->actingAs(User::factory()->create())
+        $user = User::factory()->create();
+        $expected = app(ModuleRegistry::class)->navigation($user);
+
+        $this->assertNotEmpty($expected);
+
+        $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertInertia(fn (Assert $page) => $page
-                ->has('navigation', count(app(ModuleRegistry::class)->navigation(auth()->user())))
-                ->where('navigation.0.module', 'landing'));
+                ->has('navigation', count($expected))
+                ->where('navigation.0.module', $expected[0]['module']));
     }
 
     /**
