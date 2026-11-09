@@ -311,7 +311,7 @@ export default function Profile({
 
                                 <fieldset className="grid gap-3 rounded-xl border p-4 sm:col-span-2">
                                     <legend className="flex items-center gap-2 px-1 text-sm font-medium">
-                                        <ShieldCheck className="text-sky size-4" />
+                                        <ShieldCheck className="size-4 text-sky" />
                                         Privasi
                                     </legend>
                                     <div className="flex items-center gap-2">
