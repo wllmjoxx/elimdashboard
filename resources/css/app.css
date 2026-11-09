@@ -181,7 +181,7 @@
     --glass-border: rgb(255 255 255 / 0.14);
     --glass-highlight: rgb(255 255 255 / 0.12);
     --glass-shadow: 0 12px 40px -12px rgb(0 0 0 / 0.5);
-    --haze-opacity: 0.12;
+    --haze-opacity: 0.2;
 }
 
 @layer base {
@@ -236,25 +236,31 @@
 }
 
 /*
- * Very soft abstract background: blue, orange and purple haze at 10-20%
- * opacity over a clean white or black base.
+ * Very soft abstract background: large orange, blue and purple glows at
+ * 10-20% opacity over a clean white or black base. The glow positions are
+ * CSS variables so PublicLayout can scatter them randomly on each visit.
  */
 @utility bg-haze {
     background-color: var(--background);
     background-image:
         radial-gradient(
-            40rem 30rem at 10% 0%,
-            rgb(from var(--sky) r g b / var(--haze-opacity)),
-            transparent 70%
-        ),
-        radial-gradient(
-            36rem 28rem at 95% 15%,
+            55vmax 45vmax at var(--haze-flame, 8% 35%),
             rgb(from var(--flame) r g b / var(--haze-opacity)),
             transparent 70%
         ),
         radial-gradient(
-            44rem 32rem at 50% 100%,
+            55vmax 45vmax at var(--haze-sky, 92% 60%),
+            rgb(from var(--sky) r g b / var(--haze-opacity)),
+            transparent 70%
+        ),
+        radial-gradient(
+            45vmax 38vmax at var(--haze-iris, 55% 100%),
             rgb(from var(--iris) r g b / var(--haze-opacity)),
+            transparent 70%
+        ),
+        radial-gradient(
+            35vmax 28vmax at var(--haze-iris-soft, 40% 0%),
+            rgb(from var(--iris) r g b / calc(var(--haze-opacity) * 0.6)),
             transparent 70%
         );
     background-attachment: fixed;
