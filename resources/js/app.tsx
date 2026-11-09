@@ -16,7 +16,8 @@ void createInertiaApp({
             // Public pages live in resources/js/pages/<module>/public/.
             case name.includes('/public/'):
                 return PublicLayout;
-            case name.startsWith('auth/'):
+            // Sign-in pages of the app and of modules (<module>/auth/...).
+            case name.startsWith('auth/') || name.includes('/auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
