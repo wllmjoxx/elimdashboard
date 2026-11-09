@@ -29,6 +29,7 @@ class LandingServiceProvider extends ModuleServiceProvider
     {
         return [
             'landing.view',
+            'landing.manage',
         ];
     }
 

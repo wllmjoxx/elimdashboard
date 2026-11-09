@@ -1,0 +1,290 @@
+import {
+    Clock,
+    ExternalLink,
+    HandHeart,
+    ImageIcon,
+    MapPin,
+    MessageCircle,
+} from 'lucide-react';
+import { Glass } from '@/components/glass';
+import { Button } from '@/components/ui/button';
+import {
+    SampleBadge,
+    SectionHeading,
+    SectionShell,
+    sectionIds,
+    Verse,
+} from '../components';
+import type {
+    AboutContent,
+    ContactContent,
+    DevotionalContent,
+    GalleryContent,
+    MissionContent,
+    PrayerContent,
+    ScheduleContent,
+    ScheduleGroup,
+    TestimoniesContent,
+} from '../types';
+
+export function AboutSection({ content }: { content: AboutContent }) {
+    return (
+        <SectionShell id={sectionIds.about}>
+            <div className="grid gap-10 lg:grid-cols-5">
+                <div className="lg:col-span-3">
+                    <SectionHeading eyebrow="Sejarah" title={content.title} />
+                    {/* Long text sits on a solid surface for readability. */}
+                    <div className="space-y-4 rounded-glass border bg-background/90 p-6 text-lg leading-relaxed sm:p-8">
+                        {content.paragraphs.map((paragraph) => (
+                            <p key={paragraph}>{paragraph}</p>
+                        ))}
+                    </div>
+                </div>
+                {content.milestones && content.milestones.length > 0 && (
+                    <ol className="space-y-4 self-end lg:col-span-2">
+                        {content.milestones.map((milestone) => (
+                            <li key={milestone.year}>
+                                <Glass className="flex items-baseline gap-4 p-5">
+                                    <span className="font-serif text-2xl font-semibold whitespace-nowrap text-flame-strong">
+                                        {milestone.year}
+                                    </span>
+                                    <span>{milestone.text}</span>
+                                </Glass>
+                            </li>
+                        ))}
+                    </ol>
+                )}
+            </div>
+        </SectionShell>
+    );
+}
+
+export function MissionSection({ content }: { content: MissionContent }) {
+    return (
+        <SectionShell id={sectionIds.mission} className="text-center">
+            <p className="mb-4 text-sm font-semibold tracking-widest text-gold uppercase">
+                {content.title}
+            </p>
+            <p className="mx-auto max-w-3xl font-serif text-3xl leading-snug font-semibold text-balance sm:text-5xl">
+                {content.text}
+            </p>
+            {content.verse && (
+                <Verse
+                    text={content.verse}
+                    reference={content.reference}
+                    className="mx-auto mt-8 max-w-xl text-muted-foreground"
+                />
+            )}
+        </SectionShell>
+    );
+}
+
+export function DevotionalSection({ content }: { content: DevotionalContent }) {
+    return (
+        <SectionShell id={sectionIds.devotional}>
+            <SectionHeading eyebrow={content.label} title={content.title} />
+            <Glass as="article" className="max-w-3xl space-y-6 p-6 sm:p-10">
+                <Verse text={content.verse} reference={content.reference} />
+                <p className="text-lg leading-relaxed text-muted-foreground">
+                    {content.excerpt}
+                </p>
+                {content.is_sample && <SampleBadge />}
+            </Glass>
+        </SectionShell>
+    );
+}
+
+export function ScheduleSection({
+    content,
+    groups,
+}: {
+    content: ScheduleContent;
+    groups: ScheduleGroup[];
+}) {
+    return (
+        <SectionShell id={sectionIds.schedule}>
+            <SectionHeading
+                eyebrow="Jadwal"
+                title={content.title}
+                subtitle={content.subtitle}
+            />
+            <div className="grid gap-5 md:grid-cols-3">
+                {groups.map((group) => (
+                    <Glass key={group.category} className="p-6">
+                        <h3 className="mb-4 font-serif text-xl font-semibold">
+                            {group.label}
+                        </h3>
+                        <ul className="divide-y divide-foreground/10">
+                            {group.items.map((item) => (
+                                <li
+                                    key={item.id}
+                                    className="flex items-baseline justify-between gap-4 py-3"
+                                >
+                                    <span className="font-medium">
+                                        {item.name}
+                                    </span>
+                                    <span className="text-right text-sm whitespace-nowrap text-muted-foreground">
+                                        {item.day}{' '}
+                                        <span className="font-semibold text-foreground tabular-nums">
+                                            {item.time}
+                                        </span>
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </Glass>
+                ))}
+            </div>
+        </SectionShell>
+    );
+}
+
+export function PrayerSection({ content }: { content: PrayerContent }) {
+    return (
+        <SectionShell id={sectionIds.prayer}>
+            <Glass className="grid gap-8 p-6 sm:p-10 md:grid-cols-2 md:items-center">
+                <div>
+                    <SectionHeading eyebrow="Form Doa" title={content.title} />
+                    <Verse text={content.verse} reference={content.reference} />
+                </div>
+                <div className="space-y-4">
+                    <p className="text-lg text-muted-foreground">
+                        {content.text}
+                    </p>
+                    {/* The form itself is built by the Prayer module. */}
+                    <Button size="lg" className="rounded-full" disabled>
+                        <HandHeart />
+                        Form doa segera hadir
+                    </Button>
+                </div>
+            </Glass>
+        </SectionShell>
+    );
+}
+
+const tileTints = [
+    'from-sky/25 to-iris/20',
+    'from-flame/25 to-gold/20',
+    'from-iris/25 to-sky/20',
+    'from-gold/25 to-flame/20',
+    'from-sky/20 to-flame/20',
+];
+
+export function GallerySection({ content }: { content: GalleryContent }) {
+    return (
+        <SectionShell id={sectionIds.gallery}>
+            <div className="flex items-end justify-between gap-4">
+                <SectionHeading eyebrow="Kegiatan" title={content.title} />
+                {content.is_sample && (
+                    <div className="mb-10">
+                        <SampleBadge />
+                    </div>
+                )}
+            </div>
+            <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                {content.items.map((item, index) => (
+                    <li
+                        key={item.caption}
+                        className={
+                            index === 0 ? 'col-span-2 md:row-span-2' : undefined
+                        }
+                    >
+                        <figure className="relative flex aspect-[4/3] h-full flex-col justify-end overflow-hidden rounded-glass border bg-background">
+                            {item.image ? (
+                                <img
+                                    src={item.image}
+                                    alt={item.caption}
+                                    loading="lazy"
+                                    className="absolute inset-0 size-full object-cover"
+                                />
+                            ) : (
+                                <div
+                                    className={`absolute inset-0 grid place-items-center bg-gradient-to-br ${tileTints[index % tileTints.length]}`}
+                                    aria-hidden="true"
+                                >
+                                    <ImageIcon className="size-10 text-foreground/30" />
+                                </div>
+                            )}
+                            <figcaption className="relative m-3 self-start rounded-full bg-background/85 px-3 py-1 text-sm font-medium">
+                                {item.caption}
+                            </figcaption>
+                        </figure>
+                    </li>
+                ))}
+            </ul>
+        </SectionShell>
+    );
+}
+
+export function TestimoniesSection({
+    content,
+}: {
+    content: TestimoniesContent;
+}) {
+    return (
+        <SectionShell id={sectionIds.testimonies}>
+            <SectionHeading
+                eyebrow="Kesaksian terpilih"
+                title={content.title}
+                subtitle={content.text}
+            />
+        </SectionShell>
+    );
+}
+
+function whatsappLink(number: string): string {
+    const digits = number.replace(/\D/g, '').replace(/^0/, '62');
+
+    return `https://wa.me/${digits}`;
+}
+
+export function ContactSection({ content }: { content: ContactContent }) {
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.maps_query)}`;
+
+    return (
+        <SectionShell id={sectionIds.contact}>
+            <SectionHeading eyebrow="Kontak" title={content.title} />
+            <Glass className="grid gap-6 p-6 sm:p-10 md:grid-cols-3">
+                <div className="flex gap-3">
+                    <MapPin className="mt-1 size-5 shrink-0 text-flame-strong" />
+                    <div>
+                        <h3 className="font-semibold">Alamat</h3>
+                        <p className="text-muted-foreground">
+                            {content.address}
+                        </p>
+                        <a
+                            href={mapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                        >
+                            Buka di Google Maps
+                            <ExternalLink className="size-3.5" />
+                        </a>
+                    </div>
+                </div>
+                <div className="flex gap-3">
+                    <MessageCircle className="mt-1 size-5 shrink-0 text-flame-strong" />
+                    <div>
+                        <h3 className="font-semibold">WhatsApp</h3>
+                        <a
+                            href={whatsappLink(content.whatsapp)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary underline-offset-4 hover:underline"
+                        >
+                            {content.whatsapp}
+                        </a>
+                    </div>
+                </div>
+                <div className="flex gap-3">
+                    <Clock className="mt-1 size-5 shrink-0 text-flame-strong" />
+                    <div>
+                        <h3 className="font-semibold">Jam operasional</h3>
+                        <p className="text-muted-foreground">{content.hours}</p>
+                    </div>
+                </div>
+            </Glass>
+        </SectionShell>
+    );
+}
