@@ -111,6 +111,19 @@ class ChurchScopeTest extends TestCase
         $this->assertSame(['elim', 'lain'], $this->titles());
     }
 
+    public function test_route_model_binding_is_scoped_too(): void
+    {
+        Route::middleware('web')->get('/_test/scoped-notes/{note}', fn (ScopedNote $note) => $note->title);
+
+        $elimNote = ScopedNote::query()->where('title', 'elim')->firstOrFail();
+        $otherNote = ScopedNote::query()->where('title', 'lain')->firstOrFail();
+
+        $this->actingAs($this->userWithRole(Role::Admin, $this->elim));
+
+        $this->get("/_test/scoped-notes/{$elimNote->id}")->assertOk()->assertSee('elim');
+        $this->get("/_test/scoped-notes/{$otherNote->id}")->assertNotFound();
+    }
+
     public function test_without_scope_sees_every_branch_inside_a_request(): void
     {
         $this->actingAs($this->userWithRole(Role::Admin, $this->other));
