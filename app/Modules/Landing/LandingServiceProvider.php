@@ -20,8 +20,7 @@ class LandingServiceProvider extends ModuleServiceProvider
     public function navigation(): array
     {
         return [
-            // Add 'permission' => 'landing.view' once roles and permissions exist.
-            ['title' => 'Landing Page', 'route' => 'landing.index', 'icon' => 'index', 'group' => 'Konten', 'order' => 10],
+            ['title' => 'Landing Page', 'route' => 'landing.index', 'icon' => 'index', 'permission' => 'landing.manage', 'group' => 'Konten', 'order' => 10],
         ];
     }
 

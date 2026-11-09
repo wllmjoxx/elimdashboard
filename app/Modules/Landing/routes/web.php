@@ -22,9 +22,8 @@ Route::name('landing.')->controller(PublicPageController::class)->group(function
     Route::get('/kontak', 'contact')->name('contact');
 });
 
-// TODO(core): add 'can:landing.manage' once the Core module's roles are
-// merged; until then every verified account can edit the segments.
-Route::middleware(['auth', 'verified'])
+// Editing the landing page is for Admin and Superadmin (PRD 4.2).
+Route::middleware(['auth', 'verified', 'can:landing.manage'])
     ->prefix('admin/landing')
     ->name('landing.')
     ->group(function () {

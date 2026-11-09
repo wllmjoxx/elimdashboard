@@ -3,6 +3,8 @@
 namespace Tests\Modules\Landing;
 
 use App\Models\User;
+use App\Modules\Core\Actions\SyncRolesAndPermissions;
+use App\Modules\Core\Enums\Role;
 use App\Modules\Landing\Database\Seeders\LandingSeeder;
 use App\Modules\Landing\Models\SiteSection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,11 +25,23 @@ class SegmentAdminTest extends TestCase
 
         Storage::fake('public');
         $this->seed(LandingSeeder::class);
+        app(SyncRolesAndPermissions::class)->handle();
+    }
+
+    public function test_roles_without_landing_manage_cannot_edit(): void
+    {
+        $member = User::factory()->create();
+        $member->assignRole(Role::Member->value);
+
+        $this->actingAs($member)->get(route('landing.index'))->assertForbidden();
+        $this->actingAs($member)
+            ->post(route('landing.segments.update', 'segment_1'), $this->payload())
+            ->assertForbidden();
     }
 
     public function test_admin_page_lists_three_segments_and_the_upload_rules(): void
     {
-        $this->actingAs(User::factory()->create())
+        $this->actingAs($this->admin())
             ->get(route('landing.index'))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
@@ -49,14 +63,14 @@ class SegmentAdminTest extends TestCase
 
     public function test_unknown_segments_are_not_routed(): void
     {
-        $this->actingAs(User::factory()->create())
+        $this->actingAs($this->admin())
             ->post('/admin/landing/segments/segment_9', $this->payload())
             ->assertNotFound();
     }
 
     public function test_segment_text_and_image_can_be_saved(): void
     {
-        $this->actingAs(User::factory()->create())
+        $this->actingAs($this->admin())
             ->post(route('landing.segments.update', 'segment_2'), $this->payload([
                 'title' => 'Doa Malam',
                 'align' => 'center',
@@ -78,7 +92,7 @@ class SegmentAdminTest extends TestCase
 
     public function test_replacing_or_removing_an_image_deletes_the_old_file(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $url = route('landing.segments.update', 'segment_1');
 
         $this->actingAs($user)->post($url, $this->payload(['image' => self::png(1920, 1080)]));
@@ -98,7 +112,7 @@ class SegmentAdminTest extends TestCase
 
     public function test_saving_without_a_new_image_keeps_the_current_one(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $url = route('landing.segments.update', 'segment_1');
 
         $this->actingAs($user)->post($url, $this->payload(['image' => self::png(1920, 1080)]));
@@ -134,7 +148,7 @@ class SegmentAdminTest extends TestCase
             default => UploadedFile::fake()->create('notes.pdf', 1, 'application/pdf'),
         };
 
-        $this->actingAs(User::factory()->create())
+        $this->actingAs($this->admin())
             ->post(route('landing.segments.update', 'segment_1'), $this->payload(['image' => $file->size($kilobytes)]))
             ->assertSessionHasErrors('image');
 
@@ -143,7 +157,7 @@ class SegmentAdminTest extends TestCase
 
     public function test_button_needs_both_label_and_a_safe_link(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $url = route('landing.segments.update', 'segment_1');
 
         $this->actingAs($user)
@@ -153,6 +167,14 @@ class SegmentAdminTest extends TestCase
         $this->actingAs($user)
             ->post($url, $this->payload(['button_label' => '', 'button_href' => '/jadwal']))
             ->assertSessionHasErrors('button_label');
+    }
+
+    private function admin(): User
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::Admin->value);
+
+        return $admin;
     }
 
     /**

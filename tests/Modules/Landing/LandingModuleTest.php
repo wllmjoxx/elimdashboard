@@ -3,6 +3,8 @@
 namespace Tests\Modules\Landing;
 
 use App\Models\User;
+use App\Modules\Core\Actions\SyncRolesAndPermissions;
+use App\Modules\Core\Enums\Role;
 use App\Support\Modules\ModuleRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -22,11 +24,22 @@ class LandingModuleTest extends TestCase
         $this->get(route('landing.index'))->assertRedirect(route('login'));
     }
 
-    public function test_verified_users_can_open_the_index_page(): void
+    public function test_admins_can_open_the_index_page(): void
     {
-        $this->actingAs(User::factory()->create())
+        app(SyncRolesAndPermissions::class)->handle();
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::Admin->value);
+
+        $this->actingAs($admin)
             ->get(route('landing.index'))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page->component('landing/index'));
+    }
+
+    public function test_users_without_permission_cannot_open_the_index_page(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get(route('landing.index'))
+            ->assertForbidden();
     }
 }
