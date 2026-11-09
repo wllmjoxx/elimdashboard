@@ -1,10 +1,8 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, BookOpen, CalendarDays } from 'lucide-react';
 import { Glass } from '@/components/glass';
-import {
-    devotional as devotionalPage,
-    schedule as schedulePage,
-} from '@/routes/landing';
+import { index as devotionalsPage } from '@/routes/devotionals/public';
+import { schedule as schedulePage } from '@/routes/landing';
 import { SampleBadge, SectionShell, Verse } from '../components';
 import { Reveal } from '../reveal';
 import type { DevotionalContent, ScheduleGroup } from '../types';
@@ -54,11 +52,17 @@ export function HomeHighlights({
                         <h2 className="font-serif text-2xl font-semibold tracking-tight sm:text-3xl">
                             {devotional.title}
                         </h2>
-                        <Verse
-                            text={devotional.verse}
-                            reference={devotional.reference}
-                            className="mt-4"
-                        />
+                        {devotional.verse ? (
+                            <Verse
+                                text={devotional.verse}
+                                reference={devotional.reference}
+                                className="mt-4"
+                            />
+                        ) : (
+                            <p className="mt-4 text-sm font-semibold tracking-wide text-gold">
+                                {devotional.reference}
+                            </p>
+                        )}
                         <p className="mt-4 line-clamp-3 text-muted-foreground">
                             {devotional.excerpt}
                         </p>
@@ -67,7 +71,9 @@ export function HomeHighlights({
                                 <SampleBadge />
                             </div>
                         )}
-                        <MoreLink href={devotionalPage.url()}>
+                        <MoreLink
+                            href={devotional.url ?? devotionalsPage.url()}
+                        >
                             Baca renungan
                         </MoreLink>
                     </Glass>

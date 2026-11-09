@@ -33,6 +33,8 @@ export type DevotionalContent = {
     reference: string;
     verse: string;
     excerpt: string;
+    /** Page of the published devotional; absent for the sample. */
+    url?: string;
     is_sample?: boolean;
 };
 

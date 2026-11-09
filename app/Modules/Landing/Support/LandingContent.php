@@ -2,6 +2,7 @@
 
 namespace App\Modules\Landing\Support;
 
+use App\Modules\Devotionals\Support\DevotionalFeed;
 use App\Modules\Landing\Models\ServiceSchedule;
 use App\Modules\Landing\Models\SiteSection;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class LandingContent
 {
+    public function __construct(private readonly DevotionalFeed $devotionals) {}
+
     /**
      * Visible sections with the given keys, in admin-defined order.
      *
@@ -76,6 +79,20 @@ class LandingContent
         if (in_array($section->key, SiteSection::SEGMENT_KEYS, true)) {
             $content['image_url'] = self::imageUrl($content['image'] ?? null);
             unset($content['image']);
+        }
+
+        // The devotional section shows the newest published devotional from
+        // the Devotionals module; its own content is the fallback sample.
+        if ($section->key === 'devotional' && ($latest = $this->devotionals->latest()) !== null) {
+            $content = [
+                'label' => $content['label'] ?? 'Renungan Harian',
+                'title' => $latest['title'],
+                'reference' => $latest['reference'],
+                'verse' => $latest['verse'] ?? '',
+                'excerpt' => $latest['excerpt'],
+                'url' => $latest['url'],
+                'is_sample' => false,
+            ];
         }
 
         return $content;

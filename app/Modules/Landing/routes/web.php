@@ -16,7 +16,6 @@ Route::get('/', HomeController::class)->name('home');
 // One public page per navbar item (menu of ggpelim.com).
 Route::name('landing.')->controller(PublicPageController::class)->group(function () {
     Route::get('/tentang', 'about')->name('about');
-    Route::get('/renungan', 'devotional')->name('devotional');
     Route::get('/jadwal', 'schedule')->name('schedule');
     Route::get('/doa', 'prayer')->name('prayer');
     Route::get('/kontak', 'contact')->name('contact');
