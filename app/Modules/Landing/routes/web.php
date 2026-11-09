@@ -17,7 +17,6 @@ Route::get('/', HomeController::class)->name('home');
 Route::name('landing.')->controller(PublicPageController::class)->group(function () {
     Route::get('/tentang', 'about')->name('about');
     Route::get('/jadwal', 'schedule')->name('schedule');
-    Route::get('/doa', 'prayer')->name('prayer');
     Route::get('/kontak', 'contact')->name('contact');
 });
 
