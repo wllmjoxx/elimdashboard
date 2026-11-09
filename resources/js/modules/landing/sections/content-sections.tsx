@@ -172,48 +172,134 @@ const tileTints = [
     'from-sky/20 to-flame/20',
 ];
 
+type GalleryItem = GalleryContent['items'][number];
+
+function GalleryTile({
+    item,
+    index,
+    className,
+    natural = false,
+}: {
+    item: GalleryItem;
+    index: number;
+    className?: string;
+    natural?: boolean;
+}) {
+    return (
+        <figure
+            className={`relative flex flex-col justify-end overflow-hidden rounded-glass border bg-background ${natural && item.image ? '' : 'aspect-[4/3] h-full'} ${className ?? ''}`}
+        >
+            {item.image ? (
+                <img
+                    src={item.image}
+                    alt={item.caption || 'Foto kegiatan GGP Elim'}
+                    loading="lazy"
+                    decoding="async"
+                    className={
+                        natural
+                            ? 'w-full'
+                            : 'absolute inset-0 size-full object-cover'
+                    }
+                />
+            ) : (
+                <div
+                    className={`absolute inset-0 grid place-items-center bg-gradient-to-br ${tileTints[index % tileTints.length]}`}
+                    aria-hidden="true"
+                >
+                    <ImageIcon className="size-10 text-foreground/30" />
+                </div>
+            )}
+            {item.caption && (
+                <figcaption
+                    className={`m-3 self-start rounded-full bg-background/85 px-3 py-1 text-sm font-medium ${natural && item.image ? 'absolute bottom-0 left-0' : 'relative'}`}
+                >
+                    {item.caption}
+                </figcaption>
+            )}
+        </figure>
+    );
+}
+
+/**
+ * Homepage gallery (PRD 4.3, 4.8) in the layout Admin picked: grid,
+ * carousel or masonry.
+ */
 export function GallerySection({ content }: { content: GalleryContent }) {
+    const layout = content.layout ?? 'grid';
+
     return (
         <SectionShell id={sectionIds.gallery}>
-            <div className="flex items-end justify-between gap-4">
-                <SectionHeading eyebrow="Kegiatan" title={content.title} />
-                {content.is_sample && (
-                    <div className="mb-10">
-                        <SampleBadge />
-                    </div>
-                )}
+            <div className="flex flex-wrap items-end justify-between gap-4">
+                <SectionHeading
+                    eyebrow="Kegiatan"
+                    title={content.title}
+                    subtitle={content.album ?? undefined}
+                />
+                <div className="mb-10 flex flex-wrap items-center gap-2">
+                    {content.is_sample && <SampleBadge />}
+                    {content.url && (
+                        <Button
+                            asChild
+                            variant="glass"
+                            className="rounded-full"
+                        >
+                            <SmartLink href={content.url}>
+                                Lihat album
+                            </SmartLink>
+                        </Button>
+                    )}
+                    {content.index_url && !content.is_sample && (
+                        <Button
+                            asChild
+                            variant="ghost"
+                            className="rounded-full"
+                        >
+                            <SmartLink href={content.index_url}>
+                                Semua album
+                            </SmartLink>
+                        </Button>
+                    )}
+                </div>
             </div>
-            <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                {content.items.map((item, index) => (
-                    <li
-                        key={item.caption}
-                        className={
-                            index === 0 ? 'col-span-2 md:row-span-2' : undefined
-                        }
-                    >
-                        <figure className="relative flex aspect-[4/3] h-full flex-col justify-end overflow-hidden rounded-glass border bg-background">
-                            {item.image ? (
-                                <img
-                                    src={item.image}
-                                    alt={item.caption}
-                                    loading="lazy"
-                                    className="absolute inset-0 size-full object-cover"
-                                />
-                            ) : (
-                                <div
-                                    className={`absolute inset-0 grid place-items-center bg-gradient-to-br ${tileTints[index % tileTints.length]}`}
-                                    aria-hidden="true"
-                                >
-                                    <ImageIcon className="size-10 text-foreground/30" />
-                                </div>
-                            )}
-                            <figcaption className="relative m-3 self-start rounded-full bg-background/85 px-3 py-1 text-sm font-medium">
-                                {item.caption}
-                            </figcaption>
-                        </figure>
-                    </li>
-                ))}
-            </ul>
+
+            {layout === 'carousel' ? (
+                <ul
+                    className="-mx-4 flex snap-x snap-mandatory [scrollbar-width:thin] gap-4 overflow-x-auto px-4 pb-4"
+                    aria-label="Galeri foto"
+                >
+                    {content.items.map((item, index) => (
+                        <li
+                            key={index}
+                            className="w-[80%] shrink-0 snap-start sm:w-[45%] lg:w-[30%]"
+                        >
+                            <GalleryTile item={item} index={index} />
+                        </li>
+                    ))}
+                </ul>
+            ) : layout === 'masonry' ? (
+                <ul className="columns-2 gap-4 md:columns-3 [&>li]:mb-4">
+                    {content.items.map((item, index) => (
+                        <li key={index} className="break-inside-avoid">
+                            <GalleryTile item={item} index={index} natural />
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                    {content.items.map((item, index) => (
+                        <li
+                            key={index}
+                            className={
+                                index === 0
+                                    ? 'col-span-2 md:row-span-2'
+                                    : undefined
+                            }
+                        >
+                            <GalleryTile item={item} index={index} />
+                        </li>
+                    ))}
+                </ul>
+            )}
         </SectionShell>
     );
 }

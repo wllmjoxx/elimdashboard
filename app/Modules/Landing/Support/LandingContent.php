@@ -3,6 +3,7 @@
 namespace App\Modules\Landing\Support;
 
 use App\Modules\Devotionals\Support\DevotionalFeed;
+use App\Modules\Gallery\Support\GalleryFeed;
 use App\Modules\Landing\Models\ServiceSchedule;
 use App\Modules\Landing\Models\SiteSection;
 use App\Modules\Testimonies\Support\TestimonyFeed;
@@ -16,6 +17,7 @@ class LandingContent
     public function __construct(
         private readonly DevotionalFeed $devotionals,
         private readonly TestimonyFeed $testimonies,
+        private readonly GalleryFeed $gallery,
     ) {}
 
     /**
@@ -97,6 +99,27 @@ class LandingContent
                 'url' => $latest['url'],
                 'is_sample' => false,
             ];
+        }
+
+        // Photos of the album Admin picked (or the newest one) from the Gallery
+        // module, in the chosen layout; the sample tiles stay as fallback.
+        if ($section->key === 'gallery') {
+            $home = $this->gallery->forHome(isset($content['album_id']) ? (int) $content['album_id'] : null);
+            $content['layout'] = $content['layout'] ?? 'grid';
+
+            if ($home['photos'] !== []) {
+                $content['items'] = array_map(fn (array $photo) => [
+                    'caption' => $photo['caption'] ?? '',
+                    'image' => $photo['thumbnailUrl'],
+                    'full' => $photo['url'],
+                ], $home['photos']);
+                $content['url'] = $home['album']['url'] ?? null;
+                $content['album'] = $home['album']['title'] ?? null;
+                $content['is_sample'] = false;
+            }
+
+            $content['index_url'] = route('gallery.public.index');
+            unset($content['album_id']);
         }
 
         // "Kesaksian terpilih": approved testimonies from the Testimonies module.

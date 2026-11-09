@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Landing\Http\Controllers\GallerySettingsController;
 use App\Modules\Landing\Http\Controllers\HomeController;
 use App\Modules\Landing\Http\Controllers\LandingController;
 use App\Modules\Landing\Http\Controllers\PublicPageController;
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'verified', 'can:landing.manage'])
     ->name('landing.')
     ->group(function () {
         Route::get('/', [LandingController::class, 'index'])->name('index');
+        Route::post('/gallery', [GallerySettingsController::class, 'update'])->name('gallery.update');
         Route::post('/segments/{segment}', [SegmentController::class, 'update'])
             ->whereIn('segment', SiteSection::SEGMENT_KEYS)
             ->name('segments.update');

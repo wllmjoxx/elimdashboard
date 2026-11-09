@@ -19,8 +19,8 @@ class LandingSeeder extends Seeder
             $attributes = ['church_id' => null, 'key' => $key];
             $values = ['content' => $content, 'is_active' => true, 'sort_order' => ($order + 1) * 10];
 
-            // Segments are edited by Admin, so a re-run must not overwrite them.
-            in_array($key, SiteSection::SEGMENT_KEYS, true)
+            // Sections edited by Admin must survive a re-run of the seeder.
+            in_array($key, [...SiteSection::SEGMENT_KEYS, 'gallery'], true)
                 ? SiteSection::query()->firstOrCreate($attributes, $values)
                 : SiteSection::query()->updateOrCreate($attributes, $values);
         }
@@ -124,6 +124,8 @@ class LandingSeeder extends Seeder
             // Placeholder until the Gallery module provides albums and photos.
             ['gallery', [
                 'title' => 'Galeri',
+                'layout' => 'grid',
+                'album_id' => null,
                 'items' => [
                     ['caption' => 'Ibadah Raya'],
                     ['caption' => 'Sekolah Minggu'],

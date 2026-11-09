@@ -3,7 +3,10 @@
 namespace App\Modules\Gallery;
 
 use App\Modules\Gallery\Database\Seeders\GallerySeeder;
+use App\Modules\Gallery\Models\Album;
+use App\Modules\Gallery\Policies\AlbumPolicy;
 use App\Support\Modules\ModuleServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class GalleryServiceProvider extends ModuleServiceProvider
 {
@@ -20,8 +23,7 @@ class GalleryServiceProvider extends ModuleServiceProvider
     public function navigation(): array
     {
         return [
-            // Add 'permission' => 'gallery.view' once roles and permissions exist.
-            ['title' => 'Galeri', 'route' => 'gallery.index', 'icon' => 'index', 'group' => 'Konten', 'order' => 30],
+            ['title' => 'Galeri', 'route' => 'gallery.index', 'icon' => 'index', 'permission' => 'gallery.view', 'group' => 'Konten', 'order' => 30],
         ];
     }
 
@@ -29,6 +31,8 @@ class GalleryServiceProvider extends ModuleServiceProvider
     {
         return [
             'gallery.view',
+            'gallery.upload',
+            'gallery.manage',
         ];
     }
 
@@ -37,5 +41,10 @@ class GalleryServiceProvider extends ModuleServiceProvider
         return [
             GallerySeeder::class,
         ];
+    }
+
+    protected function bootModule(): void
+    {
+        Gate::policy(Album::class, AlbumPolicy::class);
     }
 }
