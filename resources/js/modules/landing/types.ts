@@ -49,7 +49,12 @@ export type PrayerContent = {
 
 export type GalleryContent = {
     title: string;
-    items: { caption: string; image?: string }[];
+    items: { caption: string; image?: string; full?: string }[];
+    layout?: 'grid' | 'carousel' | 'masonry';
+    /** Album shown (Gallery module), its page and the album list. */
+    album?: string | null;
+    url?: string | null;
+    index_url?: string;
     is_sample?: boolean;
 };
 

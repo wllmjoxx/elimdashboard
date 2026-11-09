@@ -15,6 +15,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { update as galleryUpdate } from '@/routes/landing/gallery';
 import { update } from '@/routes/landing/segments';
 
 type Align = 'left' | 'center' | 'right';
@@ -44,10 +45,199 @@ type ImageRules = {
     recommended: string;
 };
 
+type GallerySettings = {
+    albums: { id: number; title: string; thumbnails: string[] }[];
+    albumId: number | null;
+    layout: 'grid' | 'carousel' | 'masonry';
+};
+
 type Props = {
     segments: Segment[];
     imageRules: ImageRules;
+    gallery: GallerySettings;
 };
+
+const layouts: {
+    value: GallerySettings['layout'];
+    label: string;
+    hint: string;
+}[] = [
+    {
+        value: 'grid',
+        label: 'Grid',
+        hint: 'Satu foto besar dan foto kecil di sampingnya',
+    },
+    {
+        value: 'carousel',
+        label: 'Carousel',
+        hint: 'Foto berjajar dan bisa digeser',
+    },
+    {
+        value: 'masonry',
+        label: 'Masonry',
+        hint: 'Kolom foto dengan tinggi asli',
+    },
+];
+
+/** Homepage gallery: album and layout, with a small preview (PRD 4.8). */
+function GalleryHomeForm({ gallery }: { gallery: GallerySettings }) {
+    const form = useForm<{
+        album_id: string;
+        layout: GallerySettings['layout'];
+    }>({
+        album_id: gallery.albumId?.toString() ?? '',
+        layout: gallery.layout,
+    });
+
+    const album =
+        gallery.albums.find(
+            (item) => item.id.toString() === form.data.album_id,
+        ) ?? gallery.albums.find((item) => item.thumbnails.length > 0);
+    const thumbnails = album?.thumbnails ?? [];
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.transform((data) => ({
+            ...data,
+            album_id: data.album_id === '' ? null : Number(data.album_id),
+        }));
+        form.post(galleryUpdate.url(), { preserveScroll: true });
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Galeri di Home</CardTitle>
+                <CardDescription>
+                    Pilih album dan tata letak section Galeri. Foto diunggah
+                    dari menu Galeri.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={submit} className="grid gap-6 lg:grid-cols-2">
+                    <div className="space-y-5">
+                        <div className="grid gap-2">
+                            <Label htmlFor="gallery-album">Album</Label>
+                            <select
+                                id="gallery-album"
+                                value={form.data.album_id}
+                                onChange={(e) =>
+                                    form.setData('album_id', e.target.value)
+                                }
+                                className={fieldClass}
+                            >
+                                <option value="">
+                                    Otomatis: album terbaru yang berisi foto
+                                </option>
+                                {gallery.albums.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.title}
+                                        {item.thumbnails.length === 0
+                                            ? ' (belum ada foto)'
+                                            : ''}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={form.errors.album_id} />
+                        </div>
+                        <fieldset className="grid gap-2">
+                            <legend className="mb-2 text-sm font-medium">
+                                Tata letak
+                            </legend>
+                            {layouts.map((item) => (
+                                <label
+                                    key={item.value}
+                                    className="flex cursor-pointer items-start gap-3 rounded-lg border p-3 has-checked:border-primary has-checked:bg-primary/5"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="layout"
+                                        value={item.value}
+                                        checked={
+                                            form.data.layout === item.value
+                                        }
+                                        onChange={() =>
+                                            form.setData('layout', item.value)
+                                        }
+                                        className="mt-1"
+                                    />
+                                    <span>
+                                        <span className="block text-sm font-medium">
+                                            {item.label}
+                                        </span>
+                                        <span className="block text-xs text-muted-foreground">
+                                            {item.hint}
+                                        </span>
+                                    </span>
+                                </label>
+                            ))}
+                            <InputError message={form.errors.layout} />
+                        </fieldset>
+                        <div className="flex items-center gap-3">
+                            <Button type="submit" disabled={form.processing}>
+                                Simpan
+                            </Button>
+                            {form.recentlySuccessful && (
+                                <p className="text-sm text-muted-foreground">
+                                    Tersimpan.
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <p className="mb-2 text-sm font-medium">Pratinjau</p>
+                        <div className="rounded-xl border bg-muted/30 p-3">
+                            {thumbnails.length === 0 ? (
+                                <p className="grid aspect-video place-items-center text-center text-sm text-muted-foreground">
+                                    Belum ada foto. Home menampilkan kotak
+                                    contoh.
+                                </p>
+                            ) : form.data.layout === 'carousel' ? (
+                                <div className="flex gap-2 overflow-hidden">
+                                    {thumbnails.map((src) => (
+                                        <img
+                                            key={src}
+                                            src={src}
+                                            alt=""
+                                            className="aspect-[4/3] w-2/5 shrink-0 rounded-md object-cover"
+                                        />
+                                    ))}
+                                </div>
+                            ) : form.data.layout === 'masonry' ? (
+                                <div className="columns-3 gap-2 [&>img]:mb-2">
+                                    {thumbnails.map((src) => (
+                                        <img
+                                            key={src}
+                                            src={src}
+                                            alt=""
+                                            className="w-full rounded-md"
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-4 gap-2">
+                                    {thumbnails.map((src, index) => (
+                                        <img
+                                            key={src}
+                                            src={src}
+                                            alt=""
+                                            className={
+                                                index === 0
+                                                    ? 'col-span-2 row-span-2 h-full w-full rounded-md object-cover'
+                                                    : 'aspect-[4/3] w-full rounded-md object-cover'
+                                            }
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
 
 const fieldClass =
     'w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50';
@@ -386,7 +576,7 @@ function SegmentForm({
     );
 }
 
-export default function LandingIndex({ segments, imageRules }: Props) {
+export default function LandingIndex({ segments, imageRules, gallery }: Props) {
     return (
         <>
             <Head title="Landing Page" />
@@ -403,6 +593,7 @@ export default function LandingIndex({ segments, imageRules }: Props) {
                         rules={imageRules}
                     />
                 ))}
+                <GalleryHomeForm gallery={gallery} />
             </div>
         </>
     );
