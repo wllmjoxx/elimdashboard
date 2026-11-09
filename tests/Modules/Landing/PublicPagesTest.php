@@ -20,7 +20,6 @@ class PublicPagesTest extends TestCase
     {
         return [
             'tentang' => ['landing.about', '/tentang', ['about', 'mission']],
-            'renungan' => ['landing.devotional', '/renungan', ['devotional']],
             'jadwal' => ['landing.schedule', '/jadwal', ['schedule']],
             'doa' => ['landing.prayer', '/doa', ['prayer']],
             'kontak' => ['landing.contact', '/kontak', ['contact']],

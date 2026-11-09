@@ -12,6 +12,7 @@ use App\Modules\Core\Support\CurrentChurch;
 use App\Support\Modules\ModuleServiceProvider;
 use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Gate;
 
 class CoreServiceProvider extends ModuleServiceProvider
@@ -64,7 +65,11 @@ class CoreServiceProvider extends ModuleServiceProvider
     {
         // The HTTP kernel rewrites the router's groups when it is resolved, so
         // the middleware goes on the kernel's "web" group.
-        $scope = fn (HttpKernel $kernel) => $kernel->appendMiddlewareToGroup('web', ScopeToCurrentChurch::class);
+        // It must run before route model binding, or a URL could load a
+        // record of another branch before the scope is switched on.
+        $scope = fn (HttpKernel $kernel) => $kernel
+            ->appendMiddlewareToGroup('web', ScopeToCurrentChurch::class)
+            ->addToMiddlewarePriorityBefore(SubstituteBindings::class, ScopeToCurrentChurch::class);
 
         if ($this->app->resolved(HttpKernelContract::class)) {
             $scope($this->app->make(HttpKernelContract::class));

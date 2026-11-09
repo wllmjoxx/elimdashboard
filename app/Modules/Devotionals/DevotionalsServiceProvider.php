@@ -3,7 +3,10 @@
 namespace App\Modules\Devotionals;
 
 use App\Modules\Devotionals\Database\Seeders\DevotionalsSeeder;
+use App\Modules\Devotionals\Models\Devotional;
+use App\Modules\Devotionals\Policies\DevotionalPolicy;
 use App\Support\Modules\ModuleServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class DevotionalsServiceProvider extends ModuleServiceProvider
 {
@@ -20,8 +23,7 @@ class DevotionalsServiceProvider extends ModuleServiceProvider
     public function navigation(): array
     {
         return [
-            // Add 'permission' => 'devotionals.view' once roles and permissions exist.
-            ['title' => 'Renungan', 'route' => 'devotionals.index', 'icon' => 'index', 'group' => 'Konten', 'order' => 20],
+            ['title' => 'Renungan', 'route' => 'devotionals.index', 'icon' => 'index', 'permission' => 'devotionals.view', 'group' => 'Konten', 'order' => 20],
         ];
     }
 
@@ -29,6 +31,8 @@ class DevotionalsServiceProvider extends ModuleServiceProvider
     {
         return [
             'devotionals.view',
+            'devotionals.write',
+            'devotionals.publish',
         ];
     }
 
@@ -37,5 +41,10 @@ class DevotionalsServiceProvider extends ModuleServiceProvider
         return [
             DevotionalsSeeder::class,
         ];
+    }
+
+    protected function bootModule(): void
+    {
+        Gate::policy(Devotional::class, DevotionalPolicy::class);
     }
 }

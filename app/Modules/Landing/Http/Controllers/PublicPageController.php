@@ -8,7 +8,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * One page per navbar item (Tentang, Renungan, Jadwal, Form Doa, Contact),
+ * One page per navbar item (Tentang, Jadwal, Form Doa, Contact; Renungan
+ * Harian is served by the Devotionals module),
  * each built from the matching landing sections.
  */
 class PublicPageController extends Controller
@@ -18,11 +19,6 @@ class PublicPageController extends Controller
     public function about(): Response
     {
         return $this->page('about', 'Tentang GGP Elim', 'Sejarah, misi, dan perjalanan GGP Jemaat Elim Ciputat.', ['about', 'mission']);
-    }
-
-    public function devotional(): Response
-    {
-        return $this->page('devotional', 'Renungan Harian', 'Firman Tuhan untuk menemani langkah Anda hari ini.', ['devotional']);
     }
 
     public function schedule(): Response
