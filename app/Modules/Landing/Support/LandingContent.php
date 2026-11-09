@@ -5,6 +5,7 @@ namespace App\Modules\Landing\Support;
 use App\Modules\Devotionals\Support\DevotionalFeed;
 use App\Modules\Landing\Models\ServiceSchedule;
 use App\Modules\Landing\Models\SiteSection;
+use App\Modules\Testimonies\Support\TestimonyFeed;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Storage;
  */
 class LandingContent
 {
-    public function __construct(private readonly DevotionalFeed $devotionals) {}
+    public function __construct(
+        private readonly DevotionalFeed $devotionals,
+        private readonly TestimonyFeed $testimonies,
+    ) {}
 
     /**
      * Visible sections with the given keys, in admin-defined order.
@@ -93,6 +97,12 @@ class LandingContent
                 'url' => $latest['url'],
                 'is_sample' => false,
             ];
+        }
+
+        // "Kesaksian terpilih": approved testimonies from the Testimonies module.
+        if ($section->key === 'testimonies') {
+            $content['items'] = $this->testimonies->forHome();
+            $content['url'] = route('testimonies.public.index');
         }
 
         return $content;

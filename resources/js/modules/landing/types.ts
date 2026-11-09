@@ -53,7 +53,22 @@ export type GalleryContent = {
     is_sample?: boolean;
 };
 
-export type TestimoniesContent = { title: string; text: string };
+export type TestimonyItem = {
+    id: number;
+    title: string;
+    body: string;
+    excerpt: string;
+    category: string;
+    name: string;
+};
+
+export type TestimoniesContent = {
+    title: string;
+    text: string;
+    /** Approved testimonies chosen for Home (Testimonies module). */
+    items?: TestimonyItem[];
+    url?: string;
+};
 
 export type ContactContent = {
     title: string;

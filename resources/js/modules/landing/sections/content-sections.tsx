@@ -5,6 +5,7 @@ import {
     ImageIcon,
     MapPin,
     MessageCircle,
+    Quote,
 } from 'lucide-react';
 import { Glass } from '@/components/glass';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import {
     SectionHeading,
     SectionShell,
     sectionIds,
+    SmartLink,
     Verse,
 } from '../components';
 import type {
@@ -221,13 +223,72 @@ export function TestimoniesSection({
 }: {
     content: TestimoniesContent;
 }) {
+    const items = content.items ?? [];
+
     return (
         <SectionShell id={sectionIds.testimonies}>
-            <SectionHeading
-                eyebrow="Kesaksian terpilih"
-                title={content.title}
-                subtitle={content.text}
-            />
+            <div className="flex flex-wrap items-end justify-between gap-4">
+                <SectionHeading
+                    eyebrow="Kesaksian terpilih"
+                    title={content.title}
+                    subtitle={content.text}
+                />
+                {content.url && (
+                    <div className="mb-10 flex flex-wrap gap-2">
+                        <Button
+                            asChild
+                            variant="glass"
+                            className="rounded-full"
+                        >
+                            <SmartLink href={content.url}>
+                                Lihat semua
+                            </SmartLink>
+                        </Button>
+                        <Button asChild className="rounded-full">
+                            <SmartLink href={`${content.url}#bagikan`}>
+                                <Quote />
+                                Bagikan kesaksian
+                            </SmartLink>
+                        </Button>
+                    </div>
+                )}
+            </div>
+            {items.length === 0 ? (
+                <p className="text-muted-foreground">
+                    Belum ada kesaksian yang ditampilkan.
+                </p>
+            ) : (
+                <ul
+                    className="-mx-4 flex snap-x snap-mandatory [scrollbar-width:thin] gap-4 overflow-x-auto px-4 pb-4"
+                    aria-label="Kesaksian terpilih"
+                >
+                    {items.map((item) => (
+                        <li
+                            key={item.id}
+                            className="w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-[32%]"
+                        >
+                            <Glass
+                                as="article"
+                                className="flex h-full flex-col p-6"
+                            >
+                                <Quote className="size-6 text-gold" />
+                                <h3 className="mt-3 font-serif text-xl font-semibold">
+                                    {item.title}
+                                </h3>
+                                <p className="mt-3 flex-1 text-muted-foreground">
+                                    {item.excerpt}
+                                </p>
+                                <p className="mt-4 text-sm font-medium">
+                                    {item.name}{' '}
+                                    <span className="text-muted-foreground">
+                                        · {item.category}
+                                    </span>
+                                </p>
+                            </Glass>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </SectionShell>
     );
 }
