@@ -21,6 +21,11 @@ return [
         'per_email_per_10_minutes' => 3,
         'per_ip_per_hour' => 10,
         'verify_per_minute' => 10,
+        // How the code email leaves without making the visitor wait: 'auto'
+        // sends it right after the response under PHP-FPM and through the
+        // queue elsewhere (php artisan serve); 'after_response' or 'queue'
+        // force one way.
+        'delivery' => env('OTP_DELIVERY', 'auto'),
     ],
 
     // Cloudflare Turnstile keys for public forms. Leave empty to turn the
