@@ -35,6 +35,7 @@ class CoreServiceProvider extends ModuleServiceProvider
     {
         return [
             ['title' => 'Cabang & Akses', 'route' => 'core.index', 'icon' => 'index', 'permission' => 'core.view', 'group' => 'Administrasi', 'order' => 90],
+            ['title' => 'Audit Log', 'route' => 'core.audit', 'icon' => 'audit', 'permission' => 'core.audit.view', 'group' => 'Administrasi', 'order' => 95],
         ];
     }
 
@@ -43,6 +44,7 @@ class CoreServiceProvider extends ModuleServiceProvider
         return [
             'core.view',
             'core.churches.manage',
+            'core.audit.view',
         ];
     }
 

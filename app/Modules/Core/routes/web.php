@@ -1,5 +1,7 @@
 <?php
 
+use App\Modules\Core\Http\Controllers\AuditLogController;
+use App\Modules\Core\Http\Controllers\ChurchController;
 use App\Modules\Core\Http\Controllers\CoreController;
 use App\Modules\Core\Http\Controllers\OtpLoginController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +26,14 @@ Route::middleware(['auth', 'verified', 'can:core.view'])
     ->name('core.')
     ->group(function () {
         Route::get('/', [CoreController::class, 'index'])->name('index');
+
+        Route::middleware('can:core.churches.manage')->group(function () {
+            Route::post('/churches', [ChurchController::class, 'store'])->name('churches.store');
+            Route::put('/churches/{church}', [ChurchController::class, 'update'])->name('churches.update');
+        });
     });
+
+// Audit log, Superadmin only (PRD 4.8).
+Route::middleware(['auth', 'verified', 'can:core.audit.view'])
+    ->get('/admin/audit-log', [AuditLogController::class, 'index'])
+    ->name('core.audit');

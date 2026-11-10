@@ -40,7 +40,7 @@ return [
     // a leading "!" removes matches. Superadmin is not listed: it passes every
     // check through Gate::before. Apply changes with `php artisan core:sync-permissions`.
     'role_permissions' => [
-        'admin' => ['*', '!core.churches.manage'],
+        'admin' => ['*', '!core.churches.manage', '!core.audit.view'],
         'prayer-team' => ['prayer.view', 'prayer.mark', 'prayer.export'],
         'servant' => ['devotionals.view', 'devotionals.write', 'gallery.view', 'gallery.upload'],
         'member' => [],

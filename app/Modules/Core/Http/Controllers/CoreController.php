@@ -29,6 +29,9 @@ class CoreController extends Controller
                 'slug' => $church->slug,
                 'address' => $church->address,
                 'whatsapp' => $church->contact['whatsapp'] ?? null,
+                'email' => $church->contact['email'] ?? null,
+                'timezone' => $church->timezone,
+                'isDefault' => $church->slug === config('modules.core.default_church'),
                 'isActive' => $church->is_active,
                 'usersCount' => $church->users_count,
             ]);
@@ -47,6 +50,9 @@ class CoreController extends Controller
         return Inertia::render('core/index', [
             'churches' => $churches,
             'roles' => $roles,
+            'canManageChurches' => request()->user()->can('core.churches.manage'),
+            'canViewAudit' => request()->user()->can('core.audit.view'),
+            'flash' => request()->session()->get('status'),
         ]);
     }
 }
