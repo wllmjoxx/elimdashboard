@@ -67,15 +67,24 @@ class OtpLoginTest extends TestCase
         $this->assertMatchesRegularExpression('/^\d{6}$/', $this->sentCode($user));
     }
 
-    public function test_unknown_or_inactive_emails_get_the_same_answer_and_no_code(): void
+    public function test_only_registered_active_accounts_get_a_code(): void
     {
+        $pending = User::factory()->create(['email' => 'menunggu@example.com']);
+        $pending->forceFill(['status' => 'pending'])->save();
         $inactive = User::factory()->create(['email' => 'nonaktif@example.com']);
         $inactive->forceFill(['status' => 'inactive'])->save();
 
-        foreach (['tidakada@example.com', 'nonaktif@example.com'] as $email) {
-            $this->post(route('core.otp.store'), ['email' => $email])
-                ->assertRedirect(route('core.otp.verify', ['email' => $email]))
-                ->assertSessionHas('status');
+        $expected = [
+            'tidakada@example.com' => 'Email ini belum terdaftar. Silakan daftar terlebih dahulu.',
+            'menunggu@example.com' => 'Pendaftaran Anda masih menunggu persetujuan Admin. Kami akan mengabari lewat email.',
+            'nonaktif@example.com' => 'Akun ini tidak aktif. Hubungi sekretariat GGP Elim.',
+        ];
+
+        foreach ($expected as $email => $message) {
+            $this->from(route('core.otp.create'))
+                ->post(route('core.otp.store'), ['email' => $email])
+                ->assertRedirect(route('core.otp.create'))
+                ->assertSessionHasErrors(['email' => $message]);
         }
 
         Notification::assertNothingSent();

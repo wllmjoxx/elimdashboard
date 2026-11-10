@@ -14,6 +14,19 @@ class RegistrationRejected extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * Retry a few times so a passing mail-server hiccup does not lose the
+     * email (overrides the worker's --tries).
+     */
+    public int $tries = 3;
+
+    /**
+     * Seconds to wait before each retry.
+     *
+     * @var list<int>
+     */
+    public array $backoff = [10, 60];
+
     public function __construct(public readonly string $reason) {}
 
     /**

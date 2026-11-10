@@ -31,11 +31,21 @@ class OtpLoginController extends Controller
     {
         $email = $request->validate(['email' => ['required', 'string', 'email', 'max:255']])['email'];
 
-        $this->codes->send($email);
+        // Only registered, active accounts get a code; everyone else is told
+        // why right away instead of waiting for an email that never comes.
+        $error = match ($this->codes->send($email)) {
+            'unknown' => 'Email ini belum terdaftar. Silakan daftar terlebih dahulu.',
+            'pending' => 'Pendaftaran Anda masih menunggu persetujuan Admin. Kami akan mengabari lewat email.',
+            'inactive' => 'Akun ini tidak aktif. Hubungi sekretariat GGP Elim.',
+            default => null,
+        };
 
-        // Same answer whether or not the email exists.
+        if ($error !== null) {
+            throw ValidationException::withMessages(['email' => $error]);
+        }
+
         return to_route('core.otp.verify', ['email' => $email])
-            ->with('status', 'Jika email tersebut terdaftar dan aktif, kode masuk sudah dikirim. Periksa juga folder spam.');
+            ->with('status', 'Kode masuk sudah dikirim ke email Anda. Periksa juga folder spam.');
     }
 
     public function edit(Request $request): Response|RedirectResponse

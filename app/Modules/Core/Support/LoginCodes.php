@@ -17,17 +17,22 @@ use function Illuminate\Support\defer;
 class LoginCodes
 {
     /**
-     * Send a fresh code when the email belongs to an active account. Callers
-     * show the same message either way, so nobody can tell which emails
-     * are registered.
+     * Send a fresh code when the email belongs to an active account.
+     *
+     * @return 'sent'|'unknown'|'pending'|'inactive' what happened, so the
+     *                                               page can tell the visitor
      */
-    public function send(string $email): void
+    public function send(string $email): string
     {
         $email = Str::lower(trim($email));
         $user = User::query()->where('email', $email)->first();
 
-        if (! $user || ! $this->isActive($user)) {
-            return;
+        if (! $user) {
+            return 'unknown';
+        }
+
+        if (! $this->isActive($user)) {
+            return $user->getAttribute('status') === 'pending' ? 'pending' : 'inactive';
         }
 
         $code = str_pad((string) random_int(0, 999_999), 6, '0', STR_PAD_LEFT);
@@ -48,6 +53,8 @@ class LoginCodes
         // code is only useful for a few minutes, so it must not wait for a
         // worker, and the visitor does not wait for the mail server either.
         defer(fn () => $user->notifyNow(new LoginCode($code, $minutes)));
+
+        return 'sent';
     }
 
     /**
