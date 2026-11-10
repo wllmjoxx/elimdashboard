@@ -49,12 +49,34 @@ class LoginCodes
             ]);
         });
 
-        // Sent right after the response instead of through the queue: the
-        // code is only useful for a few minutes, so it must not wait for a
-        // worker, and the visitor does not wait for the mail server either.
-        defer(fn () => $user->notifyNow(new LoginCode($code, $minutes)));
+        $this->deliver($user, new LoginCode($code, $minutes));
 
         return 'sent';
+    }
+
+    /**
+     * Send the code without making the visitor wait for the mail server.
+     *
+     * Under PHP-FPM (production) the response goes out first and the email
+     * right after it, without a queue worker. The PHP development server
+     * (`php artisan serve`) cannot finish a response early, so there the
+     * email goes to the queue and the worker sends it within seconds.
+     */
+    private function deliver(User $user, LoginCode $notification): void
+    {
+        $mode = (string) config('modules.core.otp.delivery', 'auto');
+
+        if ($mode === 'auto') {
+            $mode = function_exists('fastcgi_finish_request') ? 'after_response' : 'queue';
+        }
+
+        if ($mode === 'queue') {
+            dispatch(fn () => $user->notifyNow($notification));
+
+            return;
+        }
+
+        defer(fn () => $user->notifyNow($notification));
     }
 
     /**

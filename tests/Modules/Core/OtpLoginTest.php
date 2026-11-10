@@ -7,6 +7,7 @@ use App\Modules\Core\Models\LoginOtp;
 use App\Modules\Core\Notifications\LoginCode;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
@@ -54,10 +55,11 @@ class OtpLoginTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_code_email_skips_the_queue(): void
+    public function test_after_response_delivery_skips_the_queue(): void
     {
         $this->assertNotInstanceOf(ShouldQueue::class, new LoginCode('123456', 10));
 
+        config(['modules.core.otp.delivery' => 'after_response']);
         Queue::fake();
         $user = User::factory()->create(['email' => 'cepat@example.com']);
 
@@ -65,6 +67,32 @@ class OtpLoginTest extends TestCase
 
         Queue::assertNothingPushed();
         $this->assertMatchesRegularExpression('/^\d{6}$/', $this->sentCode($user));
+    }
+
+    public function test_queue_delivery_hands_the_email_to_the_worker(): void
+    {
+        config(['modules.core.otp.delivery' => 'queue']);
+        Queue::fake();
+        User::factory()->create(['email' => 'antre@example.com']);
+
+        $this->post(route('core.otp.store'), ['email' => 'antre@example.com'])->assertRedirect();
+
+        Queue::assertPushed(CallQueuedClosure::class);
+        Notification::assertNothingSent();
+    }
+
+    public function test_auto_delivery_queues_on_the_development_server(): void
+    {
+        if (function_exists('fastcgi_finish_request')) {
+            $this->markTestSkipped('Running under PHP-FPM.');
+        }
+
+        Queue::fake();
+        User::factory()->create(['email' => 'auto@example.com']);
+
+        $this->post(route('core.otp.store'), ['email' => 'auto@example.com']);
+
+        Queue::assertPushed(CallQueuedClosure::class);
     }
 
     public function test_only_registered_active_accounts_get_a_code(): void
