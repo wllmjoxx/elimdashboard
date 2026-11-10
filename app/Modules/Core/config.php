@@ -13,6 +13,16 @@ return [
     // The first release only has GGP Elim; per-domain branches come in Tahap 5.
     'default_church' => env('CORE_DEFAULT_CHURCH', 'ggp-elim'),
 
+    // Email sign-in codes (PRD 4.4): lifetime, wrong guesses allowed per
+    // code, and how often codes may be requested.
+    'otp' => [
+        'minutes' => 10,
+        'max_attempts' => 5,
+        'per_email_per_10_minutes' => 3,
+        'per_ip_per_hour' => 10,
+        'verify_per_minute' => 10,
+    ],
+
     // Cloudflare Turnstile keys for public forms. Leave empty to turn the
     // captcha off (local development); honeypot and rate limits still apply.
     'captcha' => [

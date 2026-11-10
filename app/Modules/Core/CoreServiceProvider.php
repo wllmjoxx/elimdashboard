@@ -10,10 +10,14 @@ use App\Modules\Core\Http\Middleware\ScopeToCurrentChurch;
 use App\Modules\Core\Models\Church;
 use App\Modules\Core\Support\CurrentChurch;
 use App\Support\Modules\ModuleServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class CoreServiceProvider extends ModuleServiceProvider
 {
@@ -77,7 +81,25 @@ class CoreServiceProvider extends ModuleServiceProvider
             $this->app->afterResolving(HttpKernelContract::class, $scope);
         }
 
+        $this->configureOtpLimits();
+
         // Superadmin works across branches and passes every check (PRD 4.2).
         Gate::before(fn ($user) => $user instanceof User && $user->hasRole(Role::Superadmin->value) ? true : null);
+    }
+
+    /**
+     * Rate limits for email sign-in codes (PRD 4.4, 4.13): per email and per
+     * IP for sending, per IP for guessing.
+     */
+    private function configureOtpLimits(): void
+    {
+        $config = config('modules.core.otp');
+
+        RateLimiter::for('otp-send', fn (Request $request) => [
+            Limit::perMinutes(10, (int) $config['per_email_per_10_minutes'])->by('otp-email:'.Str::lower((string) $request->input('email'))),
+            Limit::perHour((int) $config['per_ip_per_hour'])->by('otp-ip:'.$request->ip()),
+        ]);
+
+        RateLimiter::for('otp-verify', fn (Request $request) => Limit::perMinute((int) $config['verify_per_minute'])->by('otp-verify:'.$request->ip()));
     }
 }
