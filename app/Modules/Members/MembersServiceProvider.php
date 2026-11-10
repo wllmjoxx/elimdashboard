@@ -47,6 +47,35 @@ class MembersServiceProvider extends ModuleServiceProvider
         ];
     }
 
+    public function dashboardCards(): array
+    {
+        return [
+            [
+                'key' => 'members.pending',
+                'title' => 'Registrasi menunggu',
+                'description' => 'Pendaftaran jemaat yang perlu ditinjau',
+                'value' => fn () => Member::query()->inCurrentChurch()->withStatus(MemberStatus::Pending)->count(),
+                'route' => 'members.index',
+                'query' => ['status' => MemberStatus::Pending->value],
+                'icon' => 'index',
+                'permission' => 'members.approve',
+                'highlight' => true,
+                'order' => 10,
+            ],
+            [
+                'key' => 'members.active',
+                'title' => 'Jemaat aktif',
+                'description' => 'Akun jemaat yang sudah disetujui',
+                'value' => fn () => Member::query()->inCurrentChurch()->withStatus(MemberStatus::Active)->count(),
+                'route' => 'members.index',
+                'query' => ['status' => MemberStatus::Active->value],
+                'icon' => 'index',
+                'permission' => 'members.view',
+                'order' => 50,
+            ],
+        ];
+    }
+
     public function seeders(): array
     {
         return [

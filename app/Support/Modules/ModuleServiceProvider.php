@@ -55,6 +55,26 @@ abstract class ModuleServiceProvider extends ServiceProvider
     }
 
     /**
+     * Number cards this module adds to the dashboard (PRD 4.8).
+     *
+     * - key: unique, starts with the module key
+     * - title / description: Bahasa Indonesia
+     * - value: closure returning the number; only called for users who
+     *   may see the card, inside the request (so branch scoping applies)
+     * - route / query: where the card links to
+     * - icon: a key exported from resources/js/modules/<key>/icons.ts
+     * - permission: hide the card unless the user can($permission)
+     * - highlight: true to draw attention when the value is above zero
+     * - order: lower comes first
+     *
+     * @return list<array{key: string, title: string, description?: string, value: \Closure(): int, route: string, query?: array<string, mixed>, icon?: string|null, permission?: string|null, highlight?: bool, order?: int}>
+     */
+    public function dashboardCards(): array
+    {
+        return [];
+    }
+
+    /**
      * Seeders that DatabaseSeeder runs for this module.
      *
      * @return list<class-string<Seeder>>

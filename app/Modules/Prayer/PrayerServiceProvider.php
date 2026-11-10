@@ -3,6 +3,7 @@
 namespace App\Modules\Prayer;
 
 use App\Modules\Prayer\Database\Seeders\PrayerSeeder;
+use App\Modules\Prayer\Enums\PrayerStatus;
 use App\Modules\Prayer\Models\PrayerRequest;
 use App\Modules\Prayer\Policies\PrayerRequestPolicy;
 use App\Support\Modules\ModuleServiceProvider;
@@ -38,6 +39,45 @@ class PrayerServiceProvider extends ModuleServiceProvider
             'prayer.mark',
             'prayer.export',
             'prayer.delete',
+        ];
+    }
+
+    public function dashboardCards(): array
+    {
+        $thisWeek = fn () => PrayerRequest::query()->whereDate('week_start', PrayerRequest::currentWeekStart()->toDateString());
+
+        return [
+            [
+                'key' => 'prayer.week',
+                'title' => 'Doa minggu ini',
+                'description' => 'Pokok doa yang masuk sejak Senin',
+                'value' => fn () => $thisWeek()->count(),
+                'route' => 'prayer.index',
+                'icon' => 'index',
+                'permission' => 'prayer.view',
+                'order' => 20,
+            ],
+            [
+                'key' => 'prayer.new',
+                'title' => 'Belum didoakan',
+                'description' => 'Pokok doa minggu ini yang masih baru',
+                'value' => fn () => $thisWeek()->where('status', PrayerStatus::New->value)->count(),
+                'route' => 'prayer.index',
+                'query' => ['status' => PrayerStatus::New->value],
+                'icon' => 'index',
+                'permission' => 'prayer.mark',
+                'highlight' => true,
+                'order' => 25,
+            ],
+            [
+                'key' => 'prayer.mine',
+                'title' => 'Pokok doa saya',
+                'description' => 'Yang pernah Anda kirim lewat Form Doa',
+                'value' => fn () => PrayerRequest::query()->withoutGlobalScopes()->where('user_id', auth()->id())->count(),
+                'route' => 'prayer.history',
+                'icon' => 'history',
+                'order' => 90,
+            ],
         ];
     }
 
