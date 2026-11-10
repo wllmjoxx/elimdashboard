@@ -33,7 +33,7 @@ class SegmentAdminTest extends TestCase
         $member = User::factory()->create();
         $member->assignRole(Role::Member->value);
 
-        $this->actingAs($member)->get(route('landing.index'))->assertForbidden();
+        $this->actingAs($member)->get(route('landing.segments.edit'))->assertForbidden();
         $this->actingAs($member)
             ->post(route('landing.segments.update', 'segment_1'), $this->payload())
             ->assertForbidden();
@@ -42,10 +42,10 @@ class SegmentAdminTest extends TestCase
     public function test_admin_page_lists_three_segments_and_the_upload_rules(): void
     {
         $this->actingAs($this->admin())
-            ->get(route('landing.index'))
+            ->get(route('landing.segments.edit'))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
-                ->component('landing/index')
+                ->component('landing/segments')
                 ->has('segments', 3)
                 ->where('segments.0.key', 'segment_1')
                 ->where('segments.0.label', 'Segmen 1')

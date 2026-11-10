@@ -40,7 +40,7 @@ class LandingController extends Controller
 
         $image = config('modules.landing.segment_image');
 
-        return Inertia::render('landing/index', [
+        return Inertia::render('landing/segments', [
             'segments' => $segments,
             'gallery' => [
                 'albums' => $gallery->picker(),
