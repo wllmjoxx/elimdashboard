@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Members\Enums\MembershipStatus;
 use App\Modules\Members\Models\Member;
 use App\Modules\Members\Support\ProfilePresenter;
+use App\Modules\Members\Support\RoleAssignment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -31,6 +32,12 @@ class MemberProfileController extends Controller
             'options' => ProfilePresenter::options(),
             'can' => [
                 'updateMembership' => $request->user()->can('updateMembership', $member),
+                'assignRole' => $request->user()->can('assignRole', $member) && $request->user()->isNot($member),
+            ],
+            'role' => [
+                'current' => app(RoleAssignment::class)->current($member)?->value,
+                'currentLabel' => app(RoleAssignment::class)->current($member)?->label(),
+                'options' => app(RoleAssignment::class)->options($request->user()),
             ],
             'flash' => $request->session()->get('status'),
         ]);

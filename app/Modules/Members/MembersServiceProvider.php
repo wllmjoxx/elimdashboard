@@ -43,6 +43,7 @@ class MembersServiceProvider extends ModuleServiceProvider
             'members.view',
             'members.approve',
             'members.edit',
+            'members.roles',
             'members.deactivate',
         ];
     }

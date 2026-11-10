@@ -5,6 +5,7 @@ use App\Modules\Members\Http\Controllers\MembersController;
 use App\Modules\Members\Http\Controllers\ProfileController;
 use App\Modules\Members\Http\Controllers\RegisterController;
 use App\Modules\Members\Http\Controllers\SetPasswordController;
+use App\Modules\Members\Http\Controllers\StaffController;
 use Illuminate\Support\Facades\Route;
 
 // Routes of the Jemaat module. Loaded with the "web" middleware group.
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/member-photos/{member}', [MemberProfileController::class, 'photo'])->name('members.photo');
     Route::get('/admin/members/{member}', [MemberProfileController::class, 'show'])->whereNumber('member')->name('members.show');
     Route::post('/admin/members/{member}/membership', [MemberProfileController::class, 'updateMembership'])->name('members.membership');
+    Route::post('/admin/members/{member}/role', [StaffController::class, 'updateRole'])->name('members.role');
+    Route::post('/admin/members/invite', [StaffController::class, 'invite'])->name('members.invite');
 });
 
 Route::middleware(['auth', 'verified'])

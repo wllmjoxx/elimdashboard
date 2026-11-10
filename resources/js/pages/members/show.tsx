@@ -17,12 +17,15 @@ import { Label } from '@/components/ui/label';
 import { MemberAvatar } from '@/modules/members/avatar';
 import type { MemberProfile, ProfileOptions } from '@/modules/members/types';
 import { fieldClass, formatDate } from '@/modules/members/types';
+import { RoleCard } from '@/modules/members/role-card';
+import type { RoleInfo } from '@/modules/members/role-card';
 import { membership } from '@/routes/members';
 
 type Props = {
     profile: MemberProfile;
     options: ProfileOptions;
-    can: { updateMembership: boolean };
+    can: { updateMembership: boolean; assignRole: boolean };
+    role: RoleInfo;
     flash: string | null;
 };
 
@@ -36,7 +39,13 @@ function Item({ label, value }: { label: string; value: string }) {
 }
 
 /** Admin view of one member (PRD 4.5, 4.8). */
-export default function MemberShow({ profile, options, can, flash }: Props) {
+export default function MemberShow({
+    profile,
+    options,
+    can,
+    role,
+    flash,
+}: Props) {
     const form = useForm({
         membership_status: profile.membershipStatus,
         joined_at: profile.joinedAt ?? '',
@@ -86,6 +95,12 @@ export default function MemberShow({ profile, options, can, flash }: Props) {
                         {flash}
                     </p>
                 )}
+
+                <RoleCard
+                    memberId={profile.id}
+                    role={role}
+                    canAssign={can.assignRole}
+                />
 
                 <Card>
                     <CardHeader>

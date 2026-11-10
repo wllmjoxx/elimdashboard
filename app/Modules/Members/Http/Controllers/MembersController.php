@@ -10,6 +10,7 @@ use App\Modules\Members\Models\Member;
 use App\Modules\Members\Notifications\RegistrationApproved;
 use App\Modules\Members\Notifications\RegistrationNeedsInfo;
 use App\Modules\Members\Notifications\RegistrationRejected;
+use App\Modules\Members\Support\RoleAssignment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -68,6 +69,10 @@ class MembersController extends Controller
             'members' => $members,
             'showChurch' => ! $current->restricts(),
             'flash' => $request->session()->get('status'),
+            'invite' => $request->user()->can('invite', Member::class) ? [
+                'roles' => app(RoleAssignment::class)->options($request->user()),
+                'churches' => StaffController::churchOptions($current),
+            ] : null,
         ]);
     }
 

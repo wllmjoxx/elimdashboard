@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { InviteDialog } from '@/modules/members/invite-dialog';
+import type { InviteOptions } from '@/modules/members/invite-dialog';
 import {
     approve,
     index,
@@ -50,6 +52,7 @@ type Props = {
     };
     showChurch: boolean;
     flash: string | null;
+    invite: InviteOptions | null;
 };
 
 type NoteAction = { kind: 'reject' | 'request-info'; member: Member };
@@ -159,6 +162,7 @@ export default function MembersIndex({
     members,
     showChurch,
     flash,
+    invite,
 }: Props) {
     const [noteAction, setNoteAction] = useState<NoteAction | null>(null);
 
@@ -169,10 +173,13 @@ export default function MembersIndex({
         <>
             <Head title="Jemaat" />
             <div className="flex flex-1 flex-col gap-6 p-4">
-                <Heading
-                    title="Jemaat"
-                    description="Tinjau pendaftaran dan kelola akun jemaat cabang Anda."
-                />
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <Heading
+                        title="Jemaat"
+                        description="Tinjau pendaftaran dan kelola akun jemaat cabang Anda."
+                    />
+                    {invite && <InviteDialog options={invite} />}
+                </div>
 
                 {flash && (
                     <p
