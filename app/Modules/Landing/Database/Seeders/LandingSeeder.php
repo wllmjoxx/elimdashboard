@@ -19,10 +19,9 @@ class LandingSeeder extends Seeder
             $attributes = ['church_id' => null, 'key' => $key];
             $values = ['content' => $content, 'is_active' => true, 'sort_order' => ($order + 1) * 10];
 
-            // Sections edited by Admin must survive a re-run of the seeder.
-            in_array($key, [...SiteSection::SEGMENT_KEYS, 'gallery'], true)
-                ? SiteSection::query()->firstOrCreate($attributes, $values)
-                : SiteSection::query()->updateOrCreate($attributes, $values);
+            // Every section is edited by Admin now: only add the missing ones,
+            // never overwrite what Admin changed.
+            SiteSection::query()->firstOrCreate($attributes, $values);
         }
 
         if (ServiceSchedule::query()->doesntExist()) {
