@@ -20,6 +20,13 @@ export default defineConfig({
         tailwindcss(),
         wayfinder({
             formVariants: true,
+            // The plugin's defaults plus module route files, so adding a route
+            // in app/Modules/<Name>/routes regenerates resources/js/routes.
+            patterns: [
+                'routes/**/*.php',
+                'app/**/Http/**/*.php',
+                'app/Modules/*/routes/**/*.php',
+            ],
         }),
     ]),
     server: {
