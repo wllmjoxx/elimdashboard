@@ -74,6 +74,49 @@ final class ModuleRegistry
     }
 
     /**
+     * Dashboard cards from enabled modules that the given user may see, with
+     * their values computed.
+     *
+     * @return list<array{module: string, key: string, title: string, description: string|null, value: int, href: string, icon: string|null, highlight: bool}>
+     */
+    public function dashboardCards(?Authenticatable $user): array
+    {
+        $cards = [];
+
+        foreach ($this->enabled() as $key => $module) {
+            foreach ($module->dashboardCards() as $card) {
+                $permission = $card['permission'] ?? null;
+
+                if ($permission !== null && ! ($user instanceof Authorizable && $user->can($permission))) {
+                    continue;
+                }
+
+                $value = (int) ($card['value'])();
+
+                $cards[] = [
+                    'module' => $key,
+                    'key' => $card['key'],
+                    'title' => $card['title'],
+                    'description' => $card['description'] ?? null,
+                    'value' => $value,
+                    'href' => route($card['route'], $card['query'] ?? [], absolute: false),
+                    'icon' => $card['icon'] ?? null,
+                    'highlight' => ($card['highlight'] ?? false) && $value > 0,
+                    'order' => $card['order'] ?? 100,
+                ];
+            }
+        }
+
+        usort($cards, fn (array $a, array $b) => [$a['order'], $a['title']] <=> [$b['order'], $b['title']]);
+
+        return array_map(function (array $card) {
+            unset($card['order']);
+
+            return $card;
+        }, $cards);
+    }
+
+    /**
      * @return list<class-string<Seeder>>
      */
     public function seeders(): array
