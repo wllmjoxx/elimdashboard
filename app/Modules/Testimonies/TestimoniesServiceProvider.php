@@ -3,6 +3,7 @@
 namespace App\Modules\Testimonies;
 
 use App\Modules\Testimonies\Database\Seeders\TestimoniesSeeder;
+use App\Modules\Testimonies\Enums\TestimonyStatus;
 use App\Modules\Testimonies\Models\Testimony;
 use App\Modules\Testimonies\Policies\TestimonyPolicy;
 use App\Support\Modules\ModuleServiceProvider;
@@ -35,6 +36,23 @@ class TestimoniesServiceProvider extends ModuleServiceProvider
         return [
             'testimonies.view',
             'testimonies.moderate',
+        ];
+    }
+
+    public function dashboardCards(): array
+    {
+        return [
+            [
+                'key' => 'testimonies.pending',
+                'title' => 'Kesaksian menunggu moderasi',
+                'description' => 'Target moderasi '.config('modules.testimonies.moderation_hours').' jam',
+                'value' => fn () => Testimony::query()->where('status', TestimonyStatus::Pending->value)->count(),
+                'route' => 'testimonies.index',
+                'icon' => 'index',
+                'permission' => 'testimonies.moderate',
+                'highlight' => true,
+                'order' => 30,
+            ],
         ];
     }
 
