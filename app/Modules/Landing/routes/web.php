@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Landing\Http\Controllers\GallerySettingsController;
+use App\Modules\Landing\Http\Controllers\HeroMediaController;
 use App\Modules\Landing\Http\Controllers\HomeController;
 use App\Modules\Landing\Http\Controllers\LandingController;
 use App\Modules\Landing\Http\Controllers\PublicPageController;
@@ -54,6 +55,14 @@ Route::middleware(['auth', 'verified', 'can:landing.manage'])
         Route::post('/segments/{segment}', [SegmentController::class, 'update'])
             ->whereIn('segment', SiteSection::SEGMENT_KEYS)
             ->name('segments.update');
+
+        // Videos and live stream for the first homepage segment.
+        Route::get('/video', [HeroMediaController::class, 'index'])->name('media.index');
+        Route::put('/live', [HeroMediaController::class, 'updateLive'])->name('live.update');
+        Route::post('/videos', [HeroMediaController::class, 'store'])->name('videos.store');
+        Route::post('/videos/order', [HeroMediaController::class, 'reorder'])->name('videos.order');
+        Route::patch('/videos/{video}', [HeroMediaController::class, 'update'])->name('videos.update');
+        Route::delete('/videos/{video}', [HeroMediaController::class, 'destroy'])->name('videos.destroy');
 
         // Worship schedule.
         Route::get('/jadwal', [ScheduleController::class, 'index'])->name('schedule.index');

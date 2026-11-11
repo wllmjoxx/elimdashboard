@@ -1,49 +1,51 @@
-import { Glass } from '@/components/glass';
 import { Verse } from '@/modules/landing/components';
 import type { PublicDevotional } from './types';
 import { paragraphs } from './types';
 
 /**
- * A full devotional: date, title, verse on glass, and the body on a solid
- * surface for comfortable reading (PRD 4.9: long text is not on glass).
+ * A full devotional: date and title (unless the page hero shows them),
+ * the verse, then the body in a comfortable reading column.
  */
 export function DevotionalArticle({
     devotional,
     headingLevel = 'h1',
+    showHeader = true,
 }: {
     devotional: PublicDevotional;
     headingLevel?: 'h1' | 'h2';
+    showHeader?: boolean;
 }) {
     const Heading = headingLevel;
 
     return (
-        <article className="space-y-6">
-            <header>
-                <p className="mb-2 text-sm font-semibold tracking-widest text-gold uppercase">
-                    <time dateTime={devotional.date}>
-                        {devotional.dateLabel}
-                    </time>
-                </p>
-                <Heading className="font-serif text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-                    {devotional.title}
-                </Heading>
-            </header>
-
-            <Glass className="p-6 sm:p-8">
-                {devotional.verse ? (
-                    <Verse
-                        text={devotional.verse}
-                        reference={devotional.reference}
-                    />
-                ) : (
-                    <p className="font-semibold tracking-wide text-gold">
-                        {devotional.reference}
+        <article className="space-y-10">
+            {showHeader && (
+                <header>
+                    <p className="mb-3 font-condensed text-sm tracking-[0.3em] text-muted-foreground uppercase">
+                        <time dateTime={devotional.date}>
+                            {devotional.dateLabel}
+                        </time>
                     </p>
-                )}
-            </Glass>
+                    <Heading className="font-display text-4xl leading-[0.95] font-black tracking-tight text-balance sm:text-6xl">
+                        {devotional.title}
+                    </Heading>
+                </header>
+            )}
+
+            {devotional.verse ? (
+                <Verse
+                    text={devotional.verse}
+                    reference={devotional.reference}
+                    className="[&_blockquote]:text-2xl"
+                />
+            ) : (
+                <p className="font-condensed text-sm tracking-[0.2em] text-flame-strong uppercase">
+                    {devotional.reference}
+                </p>
+            )}
 
             {devotional.body && (
-                <div className="space-y-4 rounded-glass border bg-background/90 p-6 text-lg leading-relaxed sm:p-8">
+                <div className="space-y-5 text-lg leading-relaxed">
                     {paragraphs(devotional.body).map((paragraph, index) => (
                         <p key={index} className="whitespace-pre-line">
                             {paragraph}

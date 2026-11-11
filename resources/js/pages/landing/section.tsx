@@ -393,6 +393,37 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                 <form onSubmit={submit} className="grid gap-6">
                     {section.key === 'hero' && (
                         <>
+                            <Card>
+                                <CardContent className="grid gap-4 pt-6">
+                                    <Field
+                                        id="headline"
+                                        label="Judul besar"
+                                        optional
+                                        placeholder="Selamat Datang"
+                                        value={text('headline')}
+                                        onChange={(value) =>
+                                            form.setData('headline', value)
+                                        }
+                                        error={errors.headline}
+                                    />
+                                    <Field
+                                        id="subheadline"
+                                        label="Subjudul"
+                                        optional
+                                        placeholder="di GGP ELIM Rumah Kasih Karunia"
+                                        value={text('subheadline')}
+                                        onChange={(value) =>
+                                            form.setData('subheadline', value)
+                                        }
+                                        error={errors.subheadline}
+                                    />
+                                    <p className="text-sm text-muted-foreground">
+                                        Video dan live streaming diatur di tab
+                                        Video &amp; Live. Slide di bawah tampil
+                                        sebagai tema di atas video.
+                                    </p>
+                                </CardContent>
+                            </Card>
                             <Repeater
                                 title="Slide"
                                 addLabel="Tambah slide"

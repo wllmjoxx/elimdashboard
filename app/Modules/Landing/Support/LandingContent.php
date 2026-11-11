@@ -4,6 +4,7 @@ namespace App\Modules\Landing\Support;
 
 use App\Modules\Devotionals\Support\DevotionalFeed;
 use App\Modules\Gallery\Support\GalleryFeed;
+use App\Modules\Landing\Models\HeroVideo;
 use App\Modules\Landing\Models\ServiceSchedule;
 use App\Modules\Landing\Models\SiteSection;
 use App\Modules\Testimonies\Support\TestimonyFeed;
@@ -81,6 +82,22 @@ class LandingContent
     private function present(SiteSection $section): array
     {
         $content = $section->content;
+
+        // The first homepage segment plays Admin's videos, or the live stream
+        // while it is on air.
+        if ($section->key === 'hero') {
+            $content['videos'] = HeroVideo::query()->active()->get()
+                ->map(fn (HeroVideo $video) => [
+                    'id' => $video->id,
+                    'title' => $video->title,
+                    'url' => $video->url(),
+                    'poster' => $video->posterUrl(),
+                    'type' => $video->mime,
+                ])
+                ->values()
+                ->all();
+            $content['live'] = LiveStream::present($content['live'] ?? []);
+        }
 
         if (in_array($section->key, SiteSection::SEGMENT_KEYS, true)) {
             $content['image_url'] = self::imageUrl($content['image'] ?? null);

@@ -44,6 +44,8 @@ class LandingSeeder extends Seeder
     {
         return [
             ['hero', [
+                'headline' => 'Selamat Datang',
+                'subheadline' => 'di GGP ELIM Rumah Kasih Karunia',
                 'slides' => [
                     [
                         'eyebrow' => 'Tema',
