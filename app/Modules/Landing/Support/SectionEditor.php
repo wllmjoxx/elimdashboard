@@ -14,7 +14,7 @@ class SectionEditor
      * Admin-facing name of every section key, in default page order.
      */
     public const LABELS = [
-        'hero' => 'Hero (tema dan slide)',
+        'hero' => 'Hero (sambutan dan tema)',
         'segment_1' => 'Segmen 1',
         'about' => 'Tentang GGP Elim',
         'mission' => 'Misi',
@@ -84,6 +84,8 @@ class SectionEditor
 
         return match ($key) {
             'hero' => [
+                'headline' => ['nullable', 'string', 'max:40'],
+                'subheadline' => ['nullable', 'string', 'max:120'],
                 'slides' => ['required', 'array', 'min:1', 'max:5'],
                 'slides.*.eyebrow' => ['nullable', 'string', 'max:40'],
                 'slides.*.title' => ['required', 'string', 'max:120'],
@@ -154,6 +156,8 @@ class SectionEditor
     public static function attributes(): array
     {
         return [
+            'headline' => 'judul besar',
+            'subheadline' => 'subjudul',
             'slides' => 'slide',
             'slides.*.eyebrow' => 'label kecil',
             'slides.*.title' => 'judul slide',

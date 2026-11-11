@@ -8,10 +8,29 @@ export type HeroSlide = {
     reference?: string;
 };
 
+export type HeroVideo = {
+    id: number;
+    title: string | null;
+    url: string;
+    poster: string | null;
+    type: string;
+};
+
+export type HeroLive = {
+    is_live: boolean;
+    title: string | null;
+    url: string | null;
+    embed_url: string | null;
+};
+
 export type HeroContent = {
+    headline?: string | null;
+    subheadline?: string | null;
     slides: HeroSlide[];
     primary_cta?: Cta;
     secondary_cta?: Cta;
+    videos?: HeroVideo[];
+    live?: HeroLive;
 };
 
 export type AboutContent = {

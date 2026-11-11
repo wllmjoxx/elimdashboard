@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 /** Anchor id of each section, used by the navbar links. */
@@ -32,11 +32,11 @@ export function SectionShell({
         <section
             id={id}
             className={cn(
-                'scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24',
+                'scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24 lg:px-10',
                 className,
             )}
         >
-            <div className="mx-auto max-w-6xl">{children}</div>
+            <div className="mx-auto max-w-7xl">{children}</div>
         </section>
     );
 }
@@ -55,20 +55,20 @@ export function SectionHeading({
     return (
         <header
             className={cn(
-                'mb-10 max-w-2xl',
+                'mb-12 max-w-3xl',
                 align === 'center' && 'mx-auto text-center',
             )}
         >
             {eyebrow && (
-                <p className="mb-2 text-sm font-semibold tracking-widest text-gold uppercase">
+                <p className="mb-3 font-condensed text-sm tracking-[0.3em] text-muted-foreground uppercase">
                     {eyebrow}
                 </p>
             )}
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+            <h2 className="font-display text-4xl leading-[0.95] font-black tracking-tight text-balance sm:text-6xl">
                 {title}
             </h2>
             {subtitle && (
-                <p className="mt-3 text-muted-foreground">{subtitle}</p>
+                <p className="mt-4 text-lg text-muted-foreground">{subtitle}</p>
             )}
         </header>
     );
@@ -84,12 +84,14 @@ export function Verse({
     className?: string;
 }) {
     return (
-        <figure className={cn('space-y-2', className)}>
-            <blockquote className="font-serif text-lg leading-relaxed text-pretty italic sm:text-xl">
+        <figure
+            className={cn('space-y-3 border-l-2 border-flame pl-5', className)}
+        >
+            <blockquote className="text-lg leading-relaxed text-pretty sm:text-xl">
                 “{text}”
             </blockquote>
             {reference && (
-                <figcaption className="text-sm font-semibold tracking-wide text-gold">
+                <figcaption className="font-condensed text-sm tracking-[0.2em] text-flame-strong uppercase">
                     {reference}
                 </figcaption>
             )}
@@ -99,7 +101,7 @@ export function Verse({
 
 export function SampleBadge() {
     return (
-        <span className="inline-flex items-center rounded-full border border-gold/40 px-2.5 py-0.5 text-xs font-medium text-gold">
+        <span className="inline-flex items-center border border-current/40 px-2.5 py-0.5 font-condensed text-xs tracking-[0.2em] text-muted-foreground uppercase">
             Contoh
         </span>
     );
@@ -135,5 +137,109 @@ export function SmartLink({
         >
             {children}
         </a>
+    );
+}
+
+/**
+ * Square, hairline-bordered surface for content blocks on public pages
+ * (schedule groups, contact details, testimony cards).
+ */
+export function Panel({
+    as: Component = 'div',
+    className,
+    ...props
+}: HTMLAttributes<HTMLElement> & { as?: 'div' | 'article' | 'section' }) {
+    return (
+        <Component
+            className={cn('border border-foreground/10 bg-card', className)}
+            {...props}
+        />
+    );
+}
+
+/**
+ * Top band of a public page: the church's grainy dark gradient with a
+ * condensed eyebrow, a heavy title and an optional description. Extra
+ * content (a back link, meta line) goes in `before` or `children`.
+ */
+export function PageHero({
+    eyebrow = 'GGP Elim Ciputat',
+    title,
+    description,
+    before,
+    children,
+}: {
+    eyebrow?: ReactNode;
+    title: ReactNode;
+    description?: ReactNode;
+    before?: ReactNode;
+    children?: ReactNode;
+}) {
+    return (
+        <header className="grain relative isolate overflow-hidden bg-ember px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20 lg:px-10">
+            <div className="relative mx-auto max-w-7xl">
+                {before}
+                <p className="mb-4 font-condensed text-sm tracking-[0.32em] text-[#ffd2b8] uppercase">
+                    {eyebrow}
+                </p>
+                <h1 className="max-w-5xl font-display text-5xl leading-[0.92] font-black tracking-[-0.04em] text-balance [text-shadow:0_0_40px_rgb(255_255_255/0.25)] sm:text-7xl lg:text-8xl">
+                    {title}
+                </h1>
+                {description && (
+                    <p className="mt-6 max-w-2xl text-lg text-pretty text-white/80">
+                        {description}
+                    </p>
+                )}
+                {children}
+            </div>
+        </header>
+    );
+}
+
+/** Back link shown above a PageHero title. */
+export function HeroBackLink({
+    href,
+    children,
+}: {
+    href: string;
+    children: ReactNode;
+}) {
+    return (
+        <Link
+            href={href}
+            className="mb-8 inline-flex items-center gap-2 font-condensed text-sm tracking-[0.2em] text-white/75 uppercase hover:text-white"
+        >
+            <span aria-hidden="true">←</span>
+            {children}
+        </Link>
+    );
+}
+
+/** Square page links under a paginated list. */
+export function Pagination({
+    label,
+    links,
+}: {
+    label: string;
+    links: { url: string | null; label: string; active: boolean }[];
+}) {
+    return (
+        <nav aria-label={label} className="mt-10 flex flex-wrap gap-2">
+            {links.map((link) =>
+                link.url ? (
+                    <Link
+                        key={link.label}
+                        href={link.url}
+                        aria-current={link.active ? 'page' : undefined}
+                        className={cn(
+                            'border border-foreground/20 px-4 py-2 text-sm font-semibold transition-colors hover:border-foreground',
+                            link.active &&
+                                'border-foreground bg-foreground text-background',
+                        )}
+                        dangerouslySetInnerHTML={{ __html: link.label }}
+                    />
+                ) : null,
+            )}
+        </nav>
     );
 }

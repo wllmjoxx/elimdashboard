@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import { Fragment } from 'react';
+import { PageHero } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { renderSection } from '@/modules/landing/render-section';
-import { Reveal } from '@/modules/landing/reveal';
 import { SiteFooter } from '@/modules/landing/site-footer';
 import type { ScheduleGroup, Section } from '@/modules/landing/types';
 
@@ -28,19 +28,7 @@ export default function LandingPage({
         <>
             <Head title={title} />
 
-            <header className="px-4 pt-14 sm:px-6 sm:pt-20">
-                <Reveal className="mx-auto max-w-6xl">
-                    <p className="mb-3 text-sm font-semibold tracking-widest text-gold uppercase">
-                        GGP Elim Ciputat
-                    </p>
-                    <h1 className="font-serif text-4xl leading-tight font-semibold tracking-tight text-balance sm:text-6xl">
-                        {title}
-                    </h1>
-                    <p className="mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
-                        {description}
-                    </p>
-                </Reveal>
-            </header>
+            <PageHero title={title} description={description} />
 
             {sections.map((section) => (
                 <Fragment key={section.key}>

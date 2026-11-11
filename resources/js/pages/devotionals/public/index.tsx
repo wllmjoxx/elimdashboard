@@ -1,9 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowRight, BookOpen } from 'lucide-react';
-import { Glass } from '@/components/glass';
-import { cn } from '@/lib/utils';
+import { ArrowRight } from 'lucide-react';
 import { DevotionalArticle } from '@/modules/devotionals/devotional-article';
 import type { Paginated, PublicDevotional } from '@/modules/devotionals/types';
+import { PageHero, Pagination } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
 import { SiteFooter } from '@/modules/landing/site-footer';
@@ -23,55 +22,55 @@ export default function DevotionalsPublicIndex({ latest, archive }: Props) {
         <>
             <Head title="Renungan Harian" />
 
-            <header className="px-4 pt-14 sm:px-6 sm:pt-20">
-                <Reveal className="mx-auto max-w-3xl">
-                    <p className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-widest text-gold uppercase">
-                        <BookOpen className="size-4" />
-                        Renungan Harian
-                    </p>
-                    <p className="max-w-2xl text-lg text-pretty text-muted-foreground">
-                        Firman Tuhan untuk menemani langkah Anda hari ini.
-                    </p>
-                </Reveal>
-            </header>
+            <PageHero
+                eyebrow="Renungan Harian"
+                title="Firman untuk hari ini"
+                description="Firman Tuhan untuk menemani langkah Anda hari ini."
+            />
 
             {latest ? (
-                <section className="px-4 py-10 sm:px-6">
+                <section className="px-4 py-16 sm:px-6 sm:py-24 lg:px-10">
                     <Reveal className="mx-auto max-w-3xl">
-                        <DevotionalArticle devotional={latest} />
+                        <DevotionalArticle
+                            devotional={latest}
+                            headingLevel="h2"
+                        />
                     </Reveal>
                 </section>
             ) : (
                 archive.current_page === 1 && (
-                    <p className="mx-auto max-w-3xl px-4 py-16 text-muted-foreground sm:px-6">
+                    <p className="mx-auto max-w-3xl px-4 py-16 text-lg text-muted-foreground sm:px-6">
                         Belum ada renungan yang terbit. Silakan kembali besok.
                     </p>
                 )
             )}
 
             {others.length > 0 && (
-                <section aria-labelledby="arsip" className="px-4 pb-16 sm:px-6">
-                    <div className="mx-auto max-w-6xl">
+                <section
+                    aria-labelledby="arsip"
+                    className="border-t border-foreground/10 px-4 py-16 sm:px-6 sm:py-24 lg:px-10"
+                >
+                    <div className="mx-auto max-w-7xl">
+                        <p className="font-condensed text-sm tracking-[0.3em] text-muted-foreground uppercase">
+                            Arsip
+                        </p>
                         <h2
                             id="arsip"
-                            className="mb-6 font-serif text-2xl font-semibold sm:text-3xl"
+                            className="mt-3 mb-10 font-display text-4xl leading-[0.95] font-black tracking-tight sm:text-5xl"
                         >
-                            Arsip renungan
+                            Renungan sebelumnya
                         </h2>
-                        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <ul className="grid gap-px border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
                             {others.map((item) => (
-                                <li key={item.id}>
+                                <li key={item.id} className="bg-background">
                                     <Reveal className="h-full">
-                                        <Glass
-                                            as="article"
-                                            className="flex h-full flex-col p-6"
-                                        >
-                                            <p className="text-xs font-semibold tracking-widest text-gold uppercase">
+                                        <article className="flex h-full flex-col p-6 sm:p-8">
+                                            <p className="font-condensed text-xs tracking-[0.24em] text-flame-strong uppercase">
                                                 <time dateTime={item.date}>
                                                     {item.dateLabel}
                                                 </time>
                                             </p>
-                                            <h3 className="mt-2 font-serif text-xl font-semibold">
+                                            <h3 className="mt-3 font-display text-2xl leading-tight font-extrabold tracking-tight">
                                                 <Link
                                                     href={item.url}
                                                     className="hover:underline"
@@ -79,48 +78,31 @@ export default function DevotionalsPublicIndex({ latest, archive }: Props) {
                                                     {item.title}
                                                 </Link>
                                             </h3>
-                                            <p className="mt-1 text-sm text-muted-foreground">
+                                            <p className="mt-2 text-sm text-muted-foreground">
                                                 {item.reference}
                                             </p>
-                                            <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">
+                                            <p className="mt-3 line-clamp-3 text-muted-foreground">
                                                 {item.excerpt}
                                             </p>
                                             <Link
                                                 href={item.url}
-                                                className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-flame-strong"
+                                                className="mt-auto inline-flex items-center gap-2 pt-6 text-[13px] font-semibold tracking-[0.12em] uppercase"
                                                 aria-label={`Baca ${item.title}`}
                                             >
                                                 Baca
                                                 <ArrowRight className="size-4" />
                                             </Link>
-                                        </Glass>
+                                        </article>
                                     </Reveal>
                                 </li>
                             ))}
                         </ul>
 
                         {archive.last_page > 1 && (
-                            <nav
-                                aria-label="Halaman arsip"
-                                className="mt-8 flex flex-wrap gap-2"
-                            >
-                                {archive.links.map((link) =>
-                                    link.url ? (
-                                        <Link
-                                            key={link.label}
-                                            href={link.url}
-                                            className={cn(
-                                                'rounded-full border px-4 py-1.5 text-sm',
-                                                link.active &&
-                                                    'bg-primary text-primary-foreground',
-                                            )}
-                                            dangerouslySetInnerHTML={{
-                                                __html: link.label,
-                                            }}
-                                        />
-                                    ) : null,
-                                )}
-                            </nav>
+                            <Pagination
+                                label="Halaman arsip"
+                                links={archive.links}
+                            />
                         )}
                     </div>
                 </section>

@@ -1,14 +1,13 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { CheckCircle2, EyeOff, Quote } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Glass } from '@/components/glass';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
 import { Turnstile } from '@/modules/core/turnstile';
+import { PageHero, Pagination, Panel } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
 import { PrivacyNote } from '@/modules/landing/privacy-note';
@@ -35,9 +34,11 @@ function TestimonyCard({ item }: { item: TestimonyItem }) {
     const long = item.body.length > item.excerpt.length;
 
     return (
-        <Glass as="article" className="flex h-full flex-col p-6">
-            <Quote className="size-6 text-gold" />
-            <h3 className="mt-3 font-serif text-xl font-semibold">
+        <article className="flex h-full flex-col bg-background p-6 sm:p-8">
+            <p className="font-condensed text-xs tracking-[0.24em] text-flame-strong uppercase">
+                {item.category}
+            </p>
+            <h3 className="mt-3 font-display text-2xl leading-tight font-extrabold tracking-tight">
                 {item.title}
             </h3>
             <p className="mt-3 flex-1 whitespace-pre-line text-muted-foreground">
@@ -53,11 +54,8 @@ function TestimonyCard({ item }: { item: TestimonyItem }) {
                     {open ? 'Tutup' : 'Baca selengkapnya'}
                 </button>
             )}
-            <p className="mt-4 text-sm font-medium">
-                {item.name}{' '}
-                <span className="text-muted-foreground">· {item.category}</span>
-            </p>
-        </Glass>
+            <p className="mt-6 text-sm text-muted-foreground">— {item.name}</p>
+        </article>
     );
 }
 
@@ -99,31 +97,29 @@ export default function TestimoniesPublic({
         <>
             <Head title="Kesaksian" />
 
-            <header className="px-4 pt-14 sm:px-6 sm:pt-20">
-                <Reveal className="mx-auto max-w-6xl">
-                    <p className="mb-3 text-sm font-semibold tracking-widest text-gold uppercase">
-                        GGP Elim Ciputat
-                    </p>
-                    <h1 className="font-serif text-4xl leading-tight font-semibold tracking-tight sm:text-6xl">
-                        Kesaksian
-                    </h1>
-                    <p className="mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
-                        Cerita karya Tuhan dalam hidup jemaat. Setiap kesaksian
-                        dibagikan tanpa identitas pengirim.
-                    </p>
-                </Reveal>
-            </header>
+            <PageHero
+                eyebrow="Kesaksian Jemaat"
+                title="Karya Tuhan nyata"
+                description="Cerita karya Tuhan dalam hidup jemaat. Setiap kesaksian dibagikan tanpa identitas pengirim."
+            >
+                <a
+                    href="#bagikan"
+                    className="mt-8 inline-flex items-center gap-2 bg-white px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-[#0a0a0d] uppercase transition-colors hover:bg-white/85"
+                >
+                    Bagikan kesaksian
+                </a>
+            </PageHero>
 
-            <section className="px-4 py-12 sm:px-6">
-                <div className="mx-auto max-w-6xl">
+            <section className="px-4 py-16 sm:px-6 sm:py-24 lg:px-10">
+                <div className="mx-auto max-w-7xl">
                     {testimonies.data.length === 0 ? (
-                        <p className="text-muted-foreground">
+                        <p className="text-lg text-muted-foreground">
                             Belum ada kesaksian yang tampil.
                         </p>
                     ) : (
-                        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <ul className="grid gap-px border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
                             {testimonies.data.map((item) => (
-                                <li key={item.id}>
+                                <li key={item.id} className="bg-background">
                                     <Reveal className="h-full">
                                         <TestimonyCard item={item} />
                                     </Reveal>
@@ -133,35 +129,24 @@ export default function TestimoniesPublic({
                     )}
 
                     {testimonies.last_page > 1 && (
-                        <nav
-                            aria-label="Halaman kesaksian"
-                            className="mt-8 flex flex-wrap gap-2"
-                        >
-                            {testimonies.links.map((link) =>
-                                link.url ? (
-                                    <Link
-                                        key={link.label}
-                                        href={link.url}
-                                        className={cn(
-                                            'rounded-full border px-4 py-1.5 text-sm',
-                                            link.active &&
-                                                'bg-primary text-primary-foreground',
-                                        )}
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ) : null,
-                            )}
-                        </nav>
+                        <Pagination
+                            label="Halaman kesaksian"
+                            links={testimonies.links}
+                        />
                     )}
                 </div>
             </section>
 
-            <section id="bagikan" className="scroll-mt-24 px-4 pb-16 sm:px-6">
-                <Reveal className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-5">
+            <section
+                id="bagikan"
+                className="scroll-mt-24 border-t border-foreground/10 px-4 py-16 sm:px-6 sm:py-24 lg:px-10"
+            >
+                <Reveal className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-5">
                     <div className="lg:col-span-2">
-                        <h2 className="font-serif text-3xl font-semibold">
+                        <p className="font-condensed text-sm tracking-[0.3em] text-muted-foreground uppercase">
+                            Tulis kesaksian
+                        </p>
+                        <h2 className="mt-3 font-display text-4xl leading-[0.95] font-black tracking-tight sm:text-5xl">
                             Bagikan kesaksian Anda
                         </h2>
                         <p className="mt-4 text-muted-foreground">
@@ -177,22 +162,22 @@ export default function TestimoniesPublic({
                         </p>
                     </div>
 
-                    <Glass className="p-6 sm:p-8 lg:col-span-3">
+                    <Panel className="p-6 sm:p-10 lg:col-span-3">
                         {confirmation && !writeAgain ? (
                             <div
                                 role="status"
                                 className="flex flex-col items-start gap-4 py-6"
                             >
                                 <CheckCircle2 className="size-10 text-green-600" />
-                                <h3 className="font-serif text-2xl font-semibold">
+                                <h3 className="font-display text-3xl font-extrabold tracking-tight">
                                     Kesaksian terkirim
                                 </h3>
                                 <p className="text-muted-foreground">
                                     {confirmation}
                                 </p>
                                 <Button
-                                    variant="glass"
-                                    className="rounded-full"
+                                    variant="outline"
+                                    className="rounded-none tracking-[0.12em] uppercase"
                                     onClick={() => setWriteAgain(true)}
                                 >
                                     Tulis kesaksian lain
@@ -327,7 +312,7 @@ export default function TestimoniesPublic({
                                     <Button
                                         type="submit"
                                         size="lg"
-                                        className="rounded-full"
+                                        className="rounded-none tracking-[0.12em] uppercase"
                                         disabled={
                                             form.processing ||
                                             (captchaSiteKey !== null &&
@@ -346,7 +331,7 @@ export default function TestimoniesPublic({
                                 </div>
                             </form>
                         )}
-                    </Glass>
+                    </Panel>
                 </Reveal>
             </section>
 
