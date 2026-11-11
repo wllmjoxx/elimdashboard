@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
 import type { Album } from '@/modules/gallery/types';
+import { PageHero, Pagination } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
 import { SiteFooter } from '@/modules/landing/site-footer';
@@ -19,28 +19,20 @@ export default function GalleryPublicIndex({ albums }: Props) {
         <>
             <Head title="Galeri" />
 
-            <header className="px-4 pt-14 sm:px-6 sm:pt-20">
-                <Reveal className="mx-auto max-w-6xl">
-                    <p className="mb-3 text-sm font-semibold tracking-widest text-gold uppercase">
-                        Kegiatan
-                    </p>
-                    <h1 className="font-serif text-4xl leading-tight font-semibold tracking-tight sm:text-6xl">
-                        Galeri
-                    </h1>
-                    <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-                        Momen ibadah dan kegiatan jemaat GGP Elim.
-                    </p>
-                </Reveal>
-            </header>
+            <PageHero
+                eyebrow="Kegiatan"
+                title="Galeri"
+                description="Momen ibadah dan kegiatan jemaat GGP Elim."
+            />
 
-            <section className="px-4 py-12 sm:px-6">
-                <div className="mx-auto max-w-6xl">
+            <section className="px-4 py-16 sm:px-6 sm:py-24 lg:px-10">
+                <div className="mx-auto max-w-7xl">
                     {albums.data.length === 0 ? (
-                        <p className="text-muted-foreground">
+                        <p className="text-lg text-muted-foreground">
                             Belum ada album foto.
                         </p>
                     ) : (
-                        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        <ul className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                             {albums.data.map((album) => (
                                 <li key={album.id}>
                                     <Reveal>
@@ -48,7 +40,7 @@ export default function GalleryPublicIndex({ albums }: Props) {
                                             href={album.url}
                                             className="group block"
                                         >
-                                            <div className="aspect-[4/3] overflow-hidden rounded-glass border bg-muted">
+                                            <div className="aspect-[4/3] overflow-hidden border border-foreground/10 bg-muted">
                                                 {album.coverUrl && (
                                                     <img
                                                         src={album.coverUrl}
@@ -58,14 +50,14 @@ export default function GalleryPublicIndex({ albums }: Props) {
                                                     />
                                                 )}
                                             </div>
-                                            <h2 className="mt-3 font-serif text-xl font-semibold group-hover:underline">
-                                                {album.title}
-                                            </h2>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="mt-4 font-condensed text-xs tracking-[0.24em] text-flame-strong uppercase">
                                                 {album.photoCount} foto
                                                 {album.eventDateLabel &&
                                                     ` · ${album.eventDateLabel}`}
                                             </p>
+                                            <h2 className="mt-2 font-display text-2xl leading-tight font-extrabold tracking-tight group-hover:underline">
+                                                {album.title}
+                                            </h2>
                                         </Link>
                                     </Reveal>
                                 </li>
@@ -74,27 +66,10 @@ export default function GalleryPublicIndex({ albums }: Props) {
                     )}
 
                     {albums.last_page > 1 && (
-                        <nav
-                            aria-label="Halaman album"
-                            className="mt-8 flex flex-wrap gap-2"
-                        >
-                            {albums.links.map((link) =>
-                                link.url ? (
-                                    <Link
-                                        key={link.label}
-                                        href={link.url}
-                                        className={cn(
-                                            'rounded-full border px-4 py-1.5 text-sm',
-                                            link.active &&
-                                                'bg-primary text-primary-foreground',
-                                        )}
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ) : null,
-                            )}
-                        </nav>
+                        <Pagination
+                            label="Halaman album"
+                            links={albums.links}
+                        />
                     )}
                 </div>
             </section>

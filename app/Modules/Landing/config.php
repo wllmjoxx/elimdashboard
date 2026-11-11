@@ -25,6 +25,28 @@ return [
         'recommended' => '1920 × 1080 px (16:9)',
     ],
 
+    // Short videos for the first homepage segment (Admin › Landing Page ›
+    // Video & Live). They play muted and loop, so keep them short (30–90 s)
+    // and compressed. The web server must accept uploads this large too
+    // (PHP upload_max_filesize / post_max_size, Nginx client_max_body_size).
+    'hero_video' => [
+        'disk' => 'public',
+        'directory' => 'landing/videos',
+        'mimetypes' => ['video/mp4', 'video/webm'],
+        'extensions' => ['mp4', 'webm'],
+        'max_kb' => 51200,
+        'max_count' => 5,
+        'poster_mimes' => ['jpg', 'jpeg', 'png', 'webp'],
+        'poster_max_kb' => 2048,
+        'recommended' => 'MP4 (H.264), 1920 × 1080 atau 1280 × 720, 30–90 detik, tanpa suara',
+    ],
+
+    // Live streaming shown in the same frame while Admin marks it live. It is
+    // switched off on its own after this many hours, in case nobody does.
+    'live' => [
+        'auto_off_hours' => 6,
+    ],
+
     // Search engines and link previews (WhatsApp, Facebook). Tags are rendered
     // on the server, so scrapers that do not run JavaScript still see them.
     'seo' => [

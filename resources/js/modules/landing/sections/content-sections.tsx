@@ -7,9 +7,9 @@ import {
     MessageCircle,
     Quote,
 } from 'lucide-react';
-import { Glass } from '@/components/glass';
 import { Button } from '@/components/ui/button';
 import {
+    Panel,
     SampleBadge,
     SectionHeading,
     SectionShell,
@@ -47,12 +47,12 @@ export function AboutSection({ content }: { content: AboutContent }) {
                     <ol className="space-y-4 self-end lg:col-span-2">
                         {content.milestones.map((milestone) => (
                             <li key={milestone.year}>
-                                <Glass className="flex items-baseline gap-4 p-5">
-                                    <span className="font-serif text-2xl font-semibold whitespace-nowrap text-flame-strong">
+                                <Panel className="flex items-baseline gap-4 p-5">
+                                    <span className="font-display text-2xl font-extrabold tracking-tight whitespace-nowrap text-flame-strong">
                                         {milestone.year}
                                     </span>
                                     <span>{milestone.text}</span>
-                                </Glass>
+                                </Panel>
                             </li>
                         ))}
                     </ol>
@@ -65,10 +65,10 @@ export function AboutSection({ content }: { content: AboutContent }) {
 export function MissionSection({ content }: { content: MissionContent }) {
     return (
         <SectionShell id={sectionIds.mission} className="text-center">
-            <p className="mb-4 text-sm font-semibold tracking-widest text-gold uppercase">
+            <p className="mb-4 font-condensed text-sm tracking-[0.3em] text-muted-foreground uppercase">
                 {content.title}
             </p>
-            <p className="mx-auto max-w-3xl font-serif text-3xl leading-snug font-semibold text-balance sm:text-5xl">
+            <p className="mx-auto max-w-3xl font-display text-3xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-5xl">
                 {content.text}
             </p>
             {content.verse && (
@@ -86,13 +86,13 @@ export function DevotionalSection({ content }: { content: DevotionalContent }) {
     return (
         <SectionShell id={sectionIds.devotional}>
             <SectionHeading eyebrow={content.label} title={content.title} />
-            <Glass as="article" className="max-w-3xl space-y-6 p-6 sm:p-10">
+            <Panel as="article" className="max-w-3xl space-y-6 p-6 sm:p-10">
                 <Verse text={content.verse} reference={content.reference} />
                 <p className="text-lg leading-relaxed text-muted-foreground">
                     {content.excerpt}
                 </p>
                 {content.is_sample && <SampleBadge />}
-            </Glass>
+            </Panel>
         </SectionShell>
     );
 }
@@ -113,8 +113,8 @@ export function ScheduleSection({
             />
             <div className="grid gap-5 md:grid-cols-3">
                 {groups.map((group) => (
-                    <Glass key={group.category} className="p-6">
-                        <h3 className="mb-4 font-serif text-xl font-semibold">
+                    <Panel key={group.category} className="p-6">
+                        <h3 className="mb-4 font-display text-xl font-extrabold tracking-tight">
                             {group.label}
                         </h3>
                         <ul className="divide-y divide-foreground/10">
@@ -135,7 +135,7 @@ export function ScheduleSection({
                                 </li>
                             ))}
                         </ul>
-                    </Glass>
+                    </Panel>
                 ))}
             </div>
         </SectionShell>
@@ -145,7 +145,7 @@ export function ScheduleSection({
 export function PrayerSection({ content }: { content: PrayerContent }) {
     return (
         <SectionShell id={sectionIds.prayer}>
-            <Glass className="grid gap-8 p-6 sm:p-10 md:grid-cols-2 md:items-center">
+            <Panel className="grid gap-8 p-6 sm:p-10 md:grid-cols-2 md:items-center">
                 <div>
                     <SectionHeading eyebrow="Form Doa" title={content.title} />
                     <Verse text={content.verse} reference={content.reference} />
@@ -155,12 +155,16 @@ export function PrayerSection({ content }: { content: PrayerContent }) {
                         {content.text}
                     </p>
                     {/* The form itself is built by the Prayer module. */}
-                    <Button size="lg" className="rounded-full" disabled>
+                    <Button
+                        size="lg"
+                        className="rounded-none tracking-[0.12em] uppercase"
+                        disabled
+                    >
                         <HandHeart />
                         Form doa segera hadir
                     </Button>
                 </div>
-            </Glass>
+            </Panel>
         </SectionShell>
     );
 }
@@ -212,7 +216,7 @@ function GalleryTile({
             )}
             {item.caption && (
                 <figcaption
-                    className={`m-3 self-start rounded-full bg-background/85 px-3 py-1 text-sm font-medium ${natural && item.image ? 'absolute bottom-0 left-0' : 'relative'}`}
+                    className={`m-3 self-start bg-background/85 px-3 py-1 text-sm font-medium ${natural && item.image ? 'absolute bottom-0 left-0' : 'relative'}`}
                 >
                     {item.caption}
                 </figcaption>
@@ -242,7 +246,7 @@ export function GallerySection({ content }: { content: GalleryContent }) {
                         <Button
                             asChild
                             variant="glass"
-                            className="rounded-full"
+                            className="rounded-none tracking-[0.12em] uppercase"
                         >
                             <SmartLink href={content.url}>
                                 Lihat album
@@ -253,7 +257,7 @@ export function GallerySection({ content }: { content: GalleryContent }) {
                         <Button
                             asChild
                             variant="ghost"
-                            className="rounded-full"
+                            className="rounded-none tracking-[0.12em] uppercase"
                         >
                             <SmartLink href={content.index_url}>
                                 Semua album
@@ -325,13 +329,16 @@ export function TestimoniesSection({
                         <Button
                             asChild
                             variant="glass"
-                            className="rounded-full"
+                            className="rounded-none tracking-[0.12em] uppercase"
                         >
                             <SmartLink href={content.url}>
                                 Lihat semua
                             </SmartLink>
                         </Button>
-                        <Button asChild className="rounded-full">
+                        <Button
+                            asChild
+                            className="rounded-none tracking-[0.12em] uppercase"
+                        >
                             <SmartLink href={`${content.url}#bagikan`}>
                                 <Quote />
                                 Bagikan kesaksian
@@ -354,12 +361,12 @@ export function TestimoniesSection({
                             key={item.id}
                             className="w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-[32%]"
                         >
-                            <Glass
+                            <Panel
                                 as="article"
                                 className="flex h-full flex-col p-6"
                             >
-                                <Quote className="size-6 text-gold" />
-                                <h3 className="mt-3 font-serif text-xl font-semibold">
+                                <Quote className="size-6 text-flame-strong" />
+                                <h3 className="mt-3 font-display text-xl font-extrabold tracking-tight">
                                     {item.title}
                                 </h3>
                                 <p className="mt-3 flex-1 text-muted-foreground">
@@ -371,7 +378,7 @@ export function TestimoniesSection({
                                         · {item.category}
                                     </span>
                                 </p>
-                            </Glass>
+                            </Panel>
                         </li>
                     ))}
                 </ul>
@@ -392,7 +399,7 @@ export function ContactSection({ content }: { content: ContactContent }) {
     return (
         <SectionShell id={sectionIds.contact}>
             <SectionHeading eyebrow="Kontak" title={content.title} />
-            <Glass className="grid gap-6 p-6 sm:p-10 md:grid-cols-3">
+            <Panel className="grid gap-6 p-6 sm:p-10 md:grid-cols-3">
                 <div className="flex gap-3">
                     <MapPin className="mt-1 size-5 shrink-0 text-flame-strong" />
                     <div>
@@ -432,7 +439,7 @@ export function ContactSection({ content }: { content: ContactContent }) {
                         <p className="text-muted-foreground">{content.hours}</p>
                     </div>
                 </div>
-            </Glass>
+            </Panel>
         </SectionShell>
     );
 }
@@ -451,7 +458,7 @@ export function PrivacySection({ content }: { content: PrivacyContent }) {
                 <ol className="space-y-8">
                     {content.points.map((point, index) => (
                         <li key={point.heading} className="space-y-3">
-                            <h2 className="font-serif text-2xl font-semibold">
+                            <h2 className="font-display text-2xl font-extrabold tracking-tight">
                                 {index + 1}. {point.heading}
                             </h2>
                             {point.body

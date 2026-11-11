@@ -3,11 +3,13 @@ import { ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { home } from '@/routes';
 import { index } from '@/routes/landing';
+import { index as media } from '@/routes/landing/media';
 import { edit as segments } from '@/routes/landing/segments';
 import { index as schedule } from '@/routes/landing/schedule';
 
 const items = [
     { label: 'Tata letak & konten', href: index.url() },
+    { label: 'Video & Live', href: media.url() },
     { label: 'Segmen & Galeri', href: segments.url() },
     { label: 'Jadwal ibadah', href: schedule.url() },
 ];

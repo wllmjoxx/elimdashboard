@@ -2,13 +2,12 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle2, HandHeart, Lock } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Glass } from '@/components/glass';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Turnstile } from '@/modules/core/turnstile';
-import { Verse } from '@/modules/landing/components';
+import { PageHero, Panel, Verse } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
 import { PrivacyNote } from '@/modules/landing/privacy-note';
@@ -76,23 +75,20 @@ export default function PrayerForm({
         <>
             <Head title="Form Doa" />
 
-            <section className="px-4 pt-14 pb-16 sm:px-6 sm:pt-20">
-                <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-5">
+            <PageHero
+                eyebrow="Form Doa"
+                title={intro.title}
+                description={intro.text}
+            />
+
+            <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-10">
+                <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-5">
                     <Reveal className="lg:col-span-2">
-                        <p className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-widest text-gold uppercase">
-                            <HandHeart className="size-4" />
-                            Form Doa
-                        </p>
-                        <h1 className="font-serif text-4xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-                            {intro.title}
-                        </h1>
-                        <p className="mt-4 text-lg text-pretty text-muted-foreground">
-                            {intro.text}
-                        </p>
+                        <HandHeart className="size-8 text-flame-strong" />
                         <Verse
                             text={intro.verse}
                             reference={intro.reference}
-                            className="mt-8"
+                            className="mt-6 [&_blockquote]:text-2xl"
                         />
                         <p className="mt-8 flex gap-2 text-sm text-muted-foreground">
                             <Lock className="mt-0.5 size-4 shrink-0" />
@@ -102,22 +98,22 @@ export default function PrayerForm({
                     </Reveal>
 
                     <Reveal className="lg:col-span-3">
-                        <Glass className="p-6 sm:p-8">
+                        <Panel className="p-6 sm:p-10">
                             {showConfirmation ? (
                                 <div
                                     role="status"
                                     className="flex flex-col items-start gap-4 py-6"
                                 >
                                     <CheckCircle2 className="size-10 text-green-600" />
-                                    <h2 className="font-serif text-2xl font-semibold">
+                                    <h2 className="font-display text-3xl font-extrabold tracking-tight">
                                         Pokok doa terkirim
                                     </h2>
                                     <p className="text-muted-foreground">
                                         {confirmation}
                                     </p>
                                     <Button
-                                        variant="glass"
-                                        className="rounded-full"
+                                        variant="outline"
+                                        className="rounded-none tracking-[0.12em] uppercase"
                                         onClick={() => setSentAgain(true)}
                                     >
                                         Kirim pokok doa lain
@@ -125,7 +121,7 @@ export default function PrayerForm({
                                 </div>
                             ) : limitReached ? (
                                 <div className="space-y-4 py-6">
-                                    <h2 className="font-serif text-2xl font-semibold">
+                                    <h2 className="font-display text-3xl font-extrabold tracking-tight">
                                         Batas minggu ini tercapai
                                     </h2>
                                     <p className="text-muted-foreground">
@@ -134,8 +130,8 @@ export default function PrayerForm({
                                     </p>
                                     <Button
                                         asChild
-                                        variant="glass"
-                                        className="rounded-full"
+                                        variant="outline"
+                                        className="rounded-none tracking-[0.12em] uppercase"
                                     >
                                         <Link href={history()}>
                                             Lihat riwayat doa
@@ -360,7 +356,7 @@ export default function PrayerForm({
                                         <Button
                                             type="submit"
                                             size="lg"
-                                            className="rounded-full"
+                                            className="rounded-none tracking-[0.12em] uppercase"
                                             disabled={
                                                 form.processing ||
                                                 (captchaSiteKey !== null &&
@@ -379,7 +375,7 @@ export default function PrayerForm({
                                     </div>
                                 </form>
                             )}
-                        </Glass>
+                        </Panel>
                     </Reveal>
                 </div>
             </section>
