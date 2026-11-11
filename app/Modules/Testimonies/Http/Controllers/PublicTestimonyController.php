@@ -33,6 +33,9 @@ class PublicTestimonyController extends Controller
             ], TestimonyCategory::cases()),
             'captchaSiteKey' => $captcha->siteKey(),
             'confirmation' => $request->session()->get('testimony_sent'),
+        ])->withViewData('seo', [
+            'title' => 'Kesaksian',
+            'description' => 'Kesaksian jemaat GGP Elim Ciputat tentang karya Tuhan dalam hidup mereka.',
         ]);
     }
 

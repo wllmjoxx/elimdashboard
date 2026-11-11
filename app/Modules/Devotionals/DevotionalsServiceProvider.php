@@ -69,6 +69,17 @@ class DevotionalsServiceProvider extends ModuleServiceProvider
         ];
     }
 
+    public function sitemap(): iterable
+    {
+        $devotionals = Devotional::query()->live()->get(['slug', 'updated_at']);
+
+        yield ['loc' => route('devotionals.public.index'), 'lastmod' => $devotionals->max('updated_at')];
+
+        foreach ($devotionals as $devotional) {
+            yield ['loc' => route('devotionals.public.show', $devotional->slug), 'lastmod' => $devotional->updated_at];
+        }
+    }
+
     public function seeders(): array
     {
         return [

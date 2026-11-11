@@ -56,6 +56,11 @@ class TestimoniesServiceProvider extends ModuleServiceProvider
         ];
     }
 
+    public function sitemap(): iterable
+    {
+        yield ['loc' => route('testimonies.public.index')];
+    }
+
     public function seeders(): array
     {
         return [

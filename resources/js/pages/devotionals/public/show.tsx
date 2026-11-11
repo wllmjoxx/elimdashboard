@@ -21,18 +21,7 @@ export default function DevotionalsPublicShow({
 }: Props) {
     return (
         <>
-            <Head title={devotional.title}>
-                <meta
-                    name="description"
-                    content={`${devotional.reference}: ${devotional.excerpt}`}
-                />
-                <meta
-                    property="og:title"
-                    content={`${devotional.title} · Renungan GGP Elim`}
-                />
-                <meta property="og:description" content={devotional.excerpt} />
-                <meta property="og:type" content="article" />
-            </Head>
+            <Head title={devotional.title} />
 
             <section className="px-4 pt-14 pb-10 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-3xl space-y-8">

@@ -36,6 +36,17 @@ class GalleryServiceProvider extends ModuleServiceProvider
         ];
     }
 
+    public function sitemap(): iterable
+    {
+        $albums = Album::query()->visible()->whereHas('activePhotos')->get(['id', 'slug', 'updated_at']);
+
+        yield ['loc' => route('gallery.public.index'), 'lastmod' => $albums->max('updated_at')];
+
+        foreach ($albums as $album) {
+            yield ['loc' => route('gallery.public.show', $album->slug), 'lastmod' => $album->updated_at];
+        }
+    }
+
     public function seeders(): array
     {
         return [

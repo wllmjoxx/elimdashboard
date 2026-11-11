@@ -56,18 +56,7 @@ export default function GalleryPublicShow({ album, photos }: Props) {
 
     return (
         <>
-            <Head title={album.title}>
-                <meta
-                    name="description"
-                    content={
-                        album.description ??
-                        `Foto ${album.title} GGP Elim Ciputat.`
-                    }
-                />
-                {photos[0] && (
-                    <meta property="og:image" content={photos[0].url} />
-                )}
-            </Head>
+            <Head title={album.title} />
 
             <header className="px-4 pt-14 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-6xl">

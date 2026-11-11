@@ -27,6 +27,11 @@ class PublicDevotionalController extends Controller
         return Inertia::render('devotionals/public/index', [
             'latest' => $latest ? $this->feed->present($latest, withBody: true) : null,
             'archive' => $archive,
+        ])->withViewData('seo', [
+            'title' => 'Renungan Harian',
+            'description' => $latest
+                ? "{$latest->title} ({$latest->scripture_ref}): {$latest->excerpt()}"
+                : 'Renungan harian GGP Elim Ciputat.',
         ]);
     }
 
@@ -52,6 +57,11 @@ class PublicDevotionalController extends Controller
             'devotional' => $this->feed->present($devotional, withBody: true),
             'newer' => $newer ? $this->feed->present($newer) : null,
             'older' => $older ? $this->feed->present($older) : null,
+        ])->withViewData('seo', [
+            'title' => $devotional->title,
+            'description' => "{$devotional->scripture_ref}: {$devotional->excerpt()}",
+            'type' => 'article',
+            'published_at' => $devotional->publish_date,
         ]);
     }
 }

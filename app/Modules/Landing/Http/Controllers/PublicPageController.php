@@ -46,6 +46,10 @@ class PublicPageController extends Controller
             'description' => $description,
             'sections' => $sections,
             'scheduleGroups' => in_array('schedule', $keys, true) ? $this->content->scheduleGroups() : [],
+        ])->withViewData('seo', [
+            'title' => $title,
+            'description' => $description,
+            'schema' => $page === 'contact',
         ]);
     }
 }

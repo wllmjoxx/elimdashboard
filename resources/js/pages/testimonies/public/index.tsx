@@ -96,12 +96,7 @@ export default function TestimoniesPublic({
 
     return (
         <>
-            <Head title="Kesaksian">
-                <meta
-                    name="description"
-                    content="Kesaksian jemaat GGP Elim Ciputat tentang karya Tuhan dalam hidup mereka."
-                />
-            </Head>
+            <Head title="Kesaksian" />
 
             <header className="px-4 pt-14 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-6xl">

@@ -7,6 +7,7 @@ use App\Modules\Landing\Http\Controllers\PublicPageController;
 use App\Modules\Landing\Http\Controllers\ScheduleController;
 use App\Modules\Landing\Http\Controllers\SectionController;
 use App\Modules\Landing\Http\Controllers\SegmentController;
+use App\Modules\Landing\Http\Controllers\SeoController;
 use App\Modules\Landing\Models\SiteSection;
 use App\Modules\Landing\Support\SectionEditor;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::name('landing.')->controller(PublicPageController::class)->group(function
     Route::get('/jadwal', 'schedule')->name('schedule');
     Route::get('/kontak', 'contact')->name('contact');
 });
+
+// Search engines (pages from every module) and crawler rules.
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('landing.sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('landing.robots');
 
 // Editing the landing page is for Admin and Superadmin (PRD 4.2).
 Route::middleware(['auth', 'verified', 'can:landing.manage'])
