@@ -2,6 +2,8 @@
 
 namespace App\Modules\Core\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -16,6 +18,8 @@ use Illuminate\Support\Carbon;
  */
 class LoginOtp extends Model
 {
+    use MassPrunable;
+
     public const UPDATED_AT = null;
 
     protected $guarded = [];
@@ -29,6 +33,16 @@ class LoginOtp extends Model
             'used_at' => 'datetime',
             'attempts' => 'integer',
         ];
+    }
+
+    /**
+     * Codes live minutes; a day later they are only clutter (pruned daily).
+     *
+     * @return Builder<self>
+     */
+    public function prunable(): Builder
+    {
+        return static::query()->where('created_at', '<', now()->subDay());
     }
 
     public function isUsable(): bool

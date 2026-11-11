@@ -13,6 +13,7 @@ export const sectionIds = {
     gallery: 'galeri',
     testimonies: 'kesaksian',
     contact: 'kontak',
+    privacy: 'privasi',
     segment_1: 'segmen-1',
     segment_2: 'segmen-2',
     segment_3: 'segmen-3',

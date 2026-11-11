@@ -8,6 +8,7 @@ import {
     GallerySection,
     MissionSection,
     PrayerSection,
+    PrivacySection,
     ScheduleSection,
     TestimoniesSection,
 } from './sections/content-sections';
@@ -53,6 +54,8 @@ export function renderSection(
             return wrap(<TestimoniesSection content={section.content} />);
         case 'contact':
             return wrap(<ContactSection content={section.content} />);
+        case 'privacy':
+            return wrap(<PrivacySection content={section.content} />);
     }
 }
 

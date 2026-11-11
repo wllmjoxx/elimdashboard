@@ -28,6 +28,11 @@ return [
         'delivery' => env('OTP_DELIVERY', 'auto'),
     ],
 
+    // Staff accounts (every role except Jemaat) are signed out after this
+    // many minutes without activity (PRD 4.13). 0 turns it off. Jemaat keep
+    // the normal SESSION_LIFETIME.
+    'staff_idle_minutes' => (int) env('STAFF_IDLE_MINUTES', 30),
+
     // Cloudflare Turnstile keys for public forms. Leave empty to turn the
     // captcha off (local development); honeypot and rate limits still apply.
     'captcha' => [

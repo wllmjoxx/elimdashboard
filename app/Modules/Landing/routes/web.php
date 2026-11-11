@@ -23,6 +23,7 @@ Route::name('landing.')->controller(PublicPageController::class)->group(function
     Route::get('/tentang', 'about')->name('about');
     Route::get('/jadwal', 'schedule')->name('schedule');
     Route::get('/kontak', 'contact')->name('contact');
+    Route::get('/kebijakan-privasi', 'privacy')->name('privacy');
 });
 
 // Search engines (pages from every module) and crawler rules.

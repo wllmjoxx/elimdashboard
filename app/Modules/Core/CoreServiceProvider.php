@@ -6,11 +6,14 @@ use App\Models\User;
 use App\Modules\Core\Console\SyncPermissionsCommand;
 use App\Modules\Core\Database\Seeders\CoreSeeder;
 use App\Modules\Core\Enums\Role;
+use App\Modules\Core\Http\Middleware\LogOutIdleStaff;
 use App\Modules\Core\Http\Middleware\ScopeToCurrentChurch;
 use App\Modules\Core\Models\Church;
+use App\Modules\Core\Models\LoginOtp;
 use App\Modules\Core\Support\CurrentChurch;
 use App\Support\Modules\ModuleServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Http\Request;
@@ -73,6 +76,7 @@ class CoreServiceProvider extends ModuleServiceProvider
         // record of another branch before the scope is switched on.
         $scope = fn (HttpKernel $kernel) => $kernel
             ->appendMiddlewareToGroup('web', ScopeToCurrentChurch::class)
+            ->appendMiddlewareToGroup('web', LogOutIdleStaff::class)
             ->addToMiddlewarePriorityBefore(SubstituteBindings::class, ScopeToCurrentChurch::class);
 
         if ($this->app->resolved(HttpKernelContract::class)) {
@@ -82,6 +86,11 @@ class CoreServiceProvider extends ModuleServiceProvider
         }
 
         $this->configureOtpLimits();
+
+        // Daily clean-up of expired sign-in codes (needs the scheduler cron).
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('model:prune', ['--model' => [LoginOtp::class]])->daily();
+        });
 
         // Superadmin works across branches and passes every check (PRD 4.2).
         Gate::before(fn ($user) => $user instanceof User && $user->hasRole(Role::Superadmin->value) ? true : null);

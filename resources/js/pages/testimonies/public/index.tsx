@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { Turnstile } from '@/modules/core/turnstile';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
+import { PrivacyNote } from '@/modules/landing/privacy-note';
 import { SiteFooter } from '@/modules/landing/site-footer';
 import type { TestimonyItem } from '@/modules/landing/types';
 import { store } from '@/routes/testimonies/public';
@@ -338,6 +339,10 @@ export default function TestimoniesPublic({
                                             ? 'Mengirim…'
                                             : 'Kirim kesaksian'}
                                     </Button>
+                                    <PrivacyNote
+                                        action="mengirim kesaksian"
+                                        className="mt-3"
+                                    />
                                 </div>
                             </form>
                         )}

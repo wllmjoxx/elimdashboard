@@ -20,6 +20,7 @@ type Slide = {
 };
 type Cta = { label: string; href: string } | null;
 type Milestone = { year: string; text: string };
+type Point = { heading: string; body: string };
 type ContentValue =
     | string
     | null
@@ -27,7 +28,8 @@ type ContentValue =
     | Slide[]
     | { label: string; href: string }
     | string[]
-    | Milestone[];
+    | Milestone[]
+    | Point[];
 type Content = Record<string, ContentValue>;
 
 type Props = {
@@ -290,6 +292,13 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                       (content.milestones as Milestone[] | undefined) ?? [],
               }
             : {}),
+        ...(section.key === 'privacy'
+            ? {
+                  points: (content.points as Point[] | undefined) ?? [
+                      { heading: '', body: '' },
+                  ],
+              }
+            : {}),
     });
 
     const errors = form.errors as Record<string, string | undefined>;
@@ -312,6 +321,14 @@ export default function LandingSectionEditor({ section, flash }: Props) {
 
     const paragraphs = (form.data.paragraphs as string[] | undefined) ?? [];
     const milestones = (form.data.milestones as Milestone[] | undefined) ?? [];
+    const points = (form.data.points as Point[] | undefined) ?? [];
+    const setPoint = (index: number, patch: Partial<Point>) =>
+        form.setData(
+            'points',
+            points.map((point, position) =>
+                position === index ? { ...point, ...patch } : point,
+            ),
+        );
 
     const cta = (name: 'primary_cta' | 'secondary_cta', title: string) => {
         const value = (form.data[name] as Cta) ?? { label: '', href: '' };
@@ -698,6 +715,126 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                                                 <Trash2 />
                                             </Button>
                                         </div>
+                                    </div>
+                                ))}
+                            </Repeater>
+                        </>
+                    )}
+
+                    {section.key === 'privacy' && (
+                        <>
+                            <Card>
+                                <CardContent className="grid gap-4 pt-6">
+                                    <Field
+                                        id="title"
+                                        label="Judul"
+                                        value={text('title')}
+                                        onChange={(value) =>
+                                            form.setData('title', value)
+                                        }
+                                        error={errors.title}
+                                    />
+                                    <Field
+                                        id="effective"
+                                        label="Berlaku sejak"
+                                        optional
+                                        placeholder="11 November 2026"
+                                        value={text('effective')}
+                                        onChange={(value) =>
+                                            form.setData('effective', value)
+                                        }
+                                        error={errors.effective}
+                                    />
+                                    <Field
+                                        id="intro"
+                                        label="Pengantar"
+                                        optional
+                                        multiline
+                                        value={text('intro')}
+                                        onChange={(value) =>
+                                            form.setData('intro', value)
+                                        }
+                                        error={errors.intro}
+                                    />
+                                </CardContent>
+                            </Card>
+                            <Repeater
+                                title="Poin kebijakan"
+                                addLabel="Tambah poin"
+                                canAdd={points.length < 15}
+                                onAdd={() =>
+                                    form.setData('points', [
+                                        ...points,
+                                        { heading: '', body: '' },
+                                    ])
+                                }
+                            >
+                                <p className="text-sm text-muted-foreground">
+                                    Setiap baris pada isi poin tampil sebagai
+                                    paragraf terpisah.
+                                </p>
+                                <InputError message={errors.points} />
+                                {points.map((point, position) => (
+                                    <div
+                                        key={position}
+                                        className="grid gap-3 rounded-lg border p-4"
+                                    >
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="text-sm font-medium">
+                                                Poin {position + 1}
+                                            </span>
+                                            <ItemTools
+                                                index={position}
+                                                total={points.length}
+                                                label={`poin ${position + 1}`}
+                                                onMove={(step) =>
+                                                    form.setData(
+                                                        'points',
+                                                        moveItem(
+                                                            points,
+                                                            position,
+                                                            step,
+                                                        ),
+                                                    )
+                                                }
+                                                onRemove={() =>
+                                                    form.setData(
+                                                        'points',
+                                                        points.filter(
+                                                            (_, i) =>
+                                                                i !== position,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                        <Field
+                                            id={`point-${position}-heading`}
+                                            label="Judul poin"
+                                            value={point.heading}
+                                            onChange={(heading) =>
+                                                setPoint(position, { heading })
+                                            }
+                                            error={
+                                                errors[
+                                                    `points.${position}.heading`
+                                                ]
+                                            }
+                                        />
+                                        <Field
+                                            id={`point-${position}-body`}
+                                            label="Isi"
+                                            multiline
+                                            value={point.body}
+                                            onChange={(body) =>
+                                                setPoint(position, { body })
+                                            }
+                                            error={
+                                                errors[
+                                                    `points.${position}.body`
+                                                ]
+                                            }
+                                        />
                                     </div>
                                 ))}
                             </Repeater>

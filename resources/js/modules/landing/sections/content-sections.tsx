@@ -24,6 +24,7 @@ import type {
     GalleryContent,
     MissionContent,
     PrayerContent,
+    PrivacyContent,
     ScheduleContent,
     ScheduleGroup,
     TestimoniesContent,
@@ -432,6 +433,42 @@ export function ContactSection({ content }: { content: ContactContent }) {
                     </div>
                 </div>
             </Glass>
+        </SectionShell>
+    );
+}
+
+/** Kebijakan Privasi: numbered points; each line of a body is a paragraph. */
+export function PrivacySection({ content }: { content: PrivacyContent }) {
+    return (
+        <SectionShell id={sectionIds.privacy}>
+            <div className="mx-auto max-w-3xl space-y-6 rounded-glass border bg-background/90 p-6 leading-relaxed sm:p-10">
+                {content.effective && (
+                    <p className="text-sm text-muted-foreground">
+                        Berlaku sejak {content.effective}
+                    </p>
+                )}
+                {content.intro && <p className="text-lg">{content.intro}</p>}
+                <ol className="space-y-8">
+                    {content.points.map((point, index) => (
+                        <li key={point.heading} className="space-y-3">
+                            <h2 className="font-serif text-2xl font-semibold">
+                                {index + 1}. {point.heading}
+                            </h2>
+                            {point.body
+                                .split('\n')
+                                .filter((line) => line.trim() !== '')
+                                .map((line) => (
+                                    <p
+                                        key={line}
+                                        className="text-muted-foreground"
+                                    >
+                                        {line}
+                                    </p>
+                                ))}
+                        </li>
+                    ))}
+                </ol>
+            </div>
         </SectionShell>
     );
 }

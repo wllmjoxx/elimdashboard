@@ -131,6 +131,10 @@ class SectionController extends Controller
             $validated['milestones'] = array_values($validated['milestones'] ?? []);
         }
 
+        if (isset($validated['points'])) {
+            $validated['points'] = array_values($validated['points']);
+        }
+
         if (isset($validated['paragraphs'])) {
             $validated['paragraphs'] = array_values(array_filter($validated['paragraphs'], 'filled'));
         }

@@ -36,12 +36,14 @@ class SiteSection extends Model
         'gallery',
         'testimonies',
         'contact',
+        'privacy',
         ...self::SEGMENT_KEYS,
     ];
 
     /**
      * Sections shown on the homepage. The other sections have their own page
-     * (Tentang, Renungan, Jadwal, Form Doa, Contact); devotional and schedule
+     * (Tentang, Renungan, Jadwal, Form Doa, Contact,
+     * Kebijakan Privasi); devotional and schedule
      * appear on both, as a short teaser on the homepage.
      */
     public const HOME_KEYS = [
