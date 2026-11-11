@@ -27,6 +27,7 @@ class SectionEditor
         'testimonies' => 'Kesaksian terpilih',
         'contact' => 'Alamat dan Kontak',
         'privacy' => 'Kebijakan Privasi',
+        'pastor' => 'Gembala Sidang',
     ];
 
     /**
@@ -43,6 +44,7 @@ class SectionEditor
         'testimonies',
         'contact',
         'privacy',
+        'pastor',
     ];
 
     /**
@@ -62,6 +64,7 @@ class SectionEditor
         'testimonies' => 'Home',
         'contact' => 'Contact',
         'privacy' => 'Kebijakan Privasi',
+        'pastor' => 'Home dan Tentang',
     ];
 
     public static function label(string $key): string
@@ -136,6 +139,18 @@ class SectionEditor
                 'hours' => ['nullable', 'string', 'max:120'],
                 'maps_query' => ['nullable', 'string', 'max:200'],
             ],
+            'pastor' => [
+                'label' => ['required', 'string', 'max:40'],
+                'name' => ['required', 'string', 'max:80'],
+                'paragraphs' => ['required', 'array', 'min:1', 'max:4'],
+                'paragraphs.*' => ['required', 'string', 'max:1000'],
+                'more_label' => ['nullable', 'required_with:more_href', 'string', 'max:40'],
+                'more_href' => [...$link, 'required_with:more_label'],
+                'social_name' => ['nullable', 'string', 'max:60'],
+                'instagram' => ['nullable', 'url:https', 'max:255'],
+                'youtube' => ['nullable', 'url:https', 'max:255'],
+                'facebook' => ['nullable', 'url:https', 'max:255'],
+            ],
             'privacy' => [
                 'title' => ['required', 'string', 'max:120'],
                 'effective' => ['nullable', 'string', 'max:60'],
@@ -183,6 +198,13 @@ class SectionEditor
             'hours' => 'jam operasional',
             'maps_query' => 'pencarian Google Maps',
             'effective' => 'tanggal berlaku',
+            'name' => 'nama',
+            'more_label' => 'label tombol',
+            'more_href' => 'tautan tombol',
+            'social_name' => 'nama akun',
+            'instagram' => 'tautan Instagram',
+            'youtube' => 'tautan YouTube',
+            'facebook' => 'tautan Facebook',
             'intro' => 'pengantar',
             'points' => 'poin',
             'points.*.heading' => 'judul poin',

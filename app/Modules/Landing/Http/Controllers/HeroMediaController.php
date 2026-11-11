@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -46,6 +47,7 @@ class HeroMediaController extends Controller
                     : null,
                 'autoOffHours' => (int) config('modules.landing.live.auto_off_hours'),
             ],
+            'videoMode' => $this->hero()->content['video_mode'] ?? 'frame',
             'rules' => [
                 'maxMb' => (int) round($config['max_kb'] / 1024),
                 'maxCount' => (int) $config['max_count'],
@@ -82,6 +84,24 @@ class HeroMediaController extends Controller
         $hero->save();
 
         return back()->with('status', $isLive ? 'Live streaming tampil di beranda.' : 'Pengaturan live disimpan.');
+    }
+
+    /**
+     * How the videos show: in a frame under the welcome ("frame") or full
+     * width behind it, softly blurred ("background"). A live stream always
+     * plays in the frame.
+     */
+    public function updateMode(Request $request): RedirectResponse
+    {
+        $mode = $request->validate([
+            'video_mode' => ['required', Rule::in(['frame', 'background'])],
+        ], [], ['video_mode' => 'tampilan video'])['video_mode'];
+
+        $hero = $this->hero();
+        $hero->content = [...$hero->content, 'video_mode' => $mode];
+        $hero->save();
+
+        return back()->with('status', $mode === 'background' ? 'Video tampil sebagai latar beranda.' : 'Video tampil dalam bingkai.');
     }
 
     public function store(StoreHeroVideoRequest $request): RedirectResponse

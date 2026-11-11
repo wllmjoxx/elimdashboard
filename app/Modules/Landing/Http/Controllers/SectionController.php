@@ -4,6 +4,7 @@ namespace App\Modules\Landing\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Landing\Models\SiteSection;
+use App\Modules\Landing\Support\LandingContent;
 use App\Modules\Landing\Support\SectionEditor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,6 +55,7 @@ class SectionController extends Controller
                 'label' => SectionEditor::label($model->key),
                 'place' => SectionEditor::PLACES[$model->key] ?? null,
                 'content' => array_intersect_key($model->content, array_flip(SectionEditor::fields($model->key))),
+                'photoUrl' => $model->key === 'pastor' ? LandingContent::imageUrl($model->content['photo'] ?? null, 'pastor_photo') : null,
             ],
             'flash' => $request->session()->get('status'),
         ]);

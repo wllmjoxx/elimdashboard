@@ -2,10 +2,12 @@
 
 namespace App\Modules\Gallery;
 
+use App\Modules\Gallery\Console\RefreshInstagramToken;
 use App\Modules\Gallery\Database\Seeders\GallerySeeder;
 use App\Modules\Gallery\Models\Album;
 use App\Modules\Gallery\Policies\AlbumPolicy;
 use App\Support\Modules\ModuleServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Gate;
 
 class GalleryServiceProvider extends ModuleServiceProvider
@@ -57,5 +59,14 @@ class GalleryServiceProvider extends ModuleServiceProvider
     protected function bootModule(): void
     {
         Gate::policy(Album::class, AlbumPolicy::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([RefreshInstagramToken::class]);
+        }
+
+        // Instagram tokens last 60 days; renew them before they run out.
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('gallery:refresh-instagram')->dailyAt('03:00');
+        });
     }
 }

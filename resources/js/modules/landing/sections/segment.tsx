@@ -26,7 +26,10 @@ export function SegmentSection({
     return (
         <section
             id={id}
-            className="relative isolate flex min-h-[28rem] scroll-mt-24 items-center overflow-hidden bg-[#050507] px-4 py-20 text-white sm:min-h-[36rem] sm:px-6 lg:px-10"
+            className={cn(
+                'relative isolate flex min-h-[28rem] scroll-mt-24 items-center overflow-hidden px-4 py-20 text-band-fg sm:min-h-[36rem] sm:px-6 lg:px-10',
+                content.image_url && 'dark bg-[#050507]',
+            )}
         >
             {content.image_url ? (
                 <img
@@ -42,17 +45,19 @@ export function SegmentSection({
                     aria-hidden="true"
                 />
             )}
-            <div
-                className={cn(
-                    'absolute inset-0 -z-10',
-                    content.align === 'center'
-                        ? 'bg-black/55'
-                        : content.align === 'right'
-                          ? 'bg-gradient-to-l from-black/80 via-black/50 to-black/20'
-                          : 'bg-gradient-to-r from-black/80 via-black/50 to-black/20',
-                )}
-                aria-hidden="true"
-            />
+            {content.image_url && (
+                <div
+                    className={cn(
+                        'absolute inset-0 -z-10',
+                        content.align === 'center'
+                            ? 'bg-black/55'
+                            : content.align === 'right'
+                              ? 'bg-gradient-to-l from-black/80 via-black/50 to-black/20'
+                              : 'bg-gradient-to-r from-black/80 via-black/50 to-black/20',
+                    )}
+                    aria-hidden="true"
+                />
+            )}
 
             <Reveal className="mx-auto w-full max-w-7xl">
                 <div
@@ -62,7 +67,7 @@ export function SegmentSection({
                     )}
                 >
                     {content.eyebrow && (
-                        <p className="mb-3 font-condensed text-sm tracking-[0.3em] text-[#ffd2b8] uppercase">
+                        <p className="mb-3 font-condensed text-sm tracking-[0.3em] text-band-accent uppercase">
                             {content.eyebrow}
                         </p>
                     )}
@@ -70,7 +75,7 @@ export function SegmentSection({
                         {content.title}
                     </h2>
                     {content.text && (
-                        <p className="mt-4 text-lg text-pretty text-white/80">
+                        <p className="mt-4 text-lg text-pretty text-band-muted">
                             {content.text}
                         </p>
                     )}

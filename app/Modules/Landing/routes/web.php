@@ -4,6 +4,7 @@ use App\Modules\Landing\Http\Controllers\GallerySettingsController;
 use App\Modules\Landing\Http\Controllers\HeroMediaController;
 use App\Modules\Landing\Http\Controllers\HomeController;
 use App\Modules\Landing\Http\Controllers\LandingController;
+use App\Modules\Landing\Http\Controllers\PastorPhotoController;
 use App\Modules\Landing\Http\Controllers\PublicPageController;
 use App\Modules\Landing\Http\Controllers\ScheduleController;
 use App\Modules\Landing\Http\Controllers\SectionController;
@@ -56,9 +57,14 @@ Route::middleware(['auth', 'verified', 'can:landing.manage'])
             ->whereIn('segment', SiteSection::SEGMENT_KEYS)
             ->name('segments.update');
 
+        // Photo of the senior pastor.
+        Route::post('/pastor/photo', [PastorPhotoController::class, 'update'])->name('pastor.photo');
+        Route::delete('/pastor/photo', [PastorPhotoController::class, 'destroy'])->name('pastor.photo.destroy');
+
         // Videos and live stream for the first homepage segment.
         Route::get('/video', [HeroMediaController::class, 'index'])->name('media.index');
         Route::put('/live', [HeroMediaController::class, 'updateLive'])->name('live.update');
+        Route::put('/video-mode', [HeroMediaController::class, 'updateMode'])->name('media.mode');
         Route::post('/videos', [HeroMediaController::class, 'store'])->name('videos.store');
         Route::post('/videos/order', [HeroMediaController::class, 'reorder'])->name('videos.order');
         Route::patch('/videos/{video}', [HeroMediaController::class, 'update'])->name('videos.update');

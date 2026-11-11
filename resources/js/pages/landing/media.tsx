@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LandingAdminNav } from '@/modules/landing/admin-nav';
 import { update as liveUpdate } from '@/routes/landing/live';
+import { mode as modeUpdate } from '@/routes/landing/media';
 import {
     destroy,
     order,
@@ -59,10 +60,17 @@ type Props = {
     live: Live;
     rules: { maxMb: number; maxCount: number; recommended: string };
     flash: string | null;
+    videoMode: 'frame' | 'background';
 };
 
 /** Admin › Landing Page › Video & Live (first homepage segment). */
-export default function LandingMedia({ videos, live, rules, flash }: Props) {
+export default function LandingMedia({
+    videos,
+    live,
+    rules,
+    flash,
+    videoMode,
+}: Props) {
     return (
         <>
             <Head title="Video & Live" />
@@ -82,6 +90,7 @@ export default function LandingMedia({ videos, live, rules, flash }: Props) {
                     </p>
                 )}
 
+                <ModeCard mode={videoMode} />
                 <LiveCard live={live} />
                 <VideosCard videos={videos} rules={rules} />
             </div>
@@ -454,6 +463,86 @@ function VideosCard({
                         ))}
                     </ul>
                 )}
+            </CardContent>
+        </Card>
+    );
+}
+
+const modes = [
+    {
+        value: 'frame',
+        label: 'Bingkai',
+        description:
+            'Video diputar dalam bingkai lebar di bawah tulisan sambutan.',
+    },
+    {
+        value: 'background',
+        label: 'Latar',
+        description:
+            'Video memenuhi bagian atas beranda di belakang sambutan, dengan blur tipis.',
+    },
+] as const;
+
+/** Frame or background: how the homepage videos are shown. */
+function ModeCard({ mode }: { mode: Props['videoMode'] }) {
+    const form = useForm({ video_mode: mode });
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.put(modeUpdate.url(), { preserveScroll: true });
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Tampilan video</CardTitle>
+                <CardDescription>
+                    Saat live, siaran selalu tampil di bingkai agar tidak
+                    terhalang tulisan.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={submit} className="grid gap-4">
+                    <fieldset className="grid gap-3 sm:grid-cols-2">
+                        <legend className="sr-only">Tampilan video</legend>
+                        {modes.map((option) => (
+                            <label
+                                key={option.value}
+                                className="flex cursor-pointer gap-3 rounded-xl border p-4 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                            >
+                                <input
+                                    type="radio"
+                                    name="video_mode"
+                                    value={option.value}
+                                    checked={
+                                        form.data.video_mode === option.value
+                                    }
+                                    onChange={() =>
+                                        form.setData('video_mode', option.value)
+                                    }
+                                    className="mt-1 accent-[var(--primary)]"
+                                />
+                                <span>
+                                    <span className="block font-medium">
+                                        {option.label}
+                                    </span>
+                                    <span className="block text-sm text-muted-foreground">
+                                        {option.description}
+                                    </span>
+                                </span>
+                            </label>
+                        ))}
+                    </fieldset>
+                    <InputError message={form.errors.video_mode} />
+                    <div>
+                        <Button
+                            type="submit"
+                            disabled={form.processing || !form.isDirty}
+                        >
+                            {form.processing ? 'Menyimpan…' : 'Simpan'}
+                        </Button>
+                    </div>
+                </form>
             </CardContent>
         </Card>
     );

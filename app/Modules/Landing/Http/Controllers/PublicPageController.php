@@ -19,7 +19,7 @@ class PublicPageController extends Controller
 
     public function about(): Response
     {
-        return $this->page('about', 'Tentang GGP Elim', 'Sejarah, misi, dan perjalanan GGP Jemaat Elim Ciputat.', ['about', 'mission']);
+        return $this->page('about', 'Tentang GGP Elim', 'Sejarah, misi, dan perjalanan GGP Jemaat Elim Ciputat.', ['about', 'pastor', 'mission']);
     }
 
     public function schedule(): Response

@@ -37,6 +37,7 @@ class SiteSection extends Model
         'testimonies',
         'contact',
         'privacy',
+        'pastor',
         ...self::SEGMENT_KEYS,
     ];
 
@@ -54,6 +55,7 @@ class SiteSection extends Model
         'segment_2',
         'gallery',
         'segment_3',
+        'pastor',
         'testimonies',
     ];
 

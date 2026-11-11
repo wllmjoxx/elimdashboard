@@ -8,7 +8,6 @@ import {
     Quote,
     UserRound,
 } from 'lucide-react';
-import Heading from '@/components/heading';
 import { moduleIcon } from '@/lib/module-icons';
 import { cn } from '@/lib/utils';
 import { dashboard, home } from '@/routes';
@@ -41,12 +40,12 @@ function StatCard({ card }: { card: Card }) {
         <Link
             href={card.href}
             className={cn(
-                'group flex flex-col gap-3 rounded-xl border p-5 transition-colors hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
+                'group flex flex-col gap-3 rounded-2xl border bg-card p-5 transition-colors hover:border-foreground/40 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
                 card.highlight && 'border-flame/50 bg-flame/5',
             )}
         >
             <div className="flex items-center justify-between gap-3">
-                <span className="text-sm font-medium text-muted-foreground">
+                <span className="font-condensed text-xs tracking-[0.2em] text-muted-foreground uppercase">
                     {card.title}
                 </span>
                 <span
@@ -58,7 +57,7 @@ function StatCard({ card }: { card: Card }) {
                     <Icon className="size-4" />
                 </span>
             </div>
-            <span className="text-3xl font-semibold tabular-nums">
+            <span className="font-display text-4xl font-black tracking-tight tabular-nums">
                 {number.format(card.value)}
             </span>
             <span className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
@@ -79,14 +78,19 @@ export default function Dashboard({ cards }: { cards: Card[] }) {
         <>
             <Head title="Dashboard" />
             <div className="flex flex-1 flex-col gap-8 p-4">
-                <Heading
-                    title={`Shalom, ${firstName}!`}
-                    description={
-                        needsAction.length > 0
+                <section className="grain relative isolate overflow-hidden rounded-2xl bg-ember px-6 py-10 sm:px-10 sm:py-14">
+                    <p className="font-condensed text-xs tracking-[0.3em] text-band-accent uppercase">
+                        Dashboard
+                    </p>
+                    <h1 className="mt-3 font-display text-4xl leading-[0.95] font-black tracking-tight [text-shadow:var(--band-glow)] sm:text-6xl">
+                        Shalom, {firstName}!
+                    </h1>
+                    <p className="mt-4 max-w-2xl text-band-muted">
+                        {needsAction.length > 0
                             ? `Ada ${needsAction.length} hal yang menunggu tindakan Anda.`
-                            : 'Semua beres. Tuhan Yesus memberkati pelayanan Anda hari ini.'
-                    }
-                />
+                            : 'Semua beres. Tuhan Yesus memberkati pelayanan Anda hari ini.'}
+                    </p>
+                </section>
 
                 {cards.length > 0 && (
                     <section
@@ -105,7 +109,7 @@ export default function Dashboard({ cards }: { cards: Card[] }) {
                 >
                     <h2
                         id="pintasan"
-                        className="text-sm font-medium text-muted-foreground"
+                        className="font-condensed text-xs tracking-[0.2em] text-muted-foreground uppercase"
                     >
                         Pintasan
                     </h2>
@@ -114,7 +118,7 @@ export default function Dashboard({ cards }: { cards: Card[] }) {
                             <Link
                                 key={href}
                                 href={href}
-                                className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                                className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2.5 text-sm font-medium transition-colors hover:border-foreground/40"
                             >
                                 <Icon className="size-4" />
                                 {title}

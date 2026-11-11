@@ -67,13 +67,13 @@ class LandingContent
     /**
      * Public URL of an uploaded segment image.
      */
-    public static function imageUrl(?string $path): ?string
+    public static function imageUrl(?string $path, string $kind = 'segment_image'): ?string
     {
         if ($path === null || $path === '') {
             return null;
         }
 
-        return Storage::disk(config('modules.landing.segment_image.disk'))->url($path);
+        return Storage::disk(config("modules.landing.{$kind}.disk"))->url($path);
     }
 
     /**
@@ -97,6 +97,12 @@ class LandingContent
                 ->values()
                 ->all();
             $content['live'] = LiveStream::present($content['live'] ?? []);
+            $content['video_mode'] = ($content['video_mode'] ?? 'frame') === 'background' ? 'background' : 'frame';
+        }
+
+        if ($section->key === 'pastor') {
+            $content['photo_url'] = self::imageUrl($content['photo'] ?? null, 'pastor_photo');
+            unset($content['photo']);
         }
 
         if (in_array($section->key, SiteSection::SEGMENT_KEYS, true)) {

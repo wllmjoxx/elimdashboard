@@ -20,7 +20,9 @@ export function NavMain({
 
     return (
         <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>{label}</SidebarGroupLabel>
+            <SidebarGroupLabel className="font-condensed tracking-[0.2em] uppercase">
+                {label}
+            </SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>

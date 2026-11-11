@@ -5,6 +5,7 @@ namespace App\Modules\Gallery\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Gallery\Models\Album;
 use App\Modules\Gallery\Models\AlbumPhoto;
+use App\Modules\Gallery\Models\GallerySetting;
 use App\Modules\Gallery\Support\GalleryFeed;
 use App\Modules\Gallery\Support\PhotoProcessor;
 use Illuminate\Http\RedirectResponse;
@@ -43,7 +44,26 @@ class GalleryController extends Controller
             'albums' => $albums,
             'canManage' => $request->user()->can('manage', Album::class),
             'flash' => $request->session()->get('status'),
+            'source' => $this->source(),
         ]);
+    }
+
+    /**
+     * Gallery source for the admin page; the token itself never leaves the
+     * server.
+     *
+     * @return array{mode: string, connected: bool, username: string|null, expiresOn: string|null}
+     */
+    private function source(): array
+    {
+        $setting = GallerySetting::current();
+
+        return [
+            'mode' => $setting->source,
+            'connected' => filled($setting->instagram_token),
+            'username' => $setting->instagram_username,
+            'expiresOn' => $setting->instagram_expires_at?->locale('id')->translatedFormat('j F Y'),
+        ];
     }
 
     public function store(Request $request): RedirectResponse

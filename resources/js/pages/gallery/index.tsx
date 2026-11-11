@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { GallerySourceCard } from '@/modules/gallery/source-card';
+import type { GallerySource } from '@/modules/gallery/source-card';
 import type { Album } from '@/modules/gallery/types';
 import { show, store } from '@/routes/gallery';
 
@@ -25,6 +27,7 @@ type Props = {
     albums: Row[];
     canManage: boolean;
     flash: string | null;
+    source: GallerySource;
 };
 
 function CreateAlbumDialog({
@@ -105,7 +108,12 @@ function CreateAlbumDialog({
 }
 
 /** Gallery admin: list of albums (PRD 4.8). */
-export default function GalleryIndex({ albums, canManage, flash }: Props) {
+export default function GalleryIndex({
+    albums,
+    canManage,
+    flash,
+    source,
+}: Props) {
     const [creating, setCreating] = useState(false);
 
     return (
@@ -133,6 +141,8 @@ export default function GalleryIndex({ albums, canManage, flash }: Props) {
                         {flash}
                     </p>
                 )}
+
+                {canManage && <GallerySourceCard source={source} />}
 
                 {albums.length === 0 ? (
                     <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">

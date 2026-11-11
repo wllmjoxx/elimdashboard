@@ -31,4 +31,15 @@ return [
     // Photos shown in the homepage gallery section.
     'home_limit' => 8,
 
+    // Instagram mode (Admin › Galeri › Sumber galeri): posts from the
+    // church's professional Instagram account via the official API. Posts
+    // are cached; the token (valid 60 days) is renewed daily when it is
+    // within refresh_days_before of expiring.
+    'instagram' => [
+        'graph_url' => env('INSTAGRAM_GRAPH_URL', 'https://graph.instagram.com'),
+        'cache_minutes' => 60,
+        'limit' => 24,
+        'refresh_days_before' => 15,
+    ],
+
 ];
