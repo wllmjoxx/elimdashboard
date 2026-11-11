@@ -20,9 +20,11 @@ this repo; follow CONTRIBUTING.md (Bahasa Indonesia) to avoid merge conflicts.
   `resources/js/components`, `resources/js/layouts`, `resources/css`,
   `composer.json`, `package.json`, `.github`) change only in small, separate PRs.
 - Public (visitor) pages go in `resources/js/pages/<key>/public/` and get
-  `PublicLayout` automatically. Use `Glass`/`glass` only for floating layers
-  (max two stacked); brand colors are `flame`, `gold`, `cross`, `sky`, `iris`;
-  headings and verses use `font-serif`.
+  `PublicLayout` automatically. Their look follows the church's event
+  slides: headings `font-display` (heavy, tight), labels `font-condensed`
+  (uppercase, wide tracking), dark bands `bg-ember grain`, square buttons
+  (`publicButton` from the layout), hairline `Panel`s instead of glass.
+  Brand colors are `flame`, `gold`, `cross`, `sky`, `iris`.
 - UI text is in Bahasa Indonesia; code and identifiers are in English.
 - Product requirements: PRD "Website GGP Elim – Semua Tahap" (Tahap 1 is in scope).
 

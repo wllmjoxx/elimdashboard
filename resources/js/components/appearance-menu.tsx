@@ -9,6 +9,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { Appearance } from '@/hooks/use-appearance';
+import { cn } from '@/lib/utils';
 import { useAppearance } from '@/hooks/use-appearance';
 
 const options: { value: Appearance; label: string; icon: LucideIcon }[] = [
@@ -21,7 +22,7 @@ const options: { value: Appearance; label: string; icon: LucideIcon }[] = [
  * Navbar theme switch: Terang, Gelap or Ikuti sistem. The choice is saved
  * (localStorage + cookie) by useAppearance.
  */
-export function AppearanceMenu() {
+export function AppearanceMenu({ className }: { className?: string }) {
     const { appearance, updateAppearance } = useAppearance();
 
     return (
@@ -30,7 +31,7 @@ export function AppearanceMenu() {
                 <Button
                     variant="glass"
                     size="icon"
-                    className="rounded-full"
+                    className={cn('rounded-full', className)}
                     aria-label="Ganti tema"
                 >
                     {/* Picked by CSS from the `dark` class that app.blade.php
