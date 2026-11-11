@@ -399,6 +399,11 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                     </p>
                 )}
 
+                {/* Its own form: forms cannot be nested in the text form. */}
+                {section.key === 'pastor' && (
+                    <PastorPhoto url={section.photoUrl ?? null} />
+                )}
+
                 <form onSubmit={submit} className="grid gap-6">
                     {section.key === 'hero' && (
                         <>
@@ -763,7 +768,6 @@ export default function LandingSectionEditor({ section, flash }: Props) {
 
                     {section.key === 'pastor' && (
                         <>
-                            <PastorPhoto url={section.photoUrl ?? null} />
                             <Card>
                                 <CardContent className="grid gap-4 pt-6 sm:grid-cols-2">
                                     <Field

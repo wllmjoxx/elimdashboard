@@ -31,12 +31,21 @@ export default defineConfig({
     ]),
     server: {
         watch: {
+            // Runtime folders change on every request (SQLite WAL files,
+            // sessions, logs, uploads). Watching them made the dev server
+            // restart on Windows file locks, reloading every open tab.
             ignored: [
                 '**/.agents/**',
                 '**/.claude/**',
                 '**/.cursor/**',
                 '**/.junie/**',
                 '**/vendor/**',
+                '**/database/*.sqlite*',
+                '**/storage/**',
+                '**/bootstrap/cache/**',
+                '**/public/build/**',
+                '**/public/storage/**',
+                '**/tests/**',
             ],
         },
     },

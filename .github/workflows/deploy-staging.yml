@@ -1,0 +1,45 @@
+name: deploy staging
+
+# Deploys main to the staging server after the tests workflow passes on it.
+# Set up once in GitHub › Settings › Secrets and variables › Actions:
+#   variable STAGING_HOST  (server IP or name)
+#   variable STAGING_USER  (app user, e.g. ubuntu)
+#   variable STAGING_PATH  (e.g. /var/www/elim)
+#   secret   STAGING_SSH_KEY (private key whose public key is in the
+#            server user's ~/.ssh/authorized_keys)
+# Without STAGING_HOST the job is skipped.
+
+on:
+  workflow_run:
+    workflows: [tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      vars.STAGING_HOST != '' &&
+      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy over SSH
+        env:
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          HOST: ${{ vars.STAGING_HOST }}
+          USER: ${{ vars.STAGING_USER }}
+          APP_PATH: ${{ vars.STAGING_PATH }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/deploy_key "$USER@$HOST" "bash '$APP_PATH/deploy/deploy.sh' main"

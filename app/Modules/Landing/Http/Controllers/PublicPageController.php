@@ -29,7 +29,7 @@ class PublicPageController extends Controller
 
     public function contact(): Response
     {
-        return $this->page('contact', 'Contact', 'Alamat, WhatsApp, dan jam operasional sekretariat.', ['contact']);
+        return $this->page('contact', 'Kontak', 'Alamat, WhatsApp, dan jam operasional sekretariat.', ['contact']);
     }
 
     public function privacy(): Response
