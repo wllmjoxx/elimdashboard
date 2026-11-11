@@ -81,6 +81,11 @@ class PrayerServiceProvider extends ModuleServiceProvider
         ];
     }
 
+    public function sitemap(): iterable
+    {
+        yield ['loc' => route('landing.prayer')];
+    }
+
     public function seeders(): array
     {
         return [

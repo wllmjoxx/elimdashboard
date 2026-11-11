@@ -17,12 +17,7 @@ type Props = {
 export default function GalleryPublicIndex({ albums }: Props) {
     return (
         <>
-            <Head title="Galeri">
-                <meta
-                    name="description"
-                    content="Album foto kegiatan GGP Elim Ciputat."
-                />
-            </Head>
+            <Head title="Galeri" />
 
             <header className="px-4 pt-14 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-6xl">

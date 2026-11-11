@@ -21,20 +21,7 @@ export default function DevotionalsPublicIndex({ latest, archive }: Props) {
 
     return (
         <>
-            <Head title="Renungan Harian">
-                <meta
-                    name="description"
-                    content={
-                        latest
-                            ? `${latest.title} (${latest.reference}): ${latest.excerpt}`
-                            : 'Renungan harian GGP Elim Ciputat.'
-                    }
-                />
-                <meta
-                    property="og:title"
-                    content="Renungan Harian · GGP Elim"
-                />
-            </Head>
+            <Head title="Renungan Harian" />
 
             <header className="px-4 pt-14 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-3xl">

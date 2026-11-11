@@ -25,7 +25,10 @@ class PublicGalleryController extends Controller
             ->paginate(12)
             ->through(fn (Album $album) => $this->feed->album($album, $album->active_photos_count));
 
-        return Inertia::render('gallery/public/index', ['albums' => $albums]);
+        return Inertia::render('gallery/public/index', ['albums' => $albums])->withViewData('seo', [
+            'title' => 'Galeri',
+            'description' => 'Album foto kegiatan GGP Elim Ciputat.',
+        ]);
     }
 
     public function show(string $slug): Response
@@ -36,6 +39,10 @@ class PublicGalleryController extends Controller
         return Inertia::render('gallery/public/show', [
             'album' => $this->feed->album($album, $photos->count()),
             'photos' => $photos->map(fn (AlbumPhoto $photo) => $this->feed->photo($photo))->values(),
+        ])->withViewData('seo', [
+            'title' => $album->title,
+            'description' => $album->description ?: "Foto {$album->title} GGP Elim Ciputat.",
+            'image' => $photos->isNotEmpty() ? $this->feed->photo($photos->first())['url'] : null,
         ]);
     }
 }

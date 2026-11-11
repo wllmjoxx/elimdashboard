@@ -26,18 +26,7 @@ export default function Home({ sections, scheduleGroups }: Props) {
 
     return (
         <>
-            <Head title="Beranda">
-                <meta
-                    name="description"
-                    content="GGP Elim Ciputat (Rumah Kasih Karunia): jadwal ibadah, renungan harian, form doa, dan kontak Gereja Gerakan Pentakosta Jemaat Elim di Ciputat, Tangerang Selatan."
-                />
-                <meta property="og:title" content="GGP Elim Ciputat" />
-                <meta
-                    property="og:description"
-                    content="Rumah Kasih Karunia di Ciputat, Tangerang Selatan."
-                />
-                <meta property="og:type" content="website" />
-            </Head>
+            <Head title="Beranda" />
 
             {sections.map((section, index) => {
                 if (

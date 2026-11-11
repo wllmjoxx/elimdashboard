@@ -73,12 +73,7 @@ export default function PrayerForm({
 
     return (
         <>
-            <Head title="Form Doa">
-                <meta
-                    name="description"
-                    content="Kirimkan pokok doa Anda. Tim Doa GGP Elim Ciputat akan mendoakannya setiap minggu."
-                />
-            </Head>
+            <Head title="Form Doa" />
 
             <section className="px-4 pt-14 pb-16 sm:px-6 sm:pt-20">
                 <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-5">

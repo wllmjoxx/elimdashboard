@@ -26,11 +26,7 @@ export default function LandingPage({
 }: Props) {
     return (
         <>
-            <Head title={title}>
-                <meta name="description" content={description} />
-                <meta property="og:title" content={`${title} · GGP Elim`} />
-                <meta property="og:description" content={description} />
-            </Head>
+            <Head title={title} />
 
             <header className="px-4 pt-14 sm:px-6 sm:pt-20">
                 <Reveal className="mx-auto max-w-6xl">

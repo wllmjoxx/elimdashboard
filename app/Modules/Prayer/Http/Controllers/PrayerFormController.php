@@ -40,6 +40,9 @@ class PrayerFormController extends Controller
             'remaining' => $user ? $this->remaining($user->id) : null,
             'captchaSiteKey' => $user ? null : $captcha->siteKey(),
             'confirmation' => $request->session()->get('prayer_sent'),
+        ])->withViewData('seo', [
+            'title' => 'Form Doa',
+            'description' => 'Kirimkan pokok doa Anda. Tim Doa GGP Elim Ciputat akan mendoakannya setiap minggu.',
         ]);
     }
 

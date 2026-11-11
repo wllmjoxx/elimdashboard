@@ -75,6 +75,20 @@ abstract class ModuleServiceProvider extends ServiceProvider
     }
 
     /**
+     * Public pages this module adds to /sitemap.xml. Called only while the
+     * sitemap is built, so it may query the database.
+     *
+     * - loc: absolute URL (use route() or url())
+     * - lastmod: when the page last changed, if known
+     *
+     * @return iterable<array{loc: string, lastmod?: \DateTimeInterface|null}>
+     */
+    public function sitemap(): iterable
+    {
+        return [];
+    }
+
+    /**
      * Seeders that DatabaseSeeder runs for this module.
      *
      * @return list<class-string<Seeder>>

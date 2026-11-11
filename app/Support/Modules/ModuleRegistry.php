@@ -131,6 +131,24 @@ final class ModuleRegistry
     }
 
     /**
+     * Sitemap entries from every enabled module.
+     *
+     * @return list<array{loc: string, lastmod?: \DateTimeInterface|null}>
+     */
+    public function sitemap(): array
+    {
+        $entries = [];
+
+        foreach ($this->enabled() as $module) {
+            foreach ($module->sitemap() as $entry) {
+                $entries[] = $entry;
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
      * Sidebar items from enabled modules that the given user may see.
      *
      * @return list<array{module: string, title: string, href: string, icon: string|null, group: string}>

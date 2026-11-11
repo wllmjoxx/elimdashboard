@@ -19,6 +19,6 @@ class HomeController extends Controller
         return Inertia::render('landing/public/home', [
             'sections' => $content->sections(SiteSection::HOME_KEYS),
             'scheduleGroups' => $content->scheduleGroups(),
-        ]);
+        ])->withViewData('seo', ['schema' => true]);
     }
 }
