@@ -43,6 +43,13 @@ class CoreSeeder extends Seeder
 
         $sync->handle();
 
+        // Dummy accounts share one known password, so they exist only on
+        // developer machines and in tests. On staging and production the
+        // first account comes from `php artisan core:create-superadmin`.
+        if (! app()->environment(['local', 'testing'])) {
+            return;
+        }
+
         foreach (self::ACCOUNTS as $email => [$name, $role]) {
             $user = User::query()->firstOrCreate(
                 ['email' => $email],

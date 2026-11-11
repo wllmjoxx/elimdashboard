@@ -166,9 +166,11 @@ export default function PublicLayout({
                 Lewati ke konten
             </a>
 
-            {/* Zero-height sticky holder: the bar floats over the band below. */}
-            <div className="sticky top-0 z-40 h-0">
-                <header className="mx-3 mt-3 flex h-16 items-center gap-6 rounded-2xl glass-float px-4 text-band-fg sm:mx-6 sm:mt-5 sm:h-[72px] sm:px-5 lg:mx-auto lg:max-w-[calc(80rem+2.5rem)]">
+            {/* Fixed holder: the bar stays in one place while scrolling and
+                floats over each page's top band (spacing is padding, not
+                margin, so nothing leaks above the band). */}
+            <div className="pointer-events-none fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-5">
+                <header className="pointer-events-auto mx-auto flex h-16 items-center gap-6 rounded-2xl glass-float px-4 text-band-fg sm:h-[72px] sm:px-5 lg:max-w-[calc(80rem+2.5rem)]">
                     <Wordmark />
 
                     <nav

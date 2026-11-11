@@ -481,13 +481,17 @@ export default function TestimoniesIndex({
             </div>
 
             <EditDialog
-                key={editing?.id ?? 'none'}
+                key={editing ? `edit-${editing.id}` : 'edit-none'}
                 row={editing}
                 categories={categories}
                 onClose={() => setEditing(null)}
             />
             <NoteDialog
-                key={noting ? `${noting.row.id}-${noting.status}` : 'none'}
+                key={
+                    noting
+                        ? `note-${noting.row.id}-${noting.status}`
+                        : 'note-none'
+                }
                 action={noting}
                 onClose={() => setNoting(null)}
             />

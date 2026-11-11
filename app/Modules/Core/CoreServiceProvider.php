@@ -3,6 +3,7 @@
 namespace App\Modules\Core;
 
 use App\Models\User;
+use App\Modules\Core\Console\CreateSuperadminCommand;
 use App\Modules\Core\Console\SyncPermissionsCommand;
 use App\Modules\Core\Database\Seeders\CoreSeeder;
 use App\Modules\Core\Enums\Role;
@@ -64,7 +65,7 @@ class CoreServiceProvider extends ModuleServiceProvider
         User::resolveRelationUsing('church', fn (User $user) => $user->belongsTo(Church::class, 'church_id', 'id', 'church'));
 
         if ($this->app->runningInConsole()) {
-            $this->commands([SyncPermissionsCommand::class]);
+            $this->commands([SyncPermissionsCommand::class, CreateSuperadminCommand::class]);
         }
     }
 
