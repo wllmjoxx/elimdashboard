@@ -1,5 +1,5 @@
-import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Head } from '@inertiajs/react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,8 +9,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import type { Album, Photo } from '@/modules/gallery/types';
+import { HeroBackLink, PageHero } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
-import { Reveal } from '@/modules/landing/reveal';
 import { SiteFooter } from '@/modules/landing/site-footer';
 import { index } from '@/routes/gallery/public';
 
@@ -58,38 +58,23 @@ export default function GalleryPublicShow({ album, photos }: Props) {
         <>
             <Head title={album.title} />
 
-            <header className="px-4 pt-14 sm:px-6 sm:pt-20">
-                <Reveal className="mx-auto max-w-6xl">
-                    <Link
-                        href={index()}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
-                    >
-                        <ArrowLeft className="size-4" />
-                        Semua album
-                    </Link>
-                    <h1 className="mt-4 font-serif text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">
-                        {album.title}
-                    </h1>
-                    <p className="mt-2 text-muted-foreground">
-                        {album.photoCount} foto
-                        {album.eventDateLabel && ` · ${album.eventDateLabel}`}
-                    </p>
-                    {album.description && (
-                        <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-                            {album.description}
-                        </p>
-                    )}
-                </Reveal>
-            </header>
+            <PageHero
+                before={
+                    <HeroBackLink href={index.url()}>Semua album</HeroBackLink>
+                }
+                eyebrow={`${album.photoCount} foto${album.eventDateLabel ? ` · ${album.eventDateLabel}` : ''}`}
+                title={album.title}
+                description={album.description ?? undefined}
+            />
 
-            <section className="px-4 py-10 sm:px-6">
-                <ul className="mx-auto max-w-6xl columns-2 gap-4 md:columns-3 [&>li]:mb-4">
+            <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-10">
+                <ul className="mx-auto max-w-7xl columns-2 gap-3 md:columns-3 [&>li]:mb-3">
                     {photos.map((photo, position) => (
                         <li key={photo.id} className="break-inside-avoid">
                             <button
                                 type="button"
                                 onClick={() => setOpen(position)}
-                                className="block w-full overflow-hidden rounded-glass border focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                                className="block w-full overflow-hidden border border-foreground/10 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
                                 aria-label={
                                     photo.caption
                                         ? `Buka foto: ${photo.caption}`
@@ -138,7 +123,7 @@ export default function GalleryPublicShow({ album, photos }: Props) {
                             <Button
                                 size="icon"
                                 variant="glass"
-                                className="absolute top-2 right-2 rounded-full"
+                                className="absolute top-2 right-2 rounded-none"
                                 onClick={() => setOpen(null)}
                                 aria-label="Tutup"
                             >
@@ -149,7 +134,7 @@ export default function GalleryPublicShow({ album, photos }: Props) {
                                     <Button
                                         size="icon"
                                         variant="glass"
-                                        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full"
+                                        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-none"
                                         onClick={() => go(-1)}
                                         aria-label="Foto sebelumnya"
                                     >
@@ -158,7 +143,7 @@ export default function GalleryPublicShow({ album, photos }: Props) {
                                     <Button
                                         size="icon"
                                         variant="glass"
-                                        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full"
+                                        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-none"
                                         onClick={() => go(1)}
                                         aria-label="Foto berikutnya"
                                     >

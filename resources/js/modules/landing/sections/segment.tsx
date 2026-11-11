@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { publicButton } from '@/layouts/public-layout';
 import { cn } from '@/lib/utils';
 import { SmartLink } from '../components';
 import { Reveal } from '../reveal';
@@ -26,7 +26,7 @@ export function SegmentSection({
     return (
         <section
             id={id}
-            className="relative isolate my-8 flex min-h-[26rem] scroll-mt-24 items-center overflow-hidden bg-neutral-950 px-4 py-20 text-white sm:my-12 sm:min-h-[32rem] sm:px-6"
+            className="relative isolate flex min-h-[28rem] scroll-mt-24 items-center overflow-hidden bg-[#050507] px-4 py-20 text-white sm:min-h-[36rem] sm:px-6 lg:px-10"
         >
             {content.image_url ? (
                 <img
@@ -38,7 +38,7 @@ export function SegmentSection({
                 />
             ) : (
                 <div
-                    className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_10%_30%,rgb(from_var(--flame)_r_g_b/0.35),transparent_70%),radial-gradient(60%_80%_at_90%_70%,rgb(from_var(--sky)_r_g_b/0.35),transparent_70%),radial-gradient(50%_60%_at_50%_100%,rgb(from_var(--iris)_r_g_b/0.35),transparent_70%)]"
+                    className="grain absolute inset-0 -z-10 bg-ember"
                     aria-hidden="true"
                 />
             )}
@@ -54,19 +54,19 @@ export function SegmentSection({
                 aria-hidden="true"
             />
 
-            <Reveal className="mx-auto w-full max-w-6xl">
+            <Reveal className="mx-auto w-full max-w-7xl">
                 <div
                     className={cn(
-                        'flex max-w-2xl flex-col',
+                        'flex max-w-3xl flex-col',
                         alignment[content.align],
                     )}
                 >
                     {content.eyebrow && (
-                        <p className="mb-3 text-sm font-semibold tracking-widest text-gold uppercase">
+                        <p className="mb-3 font-condensed text-sm tracking-[0.3em] text-[#ffd2b8] uppercase">
                             {content.eyebrow}
                         </p>
                     )}
-                    <h2 className="font-serif text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
+                    <h2 className="font-display text-4xl leading-[0.95] font-black tracking-tight text-balance sm:text-6xl lg:text-7xl">
                         {content.title}
                     </h2>
                     {content.text && (
@@ -75,12 +75,13 @@ export function SegmentSection({
                         </p>
                     )}
                     {content.button_label && content.button_href && (
-                        <Button asChild size="lg" className="mt-8 rounded-full">
-                            <SmartLink href={content.button_href}>
-                                {content.button_label}
-                                <ArrowRight />
-                            </SmartLink>
-                        </Button>
+                        <SmartLink
+                            href={content.button_href}
+                            className={cn(publicButton.solid, 'mt-8')}
+                        >
+                            {content.button_label}
+                            <ArrowRight className="size-4" />
+                        </SmartLink>
                     )}
                 </div>
             </Reveal>
