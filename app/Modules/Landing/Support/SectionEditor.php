@@ -26,6 +26,7 @@ class SectionEditor
         'segment_3' => 'Segmen 3',
         'testimonies' => 'Kesaksian terpilih',
         'contact' => 'Alamat dan Kontak',
+        'privacy' => 'Kebijakan Privasi',
     ];
 
     /**
@@ -41,6 +42,7 @@ class SectionEditor
         'gallery',
         'testimonies',
         'contact',
+        'privacy',
     ];
 
     /**
@@ -59,6 +61,7 @@ class SectionEditor
         'segment_3' => 'Home',
         'testimonies' => 'Home',
         'contact' => 'Contact',
+        'privacy' => 'Kebijakan Privasi',
     ];
 
     public static function label(string $key): string
@@ -131,6 +134,14 @@ class SectionEditor
                 'hours' => ['nullable', 'string', 'max:120'],
                 'maps_query' => ['nullable', 'string', 'max:200'],
             ],
+            'privacy' => [
+                'title' => ['required', 'string', 'max:120'],
+                'effective' => ['nullable', 'string', 'max:60'],
+                'intro' => ['nullable', 'string', 'max:1500'],
+                'points' => ['required', 'array', 'min:1', 'max:15'],
+                'points.*.heading' => ['required', 'string', 'max:120'],
+                'points.*.body' => ['required', 'string', 'max:3000'],
+            ],
             default => [],
         };
     }
@@ -167,6 +178,11 @@ class SectionEditor
             'whatsapp' => 'nomor WhatsApp',
             'hours' => 'jam operasional',
             'maps_query' => 'pencarian Google Maps',
+            'effective' => 'tanggal berlaku',
+            'intro' => 'pengantar',
+            'points' => 'poin',
+            'points.*.heading' => 'judul poin',
+            'points.*.body' => 'isi poin',
         ];
     }
 

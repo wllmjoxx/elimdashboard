@@ -11,6 +11,7 @@ import { Turnstile } from '@/modules/core/turnstile';
 import { Verse } from '@/modules/landing/components';
 import { nav } from '@/modules/landing/nav';
 import { Reveal } from '@/modules/landing/reveal';
+import { PrivacyNote } from '@/modules/landing/privacy-note';
 import { SiteFooter } from '@/modules/landing/site-footer';
 import type { Option } from '@/modules/prayer/types';
 import { login } from '@/routes';
@@ -371,6 +372,10 @@ export default function PrayerForm({
                                                 ? 'Mengirim…'
                                                 : 'Kirim pokok doa'}
                                         </Button>
+                                        <PrivacyNote
+                                            action="mengirim pokok doa"
+                                            className="mt-3"
+                                        />
                                     </div>
                                 </form>
                             )}

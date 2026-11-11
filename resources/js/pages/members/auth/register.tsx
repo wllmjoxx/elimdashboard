@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { PrivacyNote } from '@/modules/landing/privacy-note';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -120,6 +121,10 @@ export default function Register({ churches, defaultChurchId }: Props) {
                                 {processing && <Spinner />}
                                 Daftar
                             </Button>
+                            <PrivacyNote
+                                action="mendaftar"
+                                className="text-center"
+                            />
                         </div>
 
                         <div className="text-center text-sm text-muted-foreground">

@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
+import { privacy } from '@/routes/landing';
 import { nav } from './nav';
 
 export function SiteFooter() {
@@ -30,6 +31,12 @@ export function SiteFooter() {
                             {item.label}
                         </Link>
                     ))}
+                    <Link
+                        href={privacy()}
+                        className="text-muted-foreground hover:text-foreground"
+                    >
+                        Kebijakan Privasi
+                    </Link>
                 </nav>
             </div>
             <p className="mx-auto mt-6 max-w-6xl text-sm text-muted-foreground">

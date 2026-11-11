@@ -8,7 +8,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * One page per navbar item (Tentang, Jadwal, Contact; Renungan Harian and
+ * One page per navbar item (Tentang, Jadwal, Contact, plus Kebijakan Privasi
+ * in the footer; Renungan Harian and
  * Form Doa are served by the Devotionals and Prayer modules),
  * each built from the matching landing sections.
  */
@@ -29,6 +30,11 @@ class PublicPageController extends Controller
     public function contact(): Response
     {
         return $this->page('contact', 'Contact', 'Alamat, WhatsApp, dan jam operasional sekretariat.', ['contact']);
+    }
+
+    public function privacy(): Response
+    {
+        return $this->page('privacy', 'Kebijakan Privasi', 'Cara GGP Elim mengumpulkan, memakai, dan melindungi data pribadi Anda.', ['privacy']);
     }
 
     /**

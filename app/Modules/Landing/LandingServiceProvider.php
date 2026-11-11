@@ -50,7 +50,7 @@ class LandingServiceProvider extends ModuleServiceProvider
         yield ['loc' => route('home'), 'lastmod' => $sections->max('updated_at')];
 
         // A page is listed only when it has something to show (else it 404s).
-        $pages = ['landing.about' => ['about', 'mission'], 'landing.schedule' => ['schedule'], 'landing.contact' => ['contact']];
+        $pages = ['landing.about' => ['about', 'mission'], 'landing.schedule' => ['schedule'], 'landing.contact' => ['contact'], 'landing.privacy' => ['privacy']];
 
         foreach ($pages as $route => $keys) {
             $visible = $sections->only($keys);

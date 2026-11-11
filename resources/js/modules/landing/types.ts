@@ -20,6 +20,13 @@ export type AboutContent = {
     milestones?: { year: string; text: string }[];
 };
 
+export type PrivacyContent = {
+    title: string;
+    effective?: string | null;
+    intro?: string | null;
+    points: { heading: string; body: string }[];
+};
+
 export type MissionContent = {
     title: string;
     text: string;
@@ -115,6 +122,7 @@ export type SectionContentMap = {
     gallery: GalleryContent;
     testimonies: TestimoniesContent;
     contact: ContactContent;
+    privacy: PrivacyContent;
     segment_1: SegmentContent;
     segment_2: SegmentContent;
     segment_3: SegmentContent;

@@ -154,6 +154,56 @@ class LandingSeeder extends Seeder
                 'hours' => 'Senin–Sabtu, 10.00–19.00, atau sesuai perjanjian',
                 'maps_query' => 'GGP Elim, Gg. Buntu, Cipayung, Ciputat, Tangerang Selatan',
             ]],
+            // Starting text written against the actual features (UU No. 27
+            // Tahun 2022 tentang Pelindungan Data Pribadi); the church should
+            // review it before go-live and can edit it from the admin panel.
+            ['privacy', [
+                'title' => 'Kebijakan Privasi',
+                'effective' => '11 November 2026',
+                'intro' => 'GGP Jemaat Elim Ciputat menghargai kepercayaan Anda. Halaman ini menjelaskan data apa yang kami kumpulkan lewat situs ini, untuk apa, siapa yang dapat melihatnya, dan hak Anda atas data tersebut, sesuai Undang-Undang No. 27 Tahun 2022 tentang Pelindungan Data Pribadi.',
+                'points' => [
+                    [
+                        'heading' => 'Data yang kami kumpulkan',
+                        'body' => "Akun jemaat: nama, email, nomor telepon, dan cabang gereja saat mendaftar, serta data profil yang Anda isi sendiri (nama panggilan, foto, tanggal lahir, jenis kelamin, alamat, status keanggotaan, dan baptisan).\nForm doa: nama lengkap, usia, nomor telepon, alamat, dan isi pokok doa.\nKesaksian: judul, isi, kategori, dan nama tampilan yang Anda pilih. Kami tidak menyimpan identitas akun pengirim kesaksian.\nCatatan teknis: alamat IP dan waktu akses untuk keamanan, pencegahan spam, dan log aktivitas pengelola.",
+                    ],
+                    [
+                        'heading' => 'Untuk apa data dipakai',
+                        'body' => "Mengelola akun dan keanggotaan jemaat, termasuk persetujuan pendaftaran oleh Admin.\nMendoakan pokok doa yang Anda kirim dan, bila perlu, menghubungi Anda untuk pelayanan doa.\nMenampilkan kesaksian yang sudah disetujui.\nMengirim email yang berkaitan dengan akun, misalnya kode masuk dan kabar persetujuan.\nKami tidak menjual data Anda dan tidak memakainya untuk iklan.",
+                    ],
+                    [
+                        'heading' => 'Siapa yang dapat melihat data',
+                        'body' => "Isi pokok doa hanya dapat dibaca oleh Tim Doa, Admin, dan Superadmin. Alamat dan isi doa disimpan dalam bentuk terenkripsi.\nData profil jemaat hanya dapat dilihat oleh Admin cabang Anda dan Superadmin. Anda dapat mengatur data profil mana yang boleh dilihat sesama jemaat.\nKesaksian tampil untuk umum hanya setelah disetujui moderator, dengan nama tampilan yang Anda pilih.",
+                    ],
+                    [
+                        'heading' => 'Pihak ketiga',
+                        'body' => 'Kami memakai layanan pihak ketiga hanya sejauh diperlukan agar situs berjalan: penyedia server dan jaringan (termasuk Cloudflare untuk keamanan dan captcha anti-spam) serta penyedia layanan email untuk mengirim email akun. Mereka memproses data atas nama kami dan tidak berhak memakainya untuk keperluan lain.',
+                    ],
+                    [
+                        'heading' => 'Cookie',
+                        'body' => 'Situs ini hanya memakai cookie yang diperlukan: menjaga Anda tetap masuk, melindungi form dari penyalahgunaan, dan mengingat pilihan tampilan (terang atau gelap). Kami tidak memakai cookie iklan atau pelacak.',
+                    ],
+                    [
+                        'heading' => 'Penyimpanan dan keamanan',
+                        'body' => "Data disimpan di server dengan koneksi terenkripsi (HTTPS) dan dicadangkan setiap hari. Password disimpan dalam bentuk hash, dan kode masuk lewat email hanya berlaku sekali dalam waktu singkat. Setiap tindakan pengelola atas data sensitif dicatat dalam log audit.\nTim Doa mengarsipkan pokok doa setelah didoakan. Data akun disimpan selama akun aktif dan dihapus setelah permintaan penghapusan disetujui, kecuali yang wajib disimpan menurut hukum.",
+                    ],
+                    [
+                        'heading' => 'Hak Anda',
+                        'body' => "Anda berhak melihat, memperbarui, dan memperbaiki data profil Anda kapan saja lewat halaman Profil.\nAnda berhak meminta akun dan data pribadi Anda dihapus lewat tombol \"Minta hapus akun\" di halaman Profil. Admin akan memproses permintaan tersebut.\nAnda berhak menarik persetujuan dan mengajukan pertanyaan atau keberatan atas pemrosesan data Anda melalui kontak di bawah.",
+                    ],
+                    [
+                        'heading' => 'Anak-anak',
+                        'body' => 'Akun jemaat ditujukan untuk remaja dan dewasa. Bila Anda mengirim data tentang anak, misalnya dalam pokok doa, pastikan orang tua atau wali menyetujuinya.',
+                    ],
+                    [
+                        'heading' => 'Perubahan kebijakan',
+                        'body' => 'Kebijakan ini dapat diperbarui sewaktu-waktu. Tanggal berlaku di atas menunjukkan versi terbaru.',
+                    ],
+                    [
+                        'heading' => 'Hubungi kami',
+                        'body' => 'Pertanyaan tentang data pribadi dapat disampaikan ke sekretariat GGP Elim Ciputat melalui WhatsApp atau alamat yang tercantum di halaman Contact.',
+                    ],
+                ],
+            ]],
         ];
     }
 
