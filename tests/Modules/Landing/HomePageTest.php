@@ -21,7 +21,8 @@ class HomePageTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('landing/public/home')
-                ->has('sections', count(SiteSection::HOME_KEYS))
+                // The pastor section waits hidden until Admin fills it in.
+                ->has('sections', count(SiteSection::HOME_KEYS) - 1)
                 ->where('sections.0.key', 'hero')
                 ->where('sections.0.content.slides.0.title', 'Yesus Kristus Imam Besar Agung kita')
                 ->where('sections.0.content.primary_cta.href', '/jadwal')
@@ -43,7 +44,7 @@ class HomePageTest extends TestCase
             ->assertInertia(function (Assert $page) {
                 $keys = array_column($page->toArray()['props']['sections'], 'key');
 
-                $this->assertSame(SiteSection::HOME_KEYS, $keys);
+                $this->assertSame(array_values(array_diff(SiteSection::HOME_KEYS, ['pastor'])), $keys);
                 $this->assertNotContains('about', $keys);
                 $this->assertNotContains('contact', $keys);
             });

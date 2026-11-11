@@ -17,7 +17,9 @@ class LandingSeeder extends Seeder
     {
         foreach (array_values($this->sections()) as $order => [$key, $content]) {
             $attributes = ['church_id' => null, 'key' => $key];
-            $values = ['content' => $content, 'is_active' => true, 'sort_order' => ($order + 1) * 10];
+            // The pastor section waits hidden until Admin fills in the real
+            // name, bio and photo.
+            $values = ['content' => $content, 'is_active' => $key !== 'pastor', 'sort_order' => ($order + 1) * 10];
 
             // Every section is edited by Admin now: only add the missing ones,
             // never overwrite what Admin changed.
@@ -144,6 +146,20 @@ class LandingSeeder extends Seeder
                 'button_href' => '/jadwal',
                 'align' => 'right',
                 'image' => null,
+            ]],
+            ['pastor', [
+                'label' => 'Gembala Sidang',
+                'name' => 'Nama Gembala Sidang',
+                'paragraphs' => [
+                    'Tulis bio singkat gembala sidang di sini: asal, panggilan pelayanan, dan sejak kapan menggembalakan GGP Jemaat Elim Ciputat.',
+                ],
+                'more_label' => 'Lihat selengkapnya',
+                'more_href' => '/tentang',
+                'social_name' => null,
+                'instagram' => null,
+                'youtube' => null,
+                'facebook' => null,
+                'photo' => null,
             ]],
             ['testimonies', [
                 'title' => 'Kesaksian',

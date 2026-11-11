@@ -31,12 +31,26 @@ export type HeroContent = {
     secondary_cta?: Cta;
     videos?: HeroVideo[];
     live?: HeroLive;
+    video_mode?: 'frame' | 'background';
 };
 
 export type AboutContent = {
     title: string;
     paragraphs: string[];
     milestones?: { year: string; text: string }[];
+};
+
+export type PastorContent = {
+    label: string;
+    name: string;
+    paragraphs: string[];
+    more_label?: string | null;
+    more_href?: string | null;
+    social_name?: string | null;
+    instagram?: string | null;
+    youtube?: string | null;
+    facebook?: string | null;
+    photo_url?: string | null;
 };
 
 export type PrivacyContent = {
@@ -142,6 +156,7 @@ export type SectionContentMap = {
     testimonies: TestimoniesContent;
     contact: ContactContent;
     privacy: PrivacyContent;
+    pastor: PastorContent;
     segment_1: SegmentContent;
     segment_2: SegmentContent;
     segment_3: SegmentContent;

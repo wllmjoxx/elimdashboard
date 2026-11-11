@@ -4,6 +4,7 @@ namespace App\Modules\Gallery\Support;
 
 use App\Modules\Gallery\Models\Album;
 use App\Modules\Gallery\Models\AlbumPhoto;
+use App\Modules\Gallery\Models\GallerySetting;
 
 /**
  * Albums and photos in the shape public pages render. The Landing homepage
@@ -19,6 +20,28 @@ class GalleryFeed
      */
     public function forHome(?int $albumId): array
     {
+        $setting = GallerySetting::current();
+
+        // Instagram mode: the newest posts, linking to the account.
+        if ($setting->usesInstagram()) {
+            $posts = array_slice(app(InstagramFeed::class)->posts($setting), 0, (int) config('modules.gallery.home_limit'));
+
+            return [
+                'album' => $posts === [] ? null : [
+                    'title' => '@'.$setting->instagram_username,
+                    'url' => 'https://www.instagram.com/'.$setting->instagram_username.'/',
+                ],
+                'photos' => array_map(fn (array $post) => [
+                    'id' => $post['id'],
+                    'url' => $post['image'],
+                    'thumbnailUrl' => $post['image'],
+                    'caption' => $post['caption'],
+                    'width' => null,
+                    'height' => null,
+                ], $posts),
+            ];
+        }
+
         $album = $albumId
             ? Album::query()->visible()->whereKey($albumId)->first()
             : null;

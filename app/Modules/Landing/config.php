@@ -25,6 +25,17 @@ return [
         'recommended' => '1920 × 1080 px (16:9)',
     ],
 
+    // Photo of the senior pastor (Admin › Landing Page › Gembala Sidang). A
+    // portrait PNG without background blends best into the panel.
+    'pastor_photo' => [
+        'disk' => 'public',
+        'directory' => 'landing/pastor',
+        'mimes' => ['jpg', 'jpeg', 'png', 'webp'],
+        'max_kb' => 4096,
+        'min_width' => 600,
+        'min_height' => 700,
+    ],
+
     // Short videos for the first homepage segment (Admin › Landing Page ›
     // Video & Live). They play muted and loop, so keep them short (30–90 s)
     // and compressed. The web server must accept uploads this large too

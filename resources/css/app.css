@@ -83,16 +83,25 @@
     --color-iris: var(--iris);
 
     --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Public site bands (hero, page headers, header, footer). */
+    --color-band: var(--band-bg);
+    --color-band-fg: var(--band-fg);
+    --color-band-muted: var(--band-muted);
+    --color-band-accent: var(--band-accent);
+    --color-band-line: var(--band-line);
+    --color-band-solid: var(--band-solid);
+    --color-band-solid-fg: var(--band-solid-fg);
 }
 
 :root {
-    --background: oklch(1 0 0);
+    --background: #f6f3ee;
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: #c2410c;
+    --primary: #111114;
     --primary-foreground: #ffffff;
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
@@ -102,8 +111,8 @@
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
+    --border: oklch(0.89 0.008 75);
+    --input: oklch(0.86 0.01 75);
     --ring: #f97316;
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);
@@ -111,7 +120,7 @@
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
+    --sidebar: #efe9e0;
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: #c2410c;
     --sidebar-primary-foreground: #ffffff;
@@ -139,17 +148,40 @@
     --glass-shadow: 0 12px 40px -12px rgb(15 23 42 / 0.12);
     --glass-blur: 20px;
     --haze-opacity: 0.16;
+
+    /* Public bands, light: warm ivory with soft orange-violet light. */
+    --band-bg: #f6f3ee;
+    --band-fg: #111114;
+    --band-muted: #4a4650;
+    --band-accent: #a8360b;
+    --band-line: rgb(17 17 20 / 0.28);
+    --band-solid: #111114;
+    --band-solid-fg: #ffffff;
+    --ember-1: rgb(255 90 42 / 0.32);
+    --ember-2: rgb(255 150 60 / 0.35);
+    --ember-3: rgb(224 71 155 / 0.18);
+    --ember-4: rgb(110 92 240 / 0.2);
+    --grain-opacity: 0.1;
+    --grain-blend: multiply;
+    --band-glow: none;
+
+    /* Floating liquid glass (header, cards and buttons over a band). */
+    --float-bg: rgb(255 255 255 / 0.5);
+    --float-border: rgb(255 255 255 / 0.85);
+    --float-highlight: rgb(255 255 255 / 0.9);
+    --float-shadow: 0 24px 48px -24px rgb(60 40 30 / 0.28);
+    --float-solid: rgb(250 248 244 / 0.95);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
+    --background: #08080b;
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
+    --card: #121216;
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.145 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: #fb923c;
-    --primary-foreground: #111111;
+    --primary: #ffffff;
+    --primary-foreground: #0a0a0d;
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
@@ -166,7 +198,7 @@
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
     --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
+    --sidebar: #0d0d11;
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: #fb923c;
     --sidebar-primary-foreground: #111111;
@@ -189,6 +221,27 @@
     --glass-highlight: rgb(255 255 255 / 0.12);
     --glass-shadow: 0 12px 40px -12px rgb(0 0 0 / 0.5);
     --haze-opacity: 0.2;
+
+    --band-bg: #050507;
+    --band-fg: #ffffff;
+    --band-muted: rgb(255 255 255 / 0.8);
+    --band-accent: #ffd2b8;
+    --band-line: rgb(255 255 255 / 0.45);
+    --band-solid: #ffffff;
+    --band-solid-fg: #0a0a0d;
+    --ember-1: rgb(255 58 20 / 0.92);
+    --ember-2: rgb(255 120 24 / 0.8);
+    --ember-3: rgb(194 24 122 / 0.5);
+    --ember-4: rgb(63 52 230 / 0.75);
+    --grain-opacity: 0.22;
+    --grain-blend: overlay;
+    --band-glow: 0 0 48px rgb(255 255 255 / 0.35);
+
+    --float-bg: rgb(14 14 18 / 0.32);
+    --float-border: rgb(255 255 255 / 0.16);
+    --float-highlight: rgb(255 255 255 / 0.2);
+    --float-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.7);
+    --float-solid: rgb(18 18 22 / 0.95);
 }
 
 @layer base {
@@ -274,34 +327,48 @@
 }
 
 /*
- * Public site band: near-black with grainy red-orange, orange, magenta and
- * blue-violet light (the church's event slides). Always dark, in both
- * themes; text on it is white. Add `grain` for the film texture.
+ * Public site band: the church's event slides, near-black with grainy
+ * red-orange, orange, magenta and blue-violet light in dark mode, warm
+ * ivory with the same light softened in light mode. Text uses band-fg.
+ * Add `grain` for the film texture. Put `dark` on an element to force the
+ * dark look inside it (photos, videos).
  */
 @utility bg-ember {
-    background-color: #050507;
+    background-color: var(--band-bg);
     background-image:
-        radial-gradient(
-            55% 60% at 0% 100%,
-            rgb(255 58 20 / 0.92),
-            rgb(255 58 20 / 0) 70%
-        ),
-        radial-gradient(
-            45% 45% at 100% 0%,
-            rgb(255 120 24 / 0.8),
-            rgb(255 120 24 / 0) 70%
-        ),
-        radial-gradient(
-            40% 50% at 100% 100%,
-            rgb(194 24 122 / 0.5),
-            rgb(194 24 122 / 0) 70%
-        ),
-        radial-gradient(
-            70% 22% at 50% 62%,
-            rgb(63 52 230 / 0.75),
-            rgb(63 52 230 / 0) 70%
-        );
-    color: #ffffff;
+        radial-gradient(55% 60% at 0% 100%, var(--ember-1), transparent 70%),
+        radial-gradient(45% 45% at 100% 0%, var(--ember-2), transparent 70%),
+        radial-gradient(40% 50% at 100% 100%, var(--ember-3), transparent 70%),
+        radial-gradient(70% 22% at 50% 62%, var(--ember-4), transparent 70%);
+    color: var(--band-fg);
+}
+
+/*
+ * Floating liquid glass for layers over a band, photo or video: header,
+ * cards, small buttons. Pair with rounded-2xl (panels) or rounded-lg
+ * (buttons). Falls back to a solid surface without backdrop-filter or when
+ * the visitor asks for less transparency.
+ */
+@utility glass-float {
+    background-color: var(--float-bg);
+    border: 1px solid var(--float-border);
+    box-shadow:
+        inset 0 1px 0 0 var(--float-highlight),
+        var(--float-shadow);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+
+    @supports not (
+        (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+    ) {
+        background-color: var(--float-solid);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+        background-color: var(--float-solid);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
 }
 
 /* Film grain over a band; the element needs position and overflow set. */
@@ -311,8 +378,8 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        opacity: 0.22;
-        mix-blend-mode: overlay;
+        opacity: var(--grain-opacity);
+        mix-blend-mode: var(--grain-blend);
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 }

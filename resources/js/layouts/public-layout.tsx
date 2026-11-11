@@ -25,11 +25,15 @@ type PublicLayoutProps = {
     nav?: PublicNavItem[];
 };
 
-/** Square-cornered buttons of the public site (outline and solid white). */
+/**
+ * Buttons of the public site, colored by the band they sit on: solid and
+ * outline are square-cornered; glass is the floating, slightly rounded one.
+ */
 export const publicButton = {
-    solid: 'inline-flex items-center justify-center gap-2 bg-white px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-[#0a0a0d] uppercase transition-colors duration-200 hover:bg-white/85 focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none',
+    solid: 'inline-flex items-center justify-center gap-2 bg-band-solid px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-band-solid-fg uppercase transition-opacity duration-200 hover:opacity-85 focus-visible:ring-[3px] focus-visible:ring-flame/50 focus-visible:outline-none',
     outline:
-        'inline-flex items-center justify-center gap-2 border border-white/50 px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-white uppercase transition-colors duration-200 hover:border-white hover:bg-white/10 focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none',
+        'inline-flex items-center justify-center gap-2 border border-band-line px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-band-fg uppercase transition-colors duration-200 hover:border-band-fg hover:bg-band-fg/10 focus-visible:ring-[3px] focus-visible:ring-flame/50 focus-visible:outline-none',
+    glass: 'glass-float inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-[13px] font-semibold tracking-[0.12em] text-band-fg uppercase transition-colors duration-200 hover:bg-band-fg/10 focus-visible:ring-[3px] focus-visible:ring-flame/50 focus-visible:outline-none',
 };
 
 /**
@@ -79,17 +83,17 @@ function Wordmark() {
     return (
         <Link
             href={home()}
-            className="flex shrink-0 items-center gap-3 focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none"
+            className="flex shrink-0 items-center gap-3 focus-visible:ring-[3px] focus-visible:ring-flame/50 focus-visible:outline-none"
             aria-label="GGP Elim, ke Beranda"
         >
-            <span className="flex size-11 items-center justify-center rounded-full border border-white/30">
+            <span className="flex size-10 items-center justify-center rounded-full border border-band-line">
                 <AppLogoIcon className="size-6 fill-flame" />
             </span>
             <span className="flex flex-col leading-none">
-                <span className="font-display text-xl font-extrabold tracking-wide">
+                <span className="font-display text-lg font-extrabold tracking-wide">
                     GGP ELIM
                 </span>
-                <span className="mt-1 font-condensed text-[11px] tracking-[0.24em] text-white/70">
+                <span className="mt-1 font-condensed text-[10px] tracking-[0.24em] text-band-muted">
                     RUMAH KASIH KARUNIA
                 </span>
             </span>
@@ -128,9 +132,10 @@ function AuthButtons({ className }: { className?: string }) {
 
 /**
  * Layout for public pages (Inertia pages under `<module>/public/...`): a
- * dark header and page frame in the style of the church's event slides
- * (heavy grotesk, uppercase menu, square buttons). Sections in between
- * follow the light or dark theme; pages render their own footer.
+ * floating glass header over each page's top band, in the style of the
+ * church's event slides (heavy grotesk, uppercase menu, square buttons).
+ * Everything follows the light or dark theme; pages render their own
+ * footer and start with a band that leaves room for the header.
  */
 export default function PublicLayout({
     children,
@@ -156,13 +161,14 @@ export default function PublicLayout({
         <div className="relative isolate min-h-screen bg-background text-foreground">
             <a
                 href="#konten"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-background focus:px-4 focus:py-2 focus:text-foreground"
             >
                 Lewati ke konten
             </a>
 
-            <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050507]/95 text-white backdrop-blur supports-[backdrop-filter]:bg-[#050507]/80">
-                <div className="mx-auto flex h-20 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-10">
+            {/* Zero-height sticky holder: the bar floats over the band below. */}
+            <div className="sticky top-0 z-40 h-0">
+                <header className="mx-3 mt-3 flex h-16 items-center gap-6 rounded-2xl glass-float px-4 text-band-fg sm:mx-6 sm:mt-5 sm:h-[72px] sm:px-5 lg:mx-auto lg:max-w-[calc(80rem+2.5rem)]">
                     <Wordmark />
 
                     <nav
@@ -173,14 +179,14 @@ export default function PublicLayout({
                             <NavLink
                                 key={item.href}
                                 item={item}
-                                className="border-b-2 border-transparent py-2 text-[13px] font-semibold tracking-[0.1em] whitespace-nowrap text-white/80 uppercase transition-colors duration-200 hover:text-white"
-                                activeClassName="border-flame text-white"
+                                className="border-b-2 border-transparent py-2 text-[13px] font-semibold tracking-[0.1em] whitespace-nowrap text-band-muted uppercase transition-colors duration-200 hover:text-band-fg"
+                                activeClassName="border-flame text-band-fg"
                             />
                         ))}
                     </nav>
 
                     <div className="ml-auto flex items-center gap-3 xl:ml-0">
-                        <AppearanceMenu className="rounded-none border border-white/30 bg-transparent text-white shadow-none hover:bg-white/10 dark:hover:bg-white/10" />
+                        <AppearanceMenu className="rounded-lg border border-band-line bg-transparent text-band-fg shadow-none hover:bg-band-fg/10 dark:hover:bg-band-fg/10" />
                         <div className="hidden items-center gap-3 md:flex">
                             <AuthButtons />
                         </div>
@@ -189,7 +195,7 @@ export default function PublicLayout({
                             <SheetTrigger asChild>
                                 <button
                                     type="button"
-                                    className="flex size-11 items-center justify-center border border-white/50 text-white transition-colors hover:bg-white/10 xl:hidden"
+                                    className="flex size-11 items-center justify-center rounded-lg border border-band-line text-band-fg transition-colors hover:bg-band-fg/10 xl:hidden"
                                     aria-label="Buka menu"
                                 >
                                     <Menu className="size-5" />
@@ -197,10 +203,10 @@ export default function PublicLayout({
                             </SheetTrigger>
                             <SheetContent
                                 side="right"
-                                className="w-80 border-white/10 bg-[#0a0a0d] text-white"
+                                className="w-80 bg-background text-foreground"
                             >
                                 <SheetHeader>
-                                    <SheetTitle className="font-condensed tracking-[0.24em] text-white/70">
+                                    <SheetTitle className="font-condensed tracking-[0.24em] text-muted-foreground">
                                         MENU
                                     </SheetTitle>
                                     <SheetDescription className="sr-only">
@@ -215,7 +221,7 @@ export default function PublicLayout({
                                         <NavLink
                                             key={item.href}
                                             item={item}
-                                            className="border-b border-white/10 py-4 font-display text-2xl font-extrabold tracking-tight"
+                                            className="border-b border-foreground/10 py-4 font-display text-2xl font-extrabold tracking-tight"
                                             activeClassName="text-flame"
                                             onNavigate={() =>
                                                 setMenuOpen(false)
@@ -229,8 +235,8 @@ export default function PublicLayout({
                             </SheetContent>
                         </Sheet>
                     </div>
-                </div>
-            </header>
+                </header>
+            </div>
 
             <main id="konten">{children}</main>
         </div>

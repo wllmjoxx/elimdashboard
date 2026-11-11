@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowDown, ArrowLeft, ArrowUp, Plus, Trash2 } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import Heading from '@/components/heading';
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LandingAdminNav } from '@/modules/landing/admin-nav';
 import { index } from '@/routes/landing';
+import { photo as pastorPhoto } from '@/routes/landing/pastor';
 import { update } from '@/routes/landing/sections';
 
 type Slide = {
@@ -38,6 +39,7 @@ type Props = {
         label: string;
         place: string | null;
         content: Content;
+        photoUrl?: string | null;
     };
     flash: string | null;
 };
@@ -281,6 +283,13 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                       label: '',
                       href: '',
                   },
+              }
+            : {}),
+        ...(section.key === 'pastor'
+            ? {
+                  paragraphs: (content.paragraphs as string[] | undefined) ?? [
+                      '',
+                  ],
               }
             : {}),
         ...(section.key === 'about'
@@ -752,6 +761,185 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                         </>
                     )}
 
+                    {section.key === 'pastor' && (
+                        <>
+                            <PastorPhoto url={section.photoUrl ?? null} />
+                            <Card>
+                                <CardContent className="grid gap-4 pt-6 sm:grid-cols-2">
+                                    <Field
+                                        id="label"
+                                        label="Label kecil"
+                                        placeholder="Gembala Sidang"
+                                        value={text('label')}
+                                        onChange={(value) =>
+                                            form.setData('label', value)
+                                        }
+                                        error={errors.label}
+                                    />
+                                    <Field
+                                        id="name"
+                                        label="Nama"
+                                        placeholder="Pdt. Nama Lengkap"
+                                        value={text('name')}
+                                        onChange={(value) =>
+                                            form.setData('name', value)
+                                        }
+                                        error={errors.name}
+                                    />
+                                </CardContent>
+                            </Card>
+                            <Repeater
+                                title="Bio"
+                                addLabel="Tambah paragraf"
+                                canAdd={paragraphs.length < 4}
+                                onAdd={() =>
+                                    form.setData('paragraphs', [
+                                        ...paragraphs,
+                                        '',
+                                    ])
+                                }
+                            >
+                                <InputError message={errors.paragraphs} />
+                                {paragraphs.map((paragraph, position) => (
+                                    <div
+                                        key={position}
+                                        className="flex items-start gap-2"
+                                    >
+                                        <div className="flex-1">
+                                            <Field
+                                                id={`paragraph-${position}`}
+                                                label={`Paragraf ${position + 1}`}
+                                                multiline
+                                                value={paragraph}
+                                                onChange={(value) =>
+                                                    form.setData(
+                                                        'paragraphs',
+                                                        paragraphs.map(
+                                                            (item, i) =>
+                                                                i === position
+                                                                    ? value
+                                                                    : item,
+                                                        ),
+                                                    )
+                                                }
+                                                error={
+                                                    errors[
+                                                        `paragraphs.${position}`
+                                                    ]
+                                                }
+                                            />
+                                        </div>
+                                        <div className="pt-6">
+                                            <ItemTools
+                                                index={position}
+                                                total={paragraphs.length}
+                                                label={`paragraf ${position + 1}`}
+                                                onMove={(step) =>
+                                                    form.setData(
+                                                        'paragraphs',
+                                                        moveItem(
+                                                            paragraphs,
+                                                            position,
+                                                            step,
+                                                        ),
+                                                    )
+                                                }
+                                                onRemove={() =>
+                                                    form.setData(
+                                                        'paragraphs',
+                                                        paragraphs.filter(
+                                                            (_, i) =>
+                                                                i !== position,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </Repeater>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>
+                                        Tombol dan media sosial
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="grid gap-4 sm:grid-cols-2">
+                                    <Field
+                                        id="more_label"
+                                        label="Label tombol"
+                                        optional
+                                        placeholder="Lihat selengkapnya"
+                                        value={text('more_label')}
+                                        onChange={(value) =>
+                                            form.setData('more_label', value)
+                                        }
+                                        error={errors.more_label}
+                                    />
+                                    <Field
+                                        id="more_href"
+                                        label="Tautan tombol"
+                                        optional
+                                        placeholder="/tentang"
+                                        value={text('more_href')}
+                                        onChange={(value) =>
+                                            form.setData('more_href', value)
+                                        }
+                                        error={errors.more_href}
+                                    />
+                                    <Field
+                                        id="social_name"
+                                        label="Nama akun di tombol media sosial"
+                                        optional
+                                        placeholder="Nama gembala"
+                                        value={text('social_name')}
+                                        onChange={(value) =>
+                                            form.setData('social_name', value)
+                                        }
+                                        error={errors.social_name}
+                                    />
+                                    <Field
+                                        id="instagram"
+                                        label="Tautan Instagram"
+                                        optional
+                                        placeholder="https://instagram.com/…"
+                                        value={text('instagram')}
+                                        onChange={(value) =>
+                                            form.setData('instagram', value)
+                                        }
+                                        error={errors.instagram}
+                                    />
+                                    <Field
+                                        id="youtube"
+                                        label="Tautan YouTube"
+                                        optional
+                                        placeholder="https://youtube.com/@…"
+                                        value={text('youtube')}
+                                        onChange={(value) =>
+                                            form.setData('youtube', value)
+                                        }
+                                        error={errors.youtube}
+                                    />
+                                    <Field
+                                        id="facebook"
+                                        label="Tautan Facebook"
+                                        optional
+                                        placeholder="https://facebook.com/…"
+                                        value={text('facebook')}
+                                        onChange={(value) =>
+                                            form.setData('facebook', value)
+                                        }
+                                        error={errors.facebook}
+                                    />
+                                </CardContent>
+                            </Card>
+                            <p className="text-sm text-muted-foreground">
+                                Segmen ini tersembunyi sampai Anda
+                                menampilkannya di halaman Tata letak.
+                            </p>
+                        </>
+                    )}
+
                     {section.key === 'privacy' && (
                         <>
                             <Card>
@@ -907,6 +1095,80 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                 </form>
             </div>
         </>
+    );
+}
+
+/** Upload or remove the pastor's photo (saved right away). */
+function PastorPhoto({ url }: { url: string | null }) {
+    const form = useForm<{ photo: File | null }>({ photo: null });
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.post(pastorPhoto.url(), {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => form.reset(),
+        });
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Foto</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-6 sm:flex-row sm:items-start">
+                <div className="flex aspect-[4/5] w-40 shrink-0 items-end justify-center overflow-hidden rounded-xl border bg-muted">
+                    {url ? (
+                        <img
+                            src={url}
+                            alt="Foto gembala saat ini"
+                            className="h-full w-full object-contain object-bottom"
+                        />
+                    ) : (
+                        <span className="m-auto px-3 text-center text-xs text-muted-foreground">
+                            Belum ada foto
+                        </span>
+                    )}
+                </div>
+                <form onSubmit={submit} className="grid flex-1 gap-3">
+                    <Label htmlFor="pastor-photo">Unggah foto baru</Label>
+                    <Input
+                        id="pastor-photo"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={(e) =>
+                            form.setData('photo', e.target.files?.[0] ?? null)
+                        }
+                    />
+                    <p className="text-sm text-muted-foreground">
+                        Paling bagus foto potret PNG tanpa latar, minimal 600 ×
+                        700 px, maksimal 4 MB.
+                    </p>
+                    <InputError message={form.errors.photo} />
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            type="submit"
+                            disabled={!form.data.photo || form.processing}
+                        >
+                            {form.processing ? 'Mengunggah…' : 'Simpan foto'}
+                        </Button>
+                        {url && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                    router.delete(pastorPhoto.url(), {
+                                        preserveScroll: true,
+                                    })
+                                }
+                            >
+                                Hapus foto
+                            </Button>
+                        )}
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
     );
 }
 

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { BookOpen, HandHeart, Pause, Play, Radio } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { publicButton } from '@/layouts/public-layout';
 import { cn } from '@/lib/utils';
 import { index as devotionals } from '@/routes/devotionals/public';
@@ -19,16 +20,18 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
- * First homepage segment: a big welcome over the church's grainy gradient,
- * then a wide frame that shows, in order of priority, the live stream (while
- * Admin marks it live), Admin's uploaded videos (muted, one after another),
- * or just the theme slides. One button pauses all motion (WCAG 2.2.2);
- * visitors who ask for reduced motion start paused.
+ * First homepage segment: a big welcome over the church's grainy band.
+ * Admin picks how the uploaded videos show: in a wide frame under the
+ * welcome ("frame") or full width behind it, softly blurred
+ * ("background"). A live stream always plays in the frame, in front. One
+ * button pauses all motion (WCAG 2.2.2); visitors who ask for reduced
+ * motion start paused.
  */
 export function HeroSection({ content }: { content: HeroContent }) {
     const slides = content.slides ?? [];
     const videos = content.videos ?? [];
     const live = content.live?.is_live ? content.live : null;
+    const background = content.video_mode === 'background' && videos.length > 0;
 
     const [playing, setPlaying] = useState(true);
     const [slide, setSlide] = useState(0);
@@ -53,109 +56,121 @@ export function HeroSection({ content }: { content: HeroContent }) {
     }, [playing, slide, slides.length]);
 
     const theme = slides[slide];
-    const hasMotion = !live && (videos.length > 0 || slides.length > 1);
+    const hasMotion = videos.length > 0 || slides.length > 1;
+    const pauseButton = hasMotion ? (
+        <button
+            type="button"
+            onClick={() => setPlaying((value) => !value)}
+            aria-label={
+                playing ? 'Hentikan video dan slide' : 'Putar video dan slide'
+            }
+            className="flex size-12 shrink-0 items-center justify-center rounded-full glass-float text-band-fg transition-colors hover:bg-band-fg/10"
+        >
+            {playing ? (
+                <Pause className="size-4" />
+            ) : (
+                <Play className="size-4" />
+            )}
+        </button>
+    ) : null;
+
+    const ctas = (
+        <>
+            {content.primary_cta && (
+                <SmartLink
+                    href={content.primary_cta.href}
+                    className={publicButton.solid}
+                >
+                    {content.primary_cta.label}
+                </SmartLink>
+            )}
+            {content.secondary_cta && (
+                <SmartLink
+                    href={content.secondary_cta.href}
+                    className={publicButton.glass}
+                >
+                    {content.secondary_cta.label}
+                </SmartLink>
+            )}
+        </>
+    );
 
     return (
         <section
             id={sectionIds.hero}
             aria-label="Selamat datang"
-            className="grain relative isolate scroll-mt-24 overflow-hidden bg-ember px-4 pt-12 pb-16 sm:px-6 sm:pt-20 sm:pb-24 lg:px-10"
+            className={cn(
+                'grain relative isolate scroll-mt-24 overflow-hidden bg-ember px-4 pt-32 pb-16 sm:px-6 sm:pt-40 sm:pb-24 lg:px-10',
+                background && 'flex min-h-[100svh] flex-col',
+            )}
         >
+            {background && (
+                <BackgroundVideo videos={videos} playing={playing} />
+            )}
+
             <div
                 aria-hidden="true"
-                className="absolute bottom-8 left-6 hidden h-28 w-52 border-r border-b border-white/50 bg-[linear-gradient(rgb(255_255_255/0.5)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.5)_1px,transparent_1px)] bg-[size:22px_20px] sm:block lg:left-10"
+                className="absolute bottom-8 left-6 hidden h-28 w-52 border-r border-b border-band-line bg-[linear-gradient(var(--band-line)_1px,transparent_1px),linear-gradient(90deg,var(--band-line)_1px,transparent_1px)] bg-[size:22px_20px] sm:block lg:left-10"
             />
 
-            <div className="relative mx-auto max-w-7xl text-center">
-                <p className="font-condensed text-xs tracking-[0.32em] text-[#ffd2b8] sm:text-sm">
+            <div className="relative mx-auto w-full max-w-7xl text-center">
+                <p className="font-condensed text-xs tracking-[0.32em] text-band-accent sm:text-sm">
                     GEREJA GERAKAN PENTAKOSTA · CIPUTAT
                 </p>
-                <h1 className="mt-4 font-display text-6xl leading-[0.9] font-black tracking-[-0.045em] text-balance [text-shadow:0_0_48px_rgb(255_255_255/0.35)] sm:text-8xl lg:text-9xl">
+                <h1 className="mt-4 font-display text-6xl leading-[0.9] font-black tracking-[-0.045em] text-balance [text-shadow:var(--band-glow)] sm:text-8xl lg:text-9xl">
                     {content.headline || 'Selamat Datang'}
                 </h1>
                 <p className="mt-4 font-condensed text-xl tracking-wide sm:text-3xl">
                     {content.subheadline || 'di GGP ELIM Rumah Kasih Karunia'}
                 </p>
 
-                <div
-                    className={cn(
-                        'relative mx-auto mt-10 aspect-[4/5] max-w-6xl overflow-hidden border border-white/15 bg-[#121218] text-left sm:mt-14 sm:aspect-video lg:aspect-[16/7]',
-                        !live &&
-                            videos.length === 0 &&
-                            'bg-[radial-gradient(70%_80%_at_85%_15%,rgb(91_47_214/0.5),transparent_70%),radial-gradient(60%_70%_at_10%_95%,rgb(255_58_20/0.45),transparent_70%)]',
-                    )}
-                >
-                    {live ? (
-                        <LiveFrame live={live} />
-                    ) : videos.length > 0 ? (
-                        <VideoPlaylist videos={videos} playing={playing} />
-                    ) : null}
+                {background && !live && (
+                    <div className="mt-10 flex flex-wrap justify-center gap-3">
+                        {ctas}
+                    </div>
+                )}
 
-                    {!live && (
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                    )}
-
-                    {!live && (
-                        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-5 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-8">
-                            {theme && <ThemeCaption slide={theme} />}
-                            <div className="flex flex-wrap items-center gap-3">
-                                {content.primary_cta && (
-                                    <SmartLink
-                                        href={content.primary_cta.href}
-                                        className={publicButton.solid}
-                                    >
-                                        {content.primary_cta.label}
-                                    </SmartLink>
-                                )}
-                                {content.secondary_cta && (
-                                    <SmartLink
-                                        href={content.secondary_cta.href}
-                                        className={publicButton.outline}
-                                    >
-                                        {content.secondary_cta.label}
-                                    </SmartLink>
-                                )}
-                                {hasMotion && (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setPlaying((value) => !value)
-                                        }
-                                        aria-label={
-                                            playing
-                                                ? 'Hentikan video dan slide'
-                                                : 'Putar video dan slide'
-                                        }
-                                        className="flex size-11 items-center justify-center border border-white/50 text-white transition-colors hover:bg-white/10"
-                                    >
-                                        {playing ? (
-                                            <Pause className="size-4" />
-                                        ) : (
-                                            <Play className="size-4" />
-                                        )}
-                                    </button>
-                                )}
+                {(!background || live) && (
+                    <MediaFrame
+                        live={live}
+                        videos={background ? [] : videos}
+                        playing={playing}
+                    >
+                        {!live && (
+                            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+                                {theme && <ThemeCard slide={theme} />}
+                                <div className="flex flex-wrap items-center gap-3">
+                                    {ctas}
+                                    {pauseButton}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </MediaFrame>
+                )}
             </div>
+
+            {background && !live && (
+                <div className="relative mx-auto mt-auto flex w-full max-w-7xl flex-col gap-4 pt-16 sm:flex-row sm:items-end sm:justify-between">
+                    {theme ? <ThemeCard slide={theme} /> : <span />}
+                    {pauseButton}
+                </div>
+            )}
 
             <nav
                 aria-label="Pintasan"
-                className="absolute right-6 bottom-24 hidden flex-col gap-3 xl:flex"
+                className="absolute top-1/2 right-6 hidden -translate-y-1/2 flex-col gap-3 xl:flex"
             >
                 <Link
                     href={prayer()}
                     aria-label="Form doa"
-                    className="flex size-12 items-center justify-center rounded-full border border-white/45 bg-black/30 text-white transition-colors hover:bg-white/10"
+                    className="flex size-12 items-center justify-center rounded-full glass-float text-band-fg transition-colors hover:bg-band-fg/10"
                 >
                     <HandHeart className="size-5" />
                 </Link>
                 <Link
                     href={devotionals()}
                     aria-label="Renungan harian"
-                    className="flex size-12 items-center justify-center rounded-full border border-white/45 bg-black/30 text-white transition-colors hover:bg-white/10"
+                    className="flex size-12 items-center justify-center rounded-full glass-float text-band-fg transition-colors hover:bg-band-fg/10"
                 >
                     <BookOpen className="size-5" />
                 </Link>
@@ -164,23 +179,89 @@ export function HeroSection({ content }: { content: HeroContent }) {
     );
 }
 
-function ThemeCaption({ slide }: { slide: HeroSlide }) {
+/**
+ * Wide frame under the welcome. Always dark inside (it holds a video or a
+ * live player), so it forces the dark tokens for what sits on top.
+ */
+function MediaFrame({
+    live,
+    videos,
+    playing,
+    children,
+}: {
+    live: HeroLive | null;
+    videos: HeroVideo[];
+    playing: boolean;
+    children?: ReactNode;
+}) {
+    return (
+        <div
+            className={cn(
+                'dark relative mx-auto mt-10 aspect-[4/5] max-w-6xl overflow-hidden rounded-2xl border border-white/15 bg-[#121218] text-left text-white sm:mt-14 sm:aspect-video lg:aspect-[16/7]',
+                !live &&
+                    videos.length === 0 &&
+                    'bg-[radial-gradient(70%_80%_at_85%_15%,rgb(91_47_214/0.5),transparent_70%),radial-gradient(60%_70%_at_10%_95%,rgb(255_58_20/0.45),transparent_70%)]',
+            )}
+        >
+            {live ? (
+                <LiveFrame live={live} />
+            ) : (
+                videos.length > 0 && (
+                    <VideoPlaylist
+                        videos={videos}
+                        playing={playing}
+                        className="absolute inset-0 size-full object-cover"
+                    />
+                )
+            )}
+            {!live && (
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+            )}
+            {children}
+        </div>
+    );
+}
+
+/** Full-width video behind the welcome, softly blurred and tinted. */
+function BackgroundVideo({
+    videos,
+    playing,
+}: {
+    videos: HeroVideo[];
+    playing: boolean;
+}) {
+    return (
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+            <VideoPlaylist
+                videos={videos}
+                playing={playing}
+                className="absolute inset-0 size-full scale-110 object-cover blur-[6px]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-band/70 via-band/45 to-band/90" />
+            <div className="absolute inset-0 bg-ember opacity-50 mix-blend-normal" />
+        </div>
+    );
+}
+
+function ThemeCard({ slide }: { slide: HeroSlide }) {
     return (
         <div
             key={slide.title}
-            className="max-w-2xl animate-in duration-700 fade-in"
+            className="max-w-xl animate-in rounded-2xl glass-float px-5 py-4 text-left text-band-fg duration-700 fade-in sm:px-6 sm:py-5"
             aria-live="polite"
         >
             {slide.eyebrow && (
-                <p className="font-condensed text-xs tracking-[0.24em] text-[#ffb38a] uppercase sm:text-sm">
+                <p className="font-condensed text-xs tracking-[0.24em] text-band-accent uppercase">
                     {slide.eyebrow}
                 </p>
             )}
-            <p className="mt-2 font-display text-2xl leading-tight font-extrabold tracking-tight text-balance text-white sm:text-4xl">
+            <p className="mt-1.5 font-display text-xl leading-tight font-extrabold tracking-tight text-balance sm:text-3xl">
                 {slide.title}
             </p>
             {slide.reference && (
-                <p className="mt-2 text-sm text-white/75">{slide.reference}</p>
+                <p className="mt-1.5 text-sm text-band-muted">
+                    {slide.reference}
+                </p>
             )}
         </div>
     );
@@ -193,9 +274,11 @@ function ThemeCaption({ slide }: { slide: HeroSlide }) {
 function VideoPlaylist({
     videos,
     playing,
+    className,
 }: {
     videos: HeroVideo[];
     playing: boolean;
+    className?: string;
 }) {
     const [index, setIndex] = useState(0);
     const ref = useRef<HTMLVideoElement>(null);
@@ -225,7 +308,7 @@ function VideoPlaylist({
         <video
             key={video.id}
             ref={ref}
-            className="absolute inset-0 size-full object-cover"
+            className={className}
             src={video.url}
             poster={video.poster ?? undefined}
             muted
@@ -258,7 +341,7 @@ function LiveFrame({ live }: { live: HeroLive }) {
                 />
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-6 text-center">
-                    <p className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+                    <p className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
                         {live.title ?? 'Ibadah sedang berlangsung'}
                     </p>
                     {live.url && (
@@ -274,11 +357,7 @@ function LiveFrame({ live }: { live: HeroLive }) {
                     )}
                 </div>
             )}
-            <span
-                className={cn(
-                    'pointer-events-none absolute top-4 left-4 inline-flex items-center gap-2 bg-[#e5241b] px-3 py-1.5 font-condensed text-xs tracking-[0.2em] text-white',
-                )}
-            >
+            <span className="pointer-events-none absolute top-4 left-4 inline-flex items-center gap-2 rounded-lg bg-[#e5241b] px-3 py-1.5 font-condensed text-xs tracking-[0.2em] text-white">
                 <Radio className="size-3.5 motion-safe:animate-pulse" />
                 LIVE{live.title ? ` · ${live.title.toUpperCase()}` : ''}
             </span>

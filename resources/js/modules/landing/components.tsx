@@ -14,6 +14,7 @@ export const sectionIds = {
     testimonies: 'kesaksian',
     contact: 'kontak',
     privacy: 'privasi',
+    pastor: 'gembala',
     segment_1: 'segmen-1',
     segment_2: 'segmen-2',
     segment_3: 'segmen-3',
@@ -176,17 +177,17 @@ export function PageHero({
     children?: ReactNode;
 }) {
     return (
-        <header className="grain relative isolate overflow-hidden bg-ember px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20 lg:px-10">
+        <header className="grain relative isolate overflow-hidden bg-ember px-4 pt-32 pb-14 sm:px-6 sm:pt-44 sm:pb-20 lg:px-10">
             <div className="relative mx-auto max-w-7xl">
                 {before}
-                <p className="mb-4 font-condensed text-sm tracking-[0.32em] text-[#ffd2b8] uppercase">
+                <p className="mb-4 font-condensed text-sm tracking-[0.32em] text-band-accent uppercase">
                     {eyebrow}
                 </p>
-                <h1 className="max-w-5xl font-display text-5xl leading-[0.92] font-black tracking-[-0.04em] text-balance [text-shadow:0_0_40px_rgb(255_255_255/0.25)] sm:text-7xl lg:text-8xl">
+                <h1 className="max-w-5xl font-display text-5xl leading-[0.92] font-black tracking-[-0.04em] text-balance [text-shadow:var(--band-glow)] sm:text-7xl lg:text-8xl">
                     {title}
                 </h1>
                 {description && (
-                    <p className="mt-6 max-w-2xl text-lg text-pretty text-white/80">
+                    <p className="mt-6 max-w-2xl text-lg text-pretty text-band-muted">
                         {description}
                     </p>
                 )}
@@ -207,7 +208,7 @@ export function HeroBackLink({
     return (
         <Link
             href={href}
-            className="mb-8 inline-flex items-center gap-2 font-condensed text-sm tracking-[0.2em] text-white/75 uppercase hover:text-white"
+            className="mb-8 inline-flex items-center gap-2 font-condensed text-sm tracking-[0.2em] text-band-muted uppercase hover:text-band-fg"
         >
             <span aria-hidden="true">←</span>
             {children}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Gallery\Http\Controllers\GalleryController;
+use App\Modules\Gallery\Http\Controllers\GallerySourceController;
 use App\Modules\Gallery\Http\Controllers\PublicGalleryController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +12,17 @@ Route::name('gallery.public.')->controller(PublicGalleryController::class)->grou
     Route::get('/galeri', 'index')->name('index');
     Route::get('/galeri/{slug}', 'show')->where('slug', '[a-z0-9-]+')->name('show');
 });
+
+// Gallery source (albums or Instagram). Registered before the album routes
+// so "/sumber" is never read as an album.
+Route::middleware(['auth', 'verified'])
+    ->prefix('admin/gallery/sumber')
+    ->name('gallery.source.')
+    ->controller(GallerySourceController::class)
+    ->group(function () {
+        Route::put('/', 'update')->name('update');
+        Route::delete('/instagram', 'disconnect')->name('disconnect');
+    });
 
 Route::middleware(['auth', 'verified'])
     ->prefix('admin/gallery')
