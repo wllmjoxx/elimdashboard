@@ -22,11 +22,16 @@ return [
         'per_ip_per_hour' => 10,
         'verify_per_minute' => 10,
         // How the code email leaves without making the visitor wait: 'auto'
-        // sends it right after the response under PHP-FPM and through the
-        // queue elsewhere (php artisan serve); 'after_response' or 'queue'
-        // force one way.
+        // sends it right after the response under PHP-FPM or LiteSpeed and
+        // through the queue elsewhere (php artisan serve); 'after_response'
+        // or 'queue' force one way.
         'delivery' => env('OTP_DELIVERY', 'auto'),
     ],
+
+    // Shared hosting (cPanel) has no Supervisor to keep `queue:work` running.
+    // When true, the scheduler cron starts a worker every minute that empties
+    // the queue (registration emails) and stops.
+    'queue_via_scheduler' => (bool) env('QUEUE_WORK_VIA_SCHEDULER', false),
 
     // Staff accounts (every role except Jemaat) are signed out after this
     // many minutes without activity (PRD 4.13). 0 turns it off. Jemaat keep

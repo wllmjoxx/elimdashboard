@@ -57,7 +57,7 @@ class LoginCodes
     /**
      * Send the code without making the visitor wait for the mail server.
      *
-     * Under PHP-FPM (production) the response goes out first and the email
+     * Under PHP-FPM or LiteSpeed (production) the response goes out first and the email
      * right after it, without a queue worker. The PHP development server
      * (`php artisan serve`) cannot finish a response early, so there the
      * email goes to the queue and the worker sends it within seconds.
@@ -67,7 +67,9 @@ class LoginCodes
         $mode = (string) config('modules.core.otp.delivery', 'auto');
 
         if ($mode === 'auto') {
-            $mode = function_exists('fastcgi_finish_request') ? 'after_response' : 'queue';
+            $mode = function_exists('fastcgi_finish_request') || function_exists('litespeed_finish_request')
+                ? 'after_response'
+                : 'queue';
         }
 
         if ($mode === 'queue') {

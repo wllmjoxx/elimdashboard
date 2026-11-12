@@ -17,6 +17,12 @@ class DevotionalsSeeder extends Seeder
      */
     public function run(): void
     {
+        // Sample content for developer machines and tests only: a real site
+        // starts empty and the team fills it in.
+        if (! app()->environment(['local', 'testing'])) {
+            return;
+        }
+
         $church = Church::default();
 
         if (! $church || Devotional::query()->withoutGlobalScopes()->where('church_id', $church->id)->exists()) {

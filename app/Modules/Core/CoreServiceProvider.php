@@ -91,6 +91,13 @@ class CoreServiceProvider extends ModuleServiceProvider
         // Daily clean-up of expired sign-in codes (needs the scheduler cron).
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $schedule->command('model:prune', ['--model' => [LoginOtp::class]])->daily();
+
+            if (config('modules.core.queue_via_scheduler')) {
+                $schedule->command('queue:work', ['--stop-when-empty' => true, '--max-time' => 50, '--tries' => 3])
+                    ->everyMinute()
+                    ->withoutOverlapping(5)
+                    ->runInBackground();
+            }
         });
 
         // Superadmin works across branches and passes every check (PRD 4.2).

@@ -5,8 +5,10 @@ namespace Tests\Modules\Core;
 use App\Models\User;
 use App\Modules\Core\Database\Seeders\CoreSeeder;
 use App\Modules\Core\Enums\Role;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ServerSetupTest extends TestCase
@@ -24,6 +26,23 @@ class ServerSetupTest extends TestCase
             $this->assertDatabaseMissing('users', ['email' => 'test@example.com']);
             $this->assertDatabaseMissing('users', ['email' => 'admin@example.com']);
             $this->assertDatabaseHas('churches', ['slug' => 'ggp-elim']);
+        }
+    }
+
+    public function test_servers_get_landing_content_but_no_sample_content(): void
+    {
+        $this->app['env'] = 'production';
+
+        $this->app->make(DatabaseSeeder::class)->setContainer($this->app)->__invoke();
+
+        $this->assertDatabaseHas('churches', ['slug' => 'ggp-elim']);
+        $this->assertDatabaseHas('site_sections', ['key' => 'hero']);
+        $this->assertDatabaseHas('service_schedules', ['name' => 'Ibadah Raya I']);
+
+        foreach (['users', 'member_profiles', 'devotionals', 'albums', 'prayer_requests', 'testimonies', 'events', 'announcements'] as $table) {
+            if (Schema::hasTable($table)) {
+                $this->assertDatabaseCount($table, 0);
+            }
         }
     }
 

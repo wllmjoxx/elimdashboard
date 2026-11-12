@@ -1,5 +1,8 @@
 # Deploy GGP Elim
 
+**Hosting cPanel (DomaiNesia, situs live):** lihat
+[cpanel/README.md](cpanel/README.md).
+
 ## Pratinjau online dari laptop (gratis, tanpa server)
 
 Satu perintah menjalankan semuanya seperti di server: aset hasil build (tanpa
