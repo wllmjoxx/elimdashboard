@@ -1,5 +1,27 @@
 # Deploy GGP Elim
 
+## Pratinjau online dari laptop (gratis, tanpa server)
+
+Satu perintah menjalankan semuanya seperti di server: aset hasil build (tanpa
+Vite dev), queue (email kode masuk dan persetujuan), scheduler, SSR, upload
+sampai 64 MB, dan tunnel Cloudflare. `APP_URL` diisi otomatis.
+
+1. Hentikan dulu semua `composer dev`, `npm run dev`, `php artisan serve` dan
+   `queue:listen` yang sedang jalan (Ctrl+C di terminalnya).
+2. Jalankan di folder proyek:
+
+    ```powershell
+    powershell -ExecutionPolicy Bypass -File deploy\tunnel.ps1
+    ```
+
+3. Bagikan alamat `https://….trycloudflare.com` yang muncul.
+4. Selesai: tekan Ctrl+C. Semua proses berhenti dan `.env` kembali ke
+   `http://localhost:8000`, lalu jalankan `composer dev` seperti biasa.
+
+Catatan: situs hanya hidup selama laptop menyala dan skrip berjalan. Alamat
+berganti setiap kali dijalankan, sehingga tautan di email dari sesi
+sebelumnya tidak terbuka lagi. Log ada di `storage/logs/preview/`.
+
 Skrip di folder ini menyiapkan server Ubuntu 24.04 dan memperbarui aplikasi.
 Dipakai untuk **staging** di Oracle Cloud Always Free sekarang, dan nanti untuk
 **production** di VPS (IDCloudHost) dengan langkah yang sama.

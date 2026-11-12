@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
+        // Proxies on this machine (cloudflared for the online preview, a
+        // local web server in front of PHP) pass the visitor's real scheme
+        // and IP. Without this, https links signed for email (Buat password)
+        // fail and every visitor shares one rate-limit bucket.
+        $middleware->trustProxies(at: ['127.0.0.1', '::1']);
+
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
