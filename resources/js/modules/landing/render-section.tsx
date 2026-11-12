@@ -12,6 +12,7 @@ import {
     ScheduleSection,
     TestimoniesSection,
 } from './sections/content-sections';
+import { EventsSection } from './sections/events';
 import { HeroSection } from './sections/hero';
 import { PastorSection } from './sections/pastor';
 import { SegmentSection } from './sections/segment';
@@ -55,6 +56,8 @@ export function renderSection(
             return wrap(<TestimoniesSection content={section.content} />);
         case 'contact':
             return wrap(<ContactSection content={section.content} />);
+        case 'events':
+            return wrap(<EventsSection content={section.content} />);
         case 'pastor':
             return <PastorSection content={section.content} />;
         case 'privacy':

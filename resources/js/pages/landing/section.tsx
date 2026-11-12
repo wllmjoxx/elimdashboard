@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LandingAdminNav } from '@/modules/landing/admin-nav';
 import { index } from '@/routes/landing';
+import { index as mediaPage } from '@/routes/landing/media';
 import { photo as pastorPhoto } from '@/routes/landing/pastor';
 import { update } from '@/routes/landing/sections';
 
@@ -93,6 +94,15 @@ const simpleFields: Record<string, FieldSpec[]> = {
         },
     ],
     gallery: [{ name: 'title', label: 'Judul', placeholder: 'Galeri' }],
+    events: [
+        { name: 'title', label: 'Judul', placeholder: 'Kegiatan' },
+        {
+            name: 'subtitle',
+            label: 'Keterangan',
+            optional: true,
+            placeholder: 'Yang sedang berjalan dan akan datang di GGP Elim.',
+        },
+    ],
     testimonies: [
         { name: 'title', label: 'Judul', placeholder: 'Kesaksian' },
         { name: 'text', label: 'Teks pengantar', optional: true },
@@ -431,11 +441,23 @@ export default function LandingSectionEditor({ section, flash }: Props) {
                                         }
                                         error={errors.subheadline}
                                     />
-                                    <p className="text-sm text-muted-foreground">
-                                        Video dan live streaming diatur di tab
-                                        Video &amp; Live. Slide di bawah tampil
-                                        sebagai tema di atas video.
-                                    </p>
+                                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted px-4 py-3 text-sm">
+                                        <span>
+                                            Video beranda dan live streaming
+                                            diatur di halaman Video &amp; Live.
+                                            Slide di bawah tampil sebagai tema
+                                            di atas video.
+                                        </span>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            variant="outline"
+                                        >
+                                            <Link href={mediaPage()}>
+                                                Unggah video / atur live
+                                            </Link>
+                                        </Button>
+                                    </div>
                                 </CardContent>
                             </Card>
                             <Repeater

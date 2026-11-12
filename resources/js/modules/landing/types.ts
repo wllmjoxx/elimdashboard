@@ -1,3 +1,5 @@
+import type { PublicEvent } from '@/modules/events/types';
+
 export type Cta = { label: string; href: string };
 
 export type HeroSlide = {
@@ -38,6 +40,13 @@ export type AboutContent = {
     title: string;
     paragraphs: string[];
     milestones?: { year: string; text: string }[];
+};
+
+export type EventsContent = {
+    title: string;
+    subtitle?: string | null;
+    items: PublicEvent[];
+    url: string;
 };
 
 export type PastorContent = {
@@ -157,6 +166,7 @@ export type SectionContentMap = {
     contact: ContactContent;
     privacy: PrivacyContent;
     pastor: PastorContent;
+    events: EventsContent;
     segment_1: SegmentContent;
     segment_2: SegmentContent;
     segment_3: SegmentContent;

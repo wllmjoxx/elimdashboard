@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Modules\Announcements\Models\Announcement;
 use App\Modules\Devotionals\Models\Devotional;
+use App\Modules\Events\Models\Event;
 use App\Modules\Gallery\Models\Album;
 use App\Modules\Landing\Support\SectionEditor;
 use Database\Seeders\DatabaseSeeder;
@@ -75,7 +77,22 @@ class PageSmokeTest extends TestCase
             '/admin/core', '/admin/members', '/admin/prayer', '/admin/prayer/print',
             '/admin/testimonies', '/admin/devotionals', '/admin/devotionals/create', '/admin/gallery',
             '/admin/landing', '/admin/landing/jadwal', '/admin/landing/segmen', '/admin/landing/video',
+            '/kegiatan', '/pengumuman', '/admin/events', '/admin/events/create',
+            '/admin/announcements', '/admin/announcements/create',
         ];
+
+        $event = Event::query()->withoutGlobalScopes()->first();
+        $announcement = Announcement::query()->withoutGlobalScopes()->first();
+
+        if ($event) {
+            $urls[] = "/kegiatan/{$event->slug}";
+            $urls[] = "/admin/events/{$event->id}/edit";
+        }
+
+        if ($announcement) {
+            $urls[] = "/pengumuman/{$announcement->slug}";
+            $urls[] = "/admin/announcements/{$announcement->id}/edit";
+        }
 
         foreach (SectionEditor::EDITABLE as $key) {
             $urls[] = "/admin/landing/sections/{$key}";

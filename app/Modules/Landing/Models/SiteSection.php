@@ -38,6 +38,7 @@ class SiteSection extends Model
         'contact',
         'privacy',
         'pastor',
+        'events',
         ...self::SEGMENT_KEYS,
     ];
 
@@ -49,6 +50,7 @@ class SiteSection extends Model
      */
     public const HOME_KEYS = [
         'hero',
+        'events',
         'segment_1',
         'devotional',
         'schedule',

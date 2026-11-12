@@ -38,8 +38,10 @@ class SectionEditorTest extends TestCase
                 ->has('sections', count(SiteSection::KEYS))
                 ->where('sections.0.key', 'hero')
                 ->where('sections.0.editor', 'section')
-                ->where('sections.1.key', 'segment_1')
-                ->where('sections.1.editor', 'segment')
+                ->where('sections.1.key', 'events')
+                ->where('sections.1.editor', 'section')
+                ->where('sections.2.key', 'segment_1')
+                ->where('sections.2.editor', 'segment')
                 ->where('sections.0.label', SectionEditor::label('hero')));
     }
 
