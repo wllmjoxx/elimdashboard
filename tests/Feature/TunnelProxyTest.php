@@ -24,8 +24,11 @@ class TunnelProxyTest extends TestCase
     {
         parent::setUp();
 
+        // Links are generated outside a request (queued email), so the
+        // scheme comes from APP_URL, not from whatever .env holds here.
         config(['app.url' => 'https://'.self::HOST]);
         URL::forceRootUrl('https://'.self::HOST);
+        URL::forceScheme('https');
     }
 
     public function test_email_links_signed_for_https_open_through_the_tunnel(): void
