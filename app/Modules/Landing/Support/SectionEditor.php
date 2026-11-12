@@ -28,6 +28,7 @@ class SectionEditor
         'contact' => 'Alamat dan Kontak',
         'privacy' => 'Kebijakan Privasi',
         'pastor' => 'Gembala Sidang',
+        'events' => 'Kegiatan',
     ];
 
     /**
@@ -45,6 +46,7 @@ class SectionEditor
         'contact',
         'privacy',
         'pastor',
+        'events',
     ];
 
     /**
@@ -65,6 +67,7 @@ class SectionEditor
         'contact' => 'Contact',
         'privacy' => 'Kebijakan Privasi',
         'pastor' => 'Home dan Tentang',
+        'events' => 'Home',
     ];
 
     public static function label(string $key): string
@@ -138,6 +141,10 @@ class SectionEditor
                 'whatsapp' => ['nullable', 'string', 'max:30', 'regex:/^\+?[0-9 ()-]{8,30}$/'],
                 'hours' => ['nullable', 'string', 'max:120'],
                 'maps_query' => ['nullable', 'string', 'max:200'],
+            ],
+            'events' => [
+                'title' => ['required', 'string', 'max:120'],
+                'subtitle' => ['nullable', 'string', 'max:200'],
             ],
             'pastor' => [
                 'label' => ['required', 'string', 'max:40'],

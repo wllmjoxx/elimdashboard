@@ -21,6 +21,12 @@
         </include>
     </source>
     <php>
+        <!-- Never read the dev caches from `php artisan optimize` (the online
+             preview builds them): cached config would point the tests at the
+             real database instead of :memory:. -->
+        <env name="APP_CONFIG_CACHE" value="bootstrap/cache/testing-config.php" force="true"/>
+        <env name="APP_ROUTES_CACHE" value="bootstrap/cache/testing-routes.php" force="true"/>
+        <env name="APP_EVENTS_CACHE" value="bootstrap/cache/testing-events.php" force="true"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

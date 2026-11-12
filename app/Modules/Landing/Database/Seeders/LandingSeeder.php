@@ -19,7 +19,10 @@ class LandingSeeder extends Seeder
             $attributes = ['church_id' => null, 'key' => $key];
             // The pastor section waits hidden until Admin fills in the real
             // name, bio and photo.
-            $values = ['content' => $content, 'is_active' => $key !== 'pastor', 'sort_order' => ($order + 1) * 10];
+            // Events came later: 15 puts it right after the hero (10) on
+            // sites seeded before it existed, too.
+            $sortOrder = $key === 'events' ? 15 : ($order + 1) * 10;
+            $values = ['content' => $content, 'is_active' => $key !== 'pastor', 'sort_order' => $sortOrder];
 
             // Every section is edited by Admin now: only add the missing ones,
             // never overwrite what Admin changed.
@@ -68,6 +71,10 @@ class LandingSeeder extends Seeder
                 ],
                 'primary_cta' => ['label' => 'Lihat jadwal ibadah', 'href' => '/jadwal'],
                 'secondary_cta' => ['label' => 'Kirim pokok doa', 'href' => '/doa'],
+            ]],
+            ['events', [
+                'title' => 'Kegiatan',
+                'subtitle' => 'Yang sedang berjalan dan akan datang di GGP Elim.',
             ]],
             ['segment_1', [
                 'eyebrow' => 'GGP Elim Ciputat',

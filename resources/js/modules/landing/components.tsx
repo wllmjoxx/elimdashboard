@@ -15,6 +15,7 @@ export const sectionIds = {
     contact: 'kontak',
     privacy: 'privasi',
     pastor: 'gembala',
+    events: 'kegiatan',
     segment_1: 'segmen-1',
     segment_2: 'segmen-2',
     segment_3: 'segmen-3',

@@ -83,8 +83,15 @@
     --color-iris: var(--iris);
 
     --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-    /* Public site bands (hero, page headers, header, footer). */
+/*
+ * Public site bands (hero, page headers, header, footer). "inline" makes the
+ * utilities read --band-* where they are used, so an element with the
+ * `dark` class (a video frame, a photo segment) gets the dark colors even
+ * in light mode.
+ */
+@theme inline {
     --color-band: var(--band-bg);
     --color-band-fg: var(--band-fg);
     --color-band-muted: var(--band-muted);

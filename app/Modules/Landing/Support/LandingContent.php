@@ -3,6 +3,7 @@
 namespace App\Modules\Landing\Support;
 
 use App\Modules\Devotionals\Support\DevotionalFeed;
+use App\Modules\Events\Support\EventFeed;
 use App\Modules\Gallery\Support\GalleryFeed;
 use App\Modules\Landing\Models\HeroVideo;
 use App\Modules\Landing\Models\ServiceSchedule;
@@ -19,6 +20,7 @@ class LandingContent
         private readonly DevotionalFeed $devotionals,
         private readonly TestimonyFeed $testimonies,
         private readonly GalleryFeed $gallery,
+        private readonly EventFeed $events,
     ) {}
 
     /**
@@ -98,6 +100,12 @@ class LandingContent
                 ->all();
             $content['live'] = LiveStream::present($content['live'] ?? []);
             $content['video_mode'] = ($content['video_mode'] ?? 'frame') === 'background' ? 'background' : 'frame';
+        }
+
+        // Ongoing and upcoming events from the Events module.
+        if ($section->key === 'events') {
+            $content['items'] = $this->events->forHome();
+            $content['url'] = route('events.public.index');
         }
 
         if ($section->key === 'pastor') {
