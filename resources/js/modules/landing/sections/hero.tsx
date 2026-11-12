@@ -194,13 +194,17 @@ function MediaFrame({
     playing: boolean;
     children?: ReactNode;
 }) {
+    // Dark only when it shows a video or the live player; an empty frame
+    // follows the light or dark theme like the rest of the band.
+    const hasMedia = live !== null || videos.length > 0;
+
     return (
         <div
             className={cn(
-                'dark relative mx-auto mt-10 aspect-[4/5] max-w-6xl overflow-hidden rounded-2xl border border-white/15 bg-[#121218] text-left text-white sm:mt-14 sm:aspect-video lg:aspect-[16/7]',
-                !live &&
-                    videos.length === 0 &&
-                    'bg-[radial-gradient(70%_80%_at_85%_15%,rgb(91_47_214/0.5),transparent_70%),radial-gradient(60%_70%_at_10%_95%,rgb(255_58_20/0.45),transparent_70%)]',
+                'relative mx-auto mt-10 aspect-[4/5] max-w-6xl overflow-hidden rounded-2xl text-left text-band-fg sm:mt-14 sm:aspect-video lg:aspect-[16/7]',
+                hasMedia
+                    ? 'dark border border-white/15 bg-[#121218]'
+                    : 'border border-band-line bg-band/40 bg-[radial-gradient(70%_80%_at_85%_15%,var(--ember-4),transparent_70%),radial-gradient(60%_70%_at_10%_95%,var(--ember-1),transparent_70%)]',
             )}
         >
             {live ? (
@@ -214,7 +218,7 @@ function MediaFrame({
                     />
                 )
             )}
-            {!live && (
+            {!live && videos.length > 0 && (
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
             )}
             {children}

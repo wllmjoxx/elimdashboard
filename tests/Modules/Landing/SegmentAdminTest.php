@@ -86,8 +86,8 @@ class SegmentAdminTest extends TestCase
         Storage::disk('public')->assertExists($content['image']);
 
         $this->get(route('home'))->assertInertia(fn (Assert $page) => $page
-            ->where('sections.4.key', 'segment_2')
-            ->where('sections.4.content.image_url', Storage::disk('public')->url($content['image'])));
+            ->where('sections.5.key', 'segment_2')
+            ->where('sections.5.content.image_url', Storage::disk('public')->url($content['image'])));
     }
 
     public function test_replacing_or_removing_an_image_deletes_the_old_file(): void
